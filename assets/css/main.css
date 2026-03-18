@@ -1,0 +1,238 @@
+:root {
+  --ui-font: var(--apple-font);
+
+  /* FONT SCALE */
+  --fs-xs: 0.75rem;
+  /* 12px */
+  --fs-sm: 0.8125rem;
+  /* 13px */
+  --fs-md: 0.875rem;
+  /* 14px */
+  --fs-lg: 1rem;
+  /* 16px */
+
+  /* LINE HEIGHT */
+  --lh-tight: 1.35;
+  --lh-normal: 1.5;
+
+  /* SPACING (4px system) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+
+  --bold-1: 300;
+  --bold-2: 400;
+  --bold-3: 600;
+
+  /* Font Mobile */
+  --fsm-sm: 12px;
+  --fsm-xs: 10px;
+
+  --bg: #ffffff;
+  --muted-bg: #f7f8fb;
+  --surface: #ffffff;
+  --border: #e6e9ef;
+  --text: #111827;
+  --muted-text: #6b7280;
+  --accent: #2563eb;
+  --row-hover: #f1f5f9;
+  --zebra: #fbfdff;
+
+  /* APPLE DESIGN TOKENS */
+  --apple-bg: #ffffff;
+  --apple-card-bg: #fbfbfb;
+  --apple-card-border: #d2d2d7;
+  --apple-text-primary: #1d1d1f;
+  --apple-text-secondary: #6e6e73;
+  --apple-blue: #0071e3;
+  --apple-radius: 14px;
+  --apple-font: 'Inter', 'SF Pro Display', 'SF Pro Text', system-ui, -apple-system, sans-serif;
+
+  scroll-behavior: smooth;
+  --primary-color-1: #00385e;
+  --primary-color-2: #1d1d1f;
+  --primary-color-3: #ec6a23;
+  --primary-color-4: #ffffff;
+  --primary-color-5: #e5e5ea;
+  --secondary-color-1: #a1a1a6;
+  --secondary-color-2: #86868b;
+  --secondary-color-3: #fdc492;
+  --secondary-color-text: var(--apple-text-secondary);
+  --title-color-hover: #1d1d1f;
+  --title-color: var(--apple-text-primary);
+  --title-icon: var(--apple-blue);
+
+  /* Override Default Bootstrap CSS Variables */
+  --bs-body-font-family: var(--ui-font);
+  --bs-font-sans-serif: var(--ui-font);
+  --bs-body-bg: var(--muted-bg);
+  --bs-body-color: var(--text);
+  --bs-primary: var(--accent);
+  --bs-primary-rgb: 37, 99, 235; /* #2563eb rgb mapping */
+  --bs-border-color: var(--border);
+}
+
+/* Globals & Layouts */
+body {
+  background-color: var(--muted-bg);
+  color: var(--text);
+  font-family: var(--ui-font);
+}
+
+html {
+  font-size: var(--fs-xs);
+}
+
+.admin-layout {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-top: 70px;
+}
+
+.main-content {
+  transition: margin-left 0.3s ease;
+  min-width: 0;
+  min-height: calc(100vh - 70px);
+}
+@media (min-width: 768px) {
+  .main-content {
+    margin-left: 260px; /* Lebar default sidebar */
+  }
+  .main-content.sidebar-collapsed {
+    margin-left: 0;
+  }
+}
+
+.content-wrapper {
+  min-height: calc(100vh - 70px);
+}
+
+.sidebar-overlay {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 70px);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 1030;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  position: fixed;
+  top: 70px;
+  left: -260px;
+  height: calc(100vh - 70px);
+  z-index: 1010;
+  transition: left 0.3s ease;
+}
+
+.sidebar.show {
+  left: 0;
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    left: 0;
+  }
+  .sidebar.hide-desktop {
+    left: -260px;
+  }
+}
+
+.sidebar .menu-link {
+  transition: all 0.2s ease;
+  font-size: var(--fs-md);
+}
+
+.sidebar .menu-link i.bi {
+  font-size: var(--fs-lg);
+}
+
+.sidebar .menu-link:hover:not(.active) {
+  background-color: var(--row-hover);
+  color: var(--accent) !important;
+  transform: translateX(3px);
+}
+
+.sidebar .menu-link.active {
+  background-color: var(--accent);
+  color: var(--surface) !important;
+  box-shadow: 0 4px 6px -1px var(--border);
+}
+
+/* Header */
+.header {
+  height: 70px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1020;
+}
+
+.header .btn-outline-light:hover {
+  background-color: var(--row-hover);
+  color: var(--accent) !important;
+}
+
+.header .dropdown-item:hover {
+  background-color: var(--row-hover);
+}
+
+/* Utilities extracted from inline styles */
+.w-36 {
+  width: 36px;
+}
+.h-36 {
+  height: 36px;
+}
+.min-h-30 {
+  min-height: 30px;
+}
+.min-h-400 {
+  min-height: 400px;
+}
+
+.search-box {
+  width: 350px;
+}
+.badge-bell-translate {
+  transform: translate(-30%, 30%) !important;
+}
+
+/* Typography Utilities */
+.fs-60,
+.fs-65 {
+  font-size: var(--fsm-xs);
+}
+.fs-70 {
+  font-size: var(--fsm-sm);
+}
+.fs-80,
+.fs-85 {
+  font-size: var(--fs-sm);
+}
+.fs-7 {
+  font-size: var(--fs-md);
+}
+
+.nav-section-title {
+  font-size: var(--fsm-xs);
+  letter-spacing: 0.5px;
+}
+
+.letter-spacing-1 {
+  letter-spacing: 0.5px;
+}
+
+.border-light {
+  border-color: var(--border) !important;
+}
