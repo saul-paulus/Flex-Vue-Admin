@@ -56,7 +56,7 @@ const getStatusIconClass = (status: string) => {
             <span class="small" style="color: var(--secondary-color-text)">+18 this month</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
                <div class="bg-primary-subtle text-primary rounded d-flex align-items-center justify-content-center" style="width:36px; height:36px;">
-                 <i class="bi bi-people-fill fs-5"></i>
+                 <i class="bi bi-people-fill fs-5" />
                </div>
             </div>
           </div>
@@ -72,7 +72,7 @@ const getStatusIconClass = (status: string) => {
             <span class="small" style="color: var(--secondary-color-text)">75% engagement</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
                <div class="bg-success-subtle text-success rounded d-flex align-items-center justify-content-center" style="width:36px; height:36px;">
-                 <i class="bi bi-person-check-fill fs-5"></i>
+                 <i class="bi bi-person-check-fill fs-5" />
                </div>
             </div>
           </div>
@@ -88,7 +88,7 @@ const getStatusIconClass = (status: string) => {
             <span class="small" style="color: var(--secondary-color-text)">Needs onboarding</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
                <div class="bg-warning-subtle text-warning rounded d-flex align-items-center justify-content-center" style="width:36px; height:36px;">
-                 <i class="bi bi-hourglass-split fs-5"></i>
+                 <i class="bi bi-hourglass-split fs-5" />
                </div>
             </div>
           </div>
@@ -104,7 +104,7 @@ const getStatusIconClass = (status: string) => {
             <span class="small" style="color: var(--secondary-color-text)">Follow up required</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
                <div class="bg-danger-subtle text-danger rounded d-flex align-items-center justify-content-center" style="width:36px; height:36px;">
-                 <i class="bi bi-person-x-fill fs-5"></i>
+                 <i class="bi bi-person-x-fill fs-5" />
                </div>
             </div>
           </div>
@@ -144,12 +144,12 @@ const getStatusIconClass = (status: string) => {
           <!-- Filter & Search -->
           <div class="d-flex align-items-center gap-2">
             <div class="input-group input-group-sm border rounded bg-white shadow-sm" style="width:250px;">
-              <span class="input-group-text bg-white border-0 text-muted"><i class="bi bi-search"></i></span>
+              <span class="input-group-text bg-white border-0 text-muted"><i class="bi bi-search" /></span>
               <input type="text" class="form-control border-0 shadow-none ps-0 bg-transparent" placeholder="Search users, email, role...">
             </div>
             
             <button class="btn btn-sm btn-white border bg-white text-dark d-flex align-items-center shadow-sm gap-2 px-3">
-              <i class="bi bi-funnel"></i> Role
+              <i class="bi bi-funnel" /> Role
             </button>
           </div>
         </div>
@@ -187,24 +187,24 @@ const getStatusIconClass = (status: string) => {
               </td>
               <td class="py-3">
                 <span class="badge rounded-pill fw-medium px-2 py-1 px-3 d-inline-flex align-items-center gap-1" :class="getRoleBadgeClasses(user.role)" style="font-size: 0.75rem;">
-                  <i class="bi bi-person-badge-fill" v-if="user.role === 'Admin'"></i> 
-                  <i class="bi bi-person-workspace" v-else-if="user.role === 'Manager'"></i>
-                  <i class="bi bi-person-fill" v-else></i>
+                  <i class="bi bi-person-badge-fill" v-if="user.role === 'Admin'" /> 
+                  <i class="bi bi-person-workspace" v-else-if="user.role === 'Manager'" />
+                  <i class="bi bi-person-fill" v-else />
                   {{ user.role }}
                 </span>
               </td>
               <td class="py-3">
                 <div class="d-flex align-items-center gap-2 fw-medium" style="font-size: 0.85rem; color: var(--title-color)">
-                  <i class="bi bi-circle-fill" style="font-size: 8px;" :class="getStatusIconClass(user.status)"></i> {{ user.status }}
+                  <i class="bi bi-circle-fill" style="font-size: 8px;" :class="getStatusIconClass(user.status)" /> {{ user.status }}
                 </div>
               </td>
               <td class="py-3" style="font-size: 0.85rem; color: var(--secondary-color-text)">{{ user.lastActive }}</td>
               <td class="py-3" style="font-size: 0.85rem; color: var(--secondary-color-text)">{{ user.joined }}</td>
               <td class="text-end pe-4 py-3">
                 <div class="d-flex align-items-center justify-content-end gap-2 text-muted">
-                  <button class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary"><i class="bi bi-eye"></i></button>
-                  <button class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary"><i class="bi bi-pencil"></i></button>
-                  <button class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary"><i class="bi bi-three-dots"></i></button>
+                  <button class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary"><i class="bi bi-eye" /></button>
+                  <button class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary"><i class="bi bi-pencil" /></button>
+                  <button class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary"><i class="bi bi-three-dots" /></button>
                 </div>
               </td>
             </tr>
@@ -220,7 +220,7 @@ const getStatusIconClass = (status: string) => {
         <nav aria-label="Page navigation">
           <ul class="pagination pagination-sm mb-0 gap-1">
             <li class="page-item disabled">
-              <a class="page-link border-0 text-muted bg-transparent" href="#" tabindex="-1" aria-disabled="true"><i class="bi bi-chevron-left"></i></a>
+              <a class="page-link border-0 text-muted bg-transparent" href="#" tabindex="-1" aria-disabled="true"><i class="bi bi-chevron-left" /></a>
             </li>
             <li class="page-item active" aria-current="page">
               <a class="page-link border-0 rounded text-white shadow-sm" style="background-color: var(--accent);" href="#">1</a>
@@ -230,7 +230,7 @@ const getStatusIconClass = (status: string) => {
             <li class="page-item"><span class="page-link border-0 rounded text-muted bg-transparent px-1">...</span></li>
             <li class="page-item"><a class="page-link border-0 rounded text-muted text-hover-dark bg-transparent" href="#">31</a></li>
             <li class="page-item">
-              <a class="page-link border-0 text-muted bg-transparent" href="#"><i class="bi bi-chevron-right"></i></a>
+              <a class="page-link border-0 text-muted bg-transparent" href="#"><i class="bi bi-chevron-right" /></a>
             </li>
           </ul>
         </nav>
