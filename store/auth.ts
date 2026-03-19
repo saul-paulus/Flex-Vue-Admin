@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia';
+import {defineStore} from 'pinia';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -14,5 +14,5 @@ export const useAuthStore = defineStore('auth', {
       this.user = null;
     },
   },
-  persist: true, // Requires pinia-plugin-persistedstate
+  persist: true,  // Requires pinia-plugin-persistedstate
 });
