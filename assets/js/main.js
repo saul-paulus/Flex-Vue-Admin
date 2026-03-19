@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
     el = el.trim();
     if (all) {
       return [...document.querySelectorAll(el)];
-    } else {
+    }
+    else {
       return document.querySelector(el);
     }
   };
@@ -32,16 +33,17 @@ document.addEventListener('DOMContentLoaded', function () {
   /**
    * Navbar links active state on scroll
    */
-  let navbarlinks = select('#navbar .scrollto', true);
+  const navbarlinks = select('#navbar .scrollto', true);
   const navbarlinksActive = () => {
-    let position = window.scrollY + 200;
+    const position = window.scrollY + 200;
     navbarlinks.forEach((navbarlink) => {
       if (!navbarlink.hash) return;
-      let section = select(navbarlink.hash);
+      const section = select(navbarlink.hash);
       if (!section) return;
       if (position >= section.offsetTop && position <= section.offsetTop + section.offsetHeight) {
         navbarlink.classList.add('active');
-      } else {
+      }
+      else {
         navbarlink.classList.remove('active');
       }
     });
@@ -49,12 +51,13 @@ document.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('load', navbarlinksActive);
   onscroll(document, navbarlinksActive);
 
-  let selectHeader = select('#header');
+  const selectHeader = select('#header');
   if (selectHeader) {
     const headerScrolled = () => {
       if (window.scrollY > 100) {
         selectHeader.classList.add('header-scrolled');
-      } else {
+      }
+      else {
         selectHeader.classList.remove('header-scrolled');
       }
     };
@@ -65,12 +68,13 @@ document.addEventListener('DOMContentLoaded', function () {
   /**
    * Back to top button
    */
-  let backtotop = select('.back-to-top');
+  const backtotop = select('.back-to-top');
   if (backtotop) {
     const toggleBacktotop = () => {
       if (window.scrollY > 100) {
         backtotop.classList.add('active');
-      } else {
+      }
+      else {
         backtotop.classList.remove('active');
       }
     };
@@ -94,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         form.classList.add('was-validated');
       },
-      false
+      false,
     );
   });
 });

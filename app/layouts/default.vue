@@ -11,7 +11,8 @@ const toggleSidebar = () => {
 const handleResize = () => {
   if (window.innerWidth < 768) {
     isSidebarOpen.value = false;
-  } else {
+  }
+  else {
     isSidebarOpen.value = true;
   }
 };
@@ -33,7 +34,10 @@ onUnmounted(() => {
 
     <div class="d-flex position-relative">
       <!-- Sidebar -->
-      <LayoutSidebar :is-open="isSidebarOpen" @close="isSidebarOpen = false" />
+      <LayoutSidebar
+        :is-open="isSidebarOpen"
+        @close="isSidebarOpen = false"
+      />
 
       <!-- Main Content -->
       <div
@@ -47,7 +51,11 @@ onUnmounted(() => {
       </div>
 
       <!-- Overlay for offcanvas menu on mobile -->
-      <div v-if="isSidebarOpen" class="sidebar-overlay d-md-none" @click="isSidebarOpen = false" />
+      <div
+        v-if="isSidebarOpen"
+        class="sidebar-overlay d-md-none"
+        @click="isSidebarOpen = false"
+      />
     </div>
   </div>
 </template>

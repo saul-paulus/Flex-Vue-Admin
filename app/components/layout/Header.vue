@@ -52,7 +52,10 @@ const emit = defineEmits(['toggle-sidebar']);
             <span style="font-size: 1.1rem; line-height: 1">🇺🇸</span>
           </button>
 
-          <div class="vr bg-light mx-1" style="height: 20px; width: 1px" />
+          <div
+            class="vr bg-light mx-1"
+            style="height: 20px; width: 1px"
+          />
 
           <!-- Grid Aplikasi -->
           <button
@@ -70,7 +73,10 @@ const emit = defineEmits(['toggle-sidebar']);
             <i class="bi bi-moon fs-6" />
           </button>
 
-          <div class="vr bg-light mx-1" style="height: 20px; width: 1px" />
+          <div
+            class="vr bg-light mx-1"
+            style="height: 20px; width: 1px"
+          />
 
           <!-- Chat Badge -->
           <button
@@ -127,12 +133,11 @@ const emit = defineEmits(['toggle-sidebar']);
               height="38"
             />
             <div class="d-none d-md-block text-start ms-2 lh-1">
-              <span class="d-block fw-bold" style="color: var(--title-color); font-size: 0.85rem"
-                >John Doe</span
-              >
-              <span style="color: var(--secondary-color-text); font-size: 0.75rem"
-                >Product Admin</span
-              >
+              <span
+                class="d-block fw-bold"
+                style="color: var(--title-color); font-size: 0.85rem"
+              >John Doe</span>
+              <span style="color: var(--secondary-color-text); font-size: 0.75rem">Product Admin</span>
             </div>
             <i
               class="bi bi-chevron-down ms-2 small text-muted d-none d-md-inline"
@@ -160,11 +165,8 @@ const emit = defineEmits(['toggle-sidebar']);
                 <span
                   class="d-block fw-bold"
                   style="color: var(--title-color); font-size: 0.95rem; margin-bottom: 5px"
-                  >John Doe</span
-                >
-                <span style="color: var(--secondary-color-text); font-size: 0.8rem"
-                  >john.doe@example.com</span
-                >
+                >John Doe</span>
+                <span style="color: var(--secondary-color-text); font-size: 0.8rem">john.doe@example.com</span>
               </div>
             </li>
 
@@ -233,7 +235,10 @@ const emit = defineEmits(['toggle-sidebar']);
             </div>
 
             <li>
-              <hr class="dropdown-divider m-0" style="border-color: var(--border); opacity: 1" />
+              <hr
+                class="dropdown-divider m-0"
+                style="border-color: var(--border); opacity: 1"
+              />
             </li>
 
             <!-- Footer Dropdown -->

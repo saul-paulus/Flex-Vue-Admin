@@ -1,22 +1,77 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from 'vue';
 
 const roles = ref([
-  { id: 1, name: 'Administrator', users: 8, icon: 'shield-lock-fill', color: 'danger', desc: 'Full system access with all permissions enabled. Can manage users, roles, and system settings.', created: 'January 1, 2024', modified: 'May 15, 2024' },
-  { id: 2, name: 'Manager', users: 15, icon: 'person-badge-fill', color: 'warning', desc: 'Can manage most system settings and users, but cannot alter roles.', created: 'February 10, 2024', modified: 'May 10, 2024' },
-  { id: 3, name: 'Editor', users: 32, icon: 'pencil-square', color: 'primary', desc: 'Can edit content and manage basic settings.', created: 'March 5, 2024', modified: 'April 20, 2024' },
-  { id: 4, name: 'User', users: 156, icon: 'person-fill', color: 'info', desc: 'Standard user access. Can view and interact with content.', created: 'January 15, 2024', modified: 'May 1, 2024' },
-  { id: 5, name: 'Viewer', users: 45, icon: 'eye-fill', color: 'secondary', desc: 'Read-only access to the system.', created: 'April 1, 2024', modified: 'April 1, 2024' },
-])
+  {
+    id: 1,
+    name: 'Administrator',
+    users: 8,
+    icon: 'shield-lock-fill',
+    color: 'danger',
+    desc: 'Full system access with all permissions enabled. Can manage users, roles, and system settings.',
+    created: 'January 1, 2024',
+    modified: 'May 15, 2024',
+  },
+  {
+    id: 2,
+    name: 'Manager',
+    users: 15,
+    icon: 'person-badge-fill',
+    color: 'warning',
+    desc: 'Can manage most system settings and users, but cannot alter roles.',
+    created: 'February 10, 2024',
+    modified: 'May 10, 2024',
+  },
+  {
+    id: 3,
+    name: 'Editor',
+    users: 32,
+    icon: 'pencil-square',
+    color: 'primary',
+    desc: 'Can edit content and manage basic settings.',
+    created: 'March 5, 2024',
+    modified: 'April 20, 2024',
+  },
+  {
+    id: 4,
+    name: 'User',
+    users: 156,
+    icon: 'person-fill',
+    color: 'info',
+    desc: 'Standard user access. Can view and interact with content.',
+    created: 'January 15, 2024',
+    modified: 'May 1, 2024',
+  },
+  {
+    id: 5,
+    name: 'Viewer',
+    users: 45,
+    icon: 'eye-fill',
+    color: 'secondary',
+    desc: 'Read-only access to the system.',
+    created: 'April 1, 2024',
+    modified: 'April 1, 2024',
+  },
+]);
 
-const activeRole = ref(roles.value[0])
+const activeRole = ref(roles.value[0]);
 
 const permissions = ref([
   {
     category: 'Dashboard',
     icon: 'grid-1x2',
     items: [
-      { name: 'Analytics Dashboard', view: true, create: false, edit: false, delete: false, all: true, c_dash: true, e_dash: true, d_dash: true },
+      {
+        name: 'Analytics Dashboard',
+        view: true,
+        create: false,
+        edit: false,
+        delete: false,
+        all: true,
+        c_dash: true,
+        e_dash: true,
+        d_dash: true,
+      },
       { name: 'Reports', view: true, create: true, edit: true, delete: true, all: true },
     ],
   },
@@ -25,7 +80,14 @@ const permissions = ref([
     icon: 'people',
     items: [
       { name: 'Users', view: true, create: true, edit: true, delete: true, all: true },
-      { name: 'Roles & Permissions', view: true, create: true, edit: true, delete: true, all: true },
+      {
+        name: 'Roles & Permissions',
+        view: true,
+        create: true,
+        edit: true,
+        delete: true,
+        all: true,
+      },
       { name: 'Teams', view: true, create: true, edit: true, delete: true, all: true },
     ],
   },
@@ -52,19 +114,38 @@ const permissions = ref([
     category: 'System Settings',
     icon: 'gear',
     items: [
-      { name: 'General Settings', view: true, create: false, edit: true, delete: false, all: true, c_dash: true, d_dash: true },
+      {
+        name: 'General Settings',
+        view: true,
+        create: false,
+        edit: true,
+        delete: false,
+        all: true,
+        c_dash: true,
+        d_dash: true,
+      },
       { name: 'Email Templates', view: true, create: true, edit: true, delete: true, all: true },
       { name: 'API Keys', view: true, create: true, edit: true, delete: true, all: true },
-      { name: 'Backup & Restore', view: true, create: true, edit: false, delete: true, all: true, e_dash: true },
+      {
+        name: 'Backup & Restore',
+        view: true,
+        create: true,
+        edit: false,
+        delete: true,
+        all: true,
+        e_dash: true,
+      },
     ],
   },
-])
+]);
 </script>
 
 <template>
   <div class="container-fluid py-2">
     <!-- Header -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div
+      class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3"
+    >
       <div>
         <h4
           class="mb-1 fw-bold"
@@ -75,7 +156,7 @@ const permissions = ref([
         <nav aria-label="breadcrumb">
           <ol
             class="breadcrumb mb-0 small"
-            style="font-size: 0.8rem;"
+            style="font-size: 0.8rem"
           >
             <li class="breadcrumb-item">
               <NuxtLink
@@ -93,7 +174,9 @@ const permissions = ref([
         </nav>
       </div>
       <div>
-        <button class="btn bg-teal rounded text-white shadow-sm fw-medium px-3 d-flex align-items-center gap-2">
+        <button
+          class="btn bg-teal rounded text-white shadow-sm fw-medium px-3 d-flex align-items-center gap-2"
+        >
           <i class="bi bi-plus-lg" /> Add Role
         </button>
       </div>
@@ -105,7 +188,7 @@ const permissions = ref([
         <!-- Roles List -->
         <div
           class="card border border-light shadow-sm bg-white"
-          style="border-radius: var(--apple-radius);"
+          style="border-radius: var(--apple-radius)"
         >
           <div class="card-header bg-white border-bottom p-4 pb-3">
             <h6
@@ -122,38 +205,38 @@ const permissions = ref([
                 :key="role.id"
                 class="p-3 border rounded cursor-pointer d-flex align-items-center gap-3 position-relative overflow-hidden role-card"
                 :class="activeRole.id === role.id ? 'active-role' : 'hover-bg-light'"
-                style="transition: all 0.2s ease; cursor: pointer;"
+                style="transition: all 0.2s ease; cursor: pointer"
                 @click="activeRole = role"
               >
                 <!-- Active Indicator -->
                 <div
                   v-if="activeRole.id === role.id"
                   class="position-absolute top-0 bottom-0 start-0 bg-teal-indicator"
-                  style="width: 4px;"
+                  style="width: 4px"
                 />
 
                 <div
                   class="rounded d-flex align-items-center justify-content-center"
                   :class="[`bg-${role.color}-subtle`, `text-${role.color}`]"
-                  style="width: 44px; height: 44px;"
+                  style="width: 44px; height: 44px"
                 >
                   <i
                     class="bi"
-                    style="font-size: 1.15rem;"
+                    style="font-size: 1.15rem"
                     :class="`bi-${role.icon}`"
                   />
                 </div>
                 <div>
                   <div
                     class="fw-bold"
-                    style="font-size: 0.95rem; letter-spacing: 0.2px;"
+                    style="font-size: 0.95rem; letter-spacing: 0.2px"
                     :class="activeRole.id === role.id ? 'text-teal' : 'text-dark'"
                   >
                     {{ role.name }}
                   </div>
                   <div
                     class="text-muted"
-                    style="font-size: 0.8rem;"
+                    style="font-size: 0.8rem"
                   >
                     {{ role.users }} users
                   </div>
@@ -166,7 +249,7 @@ const permissions = ref([
         <!-- Role Details -->
         <div
           class="card border border-light shadow-sm bg-white"
-          style="border-radius: var(--apple-radius);"
+          style="border-radius: var(--apple-radius)"
         >
           <div class="card-header bg-white border-bottom p-4 pb-3">
             <h6
@@ -180,13 +263,13 @@ const permissions = ref([
             <div>
               <div
                 class="text-muted small text-uppercase fw-bold letter-spacing-1 mb-1"
-                style="font-size: 0.65rem;"
+                style="font-size: 0.65rem"
               >
                 NAME
               </div>
               <div
                 class="fw-medium text-dark"
-                style="font-size: 0.85rem;"
+                style="font-size: 0.85rem"
               >
                 {{ activeRole.name }}
               </div>
@@ -194,13 +277,13 @@ const permissions = ref([
             <div>
               <div
                 class="text-muted small text-uppercase fw-bold letter-spacing-1 mb-1"
-                style="font-size: 0.65rem;"
+                style="font-size: 0.65rem"
               >
                 DESCRIPTION
               </div>
               <div
                 class="text-dark"
-                style="font-size: 0.85rem; line-height: 1.6;"
+                style="font-size: 0.85rem; line-height: 1.6"
               >
                 {{ activeRole.desc }}
               </div>
@@ -208,13 +291,13 @@ const permissions = ref([
             <div>
               <div
                 class="text-muted small text-uppercase fw-bold letter-spacing-1 mb-1"
-                style="font-size: 0.65rem;"
+                style="font-size: 0.65rem"
               >
                 CREATED
               </div>
               <div
                 class="text-dark"
-                style="font-size: 0.85rem;"
+                style="font-size: 0.85rem"
               >
                 {{ activeRole.created }}
               </div>
@@ -222,13 +305,13 @@ const permissions = ref([
             <div>
               <div
                 class="text-muted small text-uppercase fw-bold letter-spacing-1 mb-1"
-                style="font-size: 0.65rem;"
+                style="font-size: 0.65rem"
               >
                 LAST MODIFIED
               </div>
               <div
                 class="text-dark"
-                style="font-size: 0.85rem;"
+                style="font-size: 0.85rem"
               >
                 {{ activeRole.modified }}
               </div>
@@ -242,10 +325,12 @@ const permissions = ref([
         <!-- Permissions Matrix Card -->
         <div
           class="card border border-light shadow-sm bg-white"
-          style="border-radius: var(--apple-radius);"
+          style="border-radius: var(--apple-radius)"
         >
           <div class="card-header bg-white border-bottom p-4">
-            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+            <div
+              class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3"
+            >
               <div>
                 <h6
                   class="fw-bold mb-1"
@@ -255,14 +340,14 @@ const permissions = ref([
                 </h6>
                 <div
                   class="text-muted small"
-                  style="font-size: 0.8rem;"
+                  style="font-size: 0.8rem"
                 >
                   Configure access for {{ activeRole.name }} role
                 </div>
               </div>
               <button
                 class="btn bg-teal rounded text-white shadow-sm fw-medium px-3 d-flex align-items-center gap-2"
-                style="font-size: 0.9rem;"
+                style="font-size: 0.9rem"
               >
                 <i class="bi bi-check2" /> Save Changes
               </button>
@@ -273,48 +358,48 @@ const permissions = ref([
             <table class="table align-middle mb-0 text-nowrap">
               <thead
                 class="bg-light text-muted"
-                style="font-size: 0.75rem; letter-spacing: 0.5px;"
+                style="font-size: 0.75rem; letter-spacing: 0.5px"
               >
                 <tr>
                   <th
                     scope="col"
                     class="py-3 ps-4 border-0 fw-bold w-50"
-                    style="background-color: var(--zebra);"
+                    style="background-color: var(--zebra)"
                   >
                     MODULE
                   </th>
                   <th
                     scope="col"
                     class="py-3 border-0 fw-bold text-center"
-                    style="background-color: var(--zebra);"
+                    style="background-color: var(--zebra)"
                   >
                     VIEW
                   </th>
                   <th
                     scope="col"
                     class="py-3 border-0 fw-bold text-center"
-                    style="background-color: var(--zebra);"
+                    style="background-color: var(--zebra)"
                   >
                     CREATE
                   </th>
                   <th
                     scope="col"
                     class="py-3 border-0 fw-bold text-center"
-                    style="background-color: var(--zebra);"
+                    style="background-color: var(--zebra)"
                   >
                     EDIT
                   </th>
                   <th
                     scope="col"
                     class="py-3 border-0 fw-bold text-center"
-                    style="background-color: var(--zebra);"
+                    style="background-color: var(--zebra)"
                   >
                     DELETE
                   </th>
                   <th
                     scope="col"
                     class="py-3 pe-4 border-0 fw-bold text-center"
-                    style="background-color: var(--zebra);"
+                    style="background-color: var(--zebra)"
                   >
                     ALL
                   </th>
@@ -330,12 +415,13 @@ const permissions = ref([
                     <td
                       colspan="6"
                       class="py-2 ps-4 fw-bolder text-dark"
-                      style="font-size: 0.8rem; background-color: var(--muted-bg);"
+                      style="font-size: 0.8rem; background-color: var(--muted-bg)"
                     >
                       <i
                         class="bi me-2 text-muted"
                         :class="`bi-${group.icon}`"
-                      /> {{ group.category }}
+                      />
+                      {{ group.category }}
                     </td>
                   </tr>
 
@@ -346,7 +432,7 @@ const permissions = ref([
                   >
                     <td
                       class="ps-4 py-3 text-dark"
-                      style="font-size: 0.85rem;"
+                      style="font-size: 0.85rem"
                     >
                       {{ item.name }}
                     </td>
@@ -363,7 +449,7 @@ const permissions = ref([
                       <i
                         v-else
                         class="bi bi-circle text-muted"
-                        style="opacity: 0.3;"
+                        style="opacity: 0.3"
                       />
                     </td>
 
@@ -379,7 +465,7 @@ const permissions = ref([
                       <i
                         v-else
                         class="bi bi-circle text-muted"
-                        style="opacity: 0.3;"
+                        style="opacity: 0.3"
                       />
                     </td>
 
@@ -395,7 +481,7 @@ const permissions = ref([
                       <i
                         v-else
                         class="bi bi-circle text-muted"
-                        style="opacity: 0.3;"
+                        style="opacity: 0.3"
                       />
                     </td>
 
@@ -411,7 +497,7 @@ const permissions = ref([
                       <i
                         v-else
                         class="bi bi-circle text-muted"
-                        style="opacity: 0.3;"
+                        style="opacity: 0.3"
                       />
                     </td>
 
@@ -427,7 +513,7 @@ const permissions = ref([
                       <i
                         v-else
                         class="bi bi-circle text-muted"
-                        style="opacity: 0.3;"
+                        style="opacity: 0.3"
                       />
                     </td>
                   </tr>
@@ -440,9 +526,11 @@ const permissions = ref([
         <!-- Bottom Partial Card (Users with this role) -->
         <div
           class="card border border-light shadow-sm bg-white"
-          style="border-radius: var(--apple-radius);"
+          style="border-radius: var(--apple-radius)"
         >
-          <div class="card-header bg-white border-bottom p-4 pb-3 d-flex justify-content-between align-items-center">
+          <div
+            class="card-header bg-white border-bottom p-4 pb-3 d-flex justify-content-between align-items-center"
+          >
             <h6
               class="fw-bold mb-0"
               style="color: var(--title-color)"
@@ -451,12 +539,12 @@ const permissions = ref([
             </h6>
             <span
               class="text-muted"
-              style="font-size: 0.8rem;"
+              style="font-size: 0.8rem"
             >{{ activeRole.users }} users</span>
           </div>
           <div
             class="card-body p-4 text-center text-muted"
-            style="font-size: 0.85rem;"
+            style="font-size: 0.85rem"
           >
             User list associated with this role will appear here in production.
           </div>
@@ -467,23 +555,33 @@ const permissions = ref([
 </template>
 
 <style scoped>
-/* Mockup Specific Accents */
-.text-teal { color: #0d9488 !important; }
-.bg-teal { background-color: #0d9488 !important; color: white !important; }
-.bg-teal:hover { background-color: #0f766e !important; color: white !important; }
-.bg-teal-indicator { background-color: #14b8a6 !important; }
+  /* Mockup Specific Accents */
+  .text-teal {
+    color: #0d9488 !important;
+  }
+  .bg-teal {
+    background-color: #0d9488 !important;
+    color: white !important;
+  }
+  .bg-teal:hover {
+    background-color: #0f766e !important;
+    color: white !important;
+  }
+  .bg-teal-indicator {
+    background-color: #14b8a6 !important;
+  }
 
-.active-role {
-  border-color: #ccfbf1 !important; /* light teal border */
-  background-color: #f0fdfa !important; /* very light teal bg */
-}
-.hover-bg-light:hover {
-  background-color: var(--row-hover);
-}
-.card {
-  transition: box-shadow 0.2s ease;
-}
-.card:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
-}
+  .active-role {
+    border-color: #ccfbf1 !important; /* light teal border */
+    background-color: #f0fdfa !important; /* very light teal bg */
+  }
+  .hover-bg-light:hover {
+    background-color: var(--row-hover);
+  }
+  .card {
+    transition: box-shadow 0.2s ease;
+  }
+  .card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+  }
 </style>

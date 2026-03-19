@@ -8,5 +8,5 @@
 </template>
 
 <style scoped>
-/* Any global layout-level overrides for auth pages could go here */
+  /* Any global layout-level overrides for auth pages could go here */
 </style>

@@ -2,9 +2,7 @@
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
-defineProps<{
-  isOpen: boolean;
-}>();
+defineProps({ isOpen: Boolean });
 
 const emit = defineEmits(['close']);
 const route = useRoute();
@@ -18,11 +16,12 @@ watch(
   (newPath) => {
     if (newPath.startsWith('/users')) {
       openMenu.value = 'users';
-    } else {
+    }
+    else {
       // If navigating to Dashboard or others, close the accordion
       openMenu.value = null;
     }
-  }
+  },
 );
 
 const toggleMenu = (menu: string) => {
@@ -33,7 +32,7 @@ const toggleMenu = (menu: string) => {
 <template>
   <aside
     class="sidebar bg-white border-end d-flex flex-column shadow-sm"
-    :class="{ show: isOpen, 'hide-desktop': !isOpen }"
+    :class="{ 'show': isOpen, 'hide-desktop': !isOpen }"
   >
     <!-- Navigation -->
     <div class="sidebar-nav flex-grow-1 overflow-auto py-3">
@@ -51,15 +50,13 @@ const toggleMenu = (menu: string) => {
             <span
               class="badge rounded-pill fs-60 shadow-sm"
               :class="$route.path === '/' ? 'bg-white text-primary' : 'bg-primary text-white'"
-              >MAIN</span
-            >
+            >MAIN</span>
           </NuxtLink>
         </li>
 
         <li class="nav-item px-3 mb-1 mt-2">
           <a
             href="#"
-            @click.prevent="toggleMenu('users')"
             class="nav-link menu-link rounded px-3 py-2 d-flex align-items-center justify-content-between"
             :class="
               $route.path.startsWith('/users')
@@ -67,6 +64,7 @@ const toggleMenu = (menu: string) => {
                 : 'text-muted'
             "
             style="transition: all 0.2s ease"
+            @click.prevent="toggleMenu('users')"
           >
             <div class="d-flex align-items-center gap-3"><i class="bi bi-people" /> Users</div>
             <i
@@ -76,8 +74,8 @@ const toggleMenu = (menu: string) => {
           </a>
           <!-- Submenu Container -->
           <ul
-            class="nav flex-column ms-4 mt-2 pe-3 gap-1 submenu-list"
             v-show="openMenu === 'users'"
+            class="nav flex-column ms-4 mt-2 pe-3 gap-1 submenu-list"
             style="border-left: 1px solid var(--border)"
           >
             <li class="nav-item">
@@ -240,8 +238,12 @@ const toggleMenu = (menu: string) => {
         />
         <div class="w-100 d-flex justify-content-between align-items-center">
           <div>
-            <h6 class="mb-0 fw-bold fs-80">John Doe</h6>
-            <div class="text-muted text-uppercase fs-65">PRODUCT ADMIN</div>
+            <h6 class="mb-0 fw-bold fs-80">
+              John Doe
+            </h6>
+            <div class="text-muted text-uppercase fs-65">
+              PRODUCT ADMIN
+            </div>
           </div>
           <button class="btn btn-sm btn-link text-muted p-0 border-0">
             <i class="bi bi-box-arrow-right" />

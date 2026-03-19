@@ -1,7 +1,52 @@
 <script setup lang="ts">
 definePageMeta({
   layout: 'auth',
-})
+});
+
+const payloadCredential = reactive({
+  id_personal: '',
+  password: '',
+});
+const rememberMe = ref(false);
+const isLoading = ref(false);
+const isFormValidated = ref(false);
+const errorMessages = ref(''); // Added based on the instruction's usage
+
+const authStore = useAuthStore();
+const router = useRouter();
+
+const handleAuthLogin = async (event: Event) => {
+  const form = event.target as HTMLFormElement;
+
+  // Jika masih ada input yang kosong, hentikan Submit dan munculkan teks merah
+  if (!form.checkValidity()) {
+    isFormValidated.value = true;
+    return;
+  }
+
+  // Bersihkan error lama dan jalankan spinner loading
+  isFormValidated.value = false;
+  errorMessages.value = '';
+  isLoading.value = true;
+
+  try {
+    // Memanggil API login dari Backend melalui aksi Pinia
+    await authStore.login({
+      id_personal: payloadCredential.id_personal,
+      password: payloadCredential.password,
+    });
+
+    // Navigasi ke Home / Dashboard jika backend sukses
+    router.push('/');
+  }
+  catch (error) {
+    // Tampilkan pesan JSON.message milik Backend ke dalam kotak merah alert HTML
+    errorMessages.value = String(error);
+  }
+  finally {
+    isLoading.value = false;
+  }
+};
 </script>
 
 <template>
@@ -19,12 +64,7 @@ definePageMeta({
         </h4>
         <span
           class="badge rounded-pill fw-bold ms-2"
-          style="
-            background-color: rgba(255, 255, 255, 0.15);
-            color: #fff;
-            font-size: 0.6rem;
-            letter-spacing: 0.5px;
-          "
+          style="background-color: rgba(255, 255, 255, 0.15); color: #fff; font-size: 0.6rem; letter-spacing: 0.5px"
         >WORKSPACE INTELLIGENCE</span>
       </div>
 
@@ -40,8 +80,7 @@ definePageMeta({
           class="mb-5"
           style="max-width: 400px; line-height: 1.6; font-size: 0.95rem; opacity: 0.85"
         >
-          Track growth, team activity, and operational risk with a dashboard built for fast
-          decisions.
+          Track growth, team activity, and operational risk with a dashboard built for fast decisions.
         </p>
 
         <!-- Feature List -->
@@ -115,21 +154,30 @@ definePageMeta({
                 Sign in to continue to your niceAdmin workspace.
               </p>
             </div>
-
             <!-- Card Form -->
-            <form @submit.prevent>
+            <form
+              class="needs-validation"
+              :class="{ 'was-validated': isFormValidated }"
+              novalidate
+              @submit.prevent="handleAuthLogin"
+            >
               <!-- Email -->
               <div class="mb-3">
                 <label
                   class="form-label fw-bold small mb-1"
                   style="color: var(--secondary-color-text)"
-                >Email address</label>
+                >Id Personal</label>
                 <input
-                  type="email"
+                  v-model="payloadCredential.id_personal"
+                  type="text"
                   class="form-control form-control-lg border-light bg-light custom-input"
-                  placeholder="name@example.com"
+                  placeholder="00710XXXX"
                   required
-                >
+                />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  <span>Please enter a valid Id Personal</span>
+                </div>
               </div>
 
               <!-- Password -->
@@ -146,11 +194,12 @@ definePageMeta({
                 </div>
                 <div class="input-group">
                   <input
+                    v-model="payloadCredential.password"
                     type="password"
                     class="form-control form-control-lg border-light border-end-0 bg-light custom-input"
                     placeholder="Enter your password"
                     required
-                  >
+                  />
                   <button
                     class="btn border-light border-start-0 bg-light text-muted px-3"
                     type="button"
@@ -158,6 +207,10 @@ definePageMeta({
                   >
                     <i class="bi bi-eye" />
                   </button>
+                  <div class="invalid-feedback">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    <span>Please enter your password</span>
+                  </div>
                 </div>
               </div>
 
@@ -166,15 +219,19 @@ definePageMeta({
                 <div class="form-check mb-0">
                   <input
                     id="rememberMe"
+                    v-model="rememberMe"
                     class="form-check-input"
                     type="checkbox"
-                  >
+                    required
+                  />
                   <label
                     class="form-check-label small text-muted pt-1"
                     for="rememberMe"
-                  >
-                    Remember me
-                  </label>
+                  > Remember me </label>
+                  <div class="invalid-feedback mt-2">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    <span>Please check remember me</span>
+                  </div>
                 </div>
                 <a
                   href="#"
@@ -183,30 +240,42 @@ definePageMeta({
               </div>
 
               <!-- Submit Button -->
-              <button
-                class="btn text-white w-100 py-3 mb-4 fw-medium shadow-sm rounded-3 btn-accent"
-                type="submit"
-                style="font-size: 0.95rem; letter-spacing: 0.3px"
-              >
-                Sign In
-              </button>
+              <div class="mb-1">
+                <button
+                  v-if="!isLoading"
+                  class="btn btn-sm text-white w-100 py-3 mb-4 fw-medium shadow-sm rounded-3 btn-accent"
+                  type="submit"
+                >
+                  Sign In
+                </button>
+                <button
+                  v-else
+                  type="submit"
+                  class="btn btn-sm text-white w-100 py-3 mb-4 fw-medium shadow-sm rounded-3 btn-accent"
+                  disabled
+                >
+                  <span
+                    class="spinner-border spinner-border-sm me-2"
+                    aria-hidden="true"
+                  ></span>
+                  Loading...
+                </button>
+              </div>
 
               <!-- Divider -->
               <div class="d-flex align-items-center mb-4">
-                <hr class="flex-grow-1 border-light">
+                <hr class="flex-grow-1 border-light" />
                 <span
                   class="px-3 small text-muted"
                   style="font-size: 0.75rem"
                 >or continue with</span>
-                <hr class="flex-grow-1 border-light">
+                <hr class="flex-grow-1 border-light" />
               </div>
 
               <!-- Social Logins -->
               <div class="row g-3 mb-4">
                 <div class="col-6">
-                  <button
-                    class="btn btn-white border w-100 text-dark fw-medium d-flex align-items-center justify-content-center gap-2 py-2 btn-social"
-                  >
+                  <button class="btn btn-white border w-100 text-dark fw-medium d-flex align-items-center justify-content-center gap-2 py-2 btn-social">
                     <i class="bi bi-google text-danger" />
                     <span
                       class="small"
@@ -215,9 +284,7 @@ definePageMeta({
                   </button>
                 </div>
                 <div class="col-6">
-                  <button
-                    class="btn btn-white border w-100 text-dark fw-medium d-flex align-items-center justify-content-center gap-2 py-2 btn-social"
-                  >
+                  <button class="btn btn-white border w-100 text-dark fw-medium d-flex align-items-center justify-content-center gap-2 py-2 btn-social">
                     <i class="bi bi-github" />
                     <span
                       class="small"
