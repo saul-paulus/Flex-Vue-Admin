@@ -32,7 +32,7 @@ const handleAuthLogin = async (event: Event) => {
   isLoading.value = true;
 
   try {
-    await authStore.login(payloadCredential.id_personal, payloadCredential.password);
+    await authStore.fetchAuthlogin(payloadCredential);
 
     // Navigasi ke Home / Dashboard jika backend sukses
     router.push('/');
@@ -123,6 +123,29 @@ const handleAuthLogin = async (event: Event) => {
               <p class="text-muted small" style="font-size: 0.85rem">
                 Sign in to continue to your niceAdmin workspace.
               </p>
+            </div>
+            <!-- Error Alert -->
+            <div
+              v-if="errorMessages"
+              class="alert alert-danger alert-dismissible fade show border-0 mb-4 shadow-sm"
+              role="alert"
+              style="
+                border-radius: var(--apple-radius, 12px);
+                background-color: rgba(220, 38, 38, 0.05);
+                color: #dc2626;
+              "
+            >
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                <div class="small fw-medium">{{ errorMessages }}</div>
+              </div>
+              <button
+                type="button"
+                class="btn-close small"
+                style="font-size: 0.75rem"
+                aria-label="Close"
+                @click="errorMessages = ''"
+              ></button>
             </div>
             <!-- Card Form -->
             <form

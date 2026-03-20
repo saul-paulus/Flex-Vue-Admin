@@ -1,30 +1,26 @@
 import { defineStore } from 'pinia';
 import type { AuthUser } from '~/domain/entities/Auth';
-import { tokenStorage } from '~/infrastructure/storage/tokenStorage';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: tokenStorage.token || (null as string | null),
-    user: null as AuthUser | null,
+    token: null as string | null | undefined,
+    user: null as AuthUser | null | undefined,
   }),
+  persist: true,
 
   actions: {
-    async login(id_personal: string, password: string) {
+    async fetchAuthlogin(payload: { id_personal: string; password: string }) {
       const { $authRepository } = useNuxtApp();
 
-      const result = await $authRepository.login({ id_personal, password });
+      const result = await $authRepository.login(payload);
+      const token = result.data.access_token;
 
-      this.token = result;
-      tokenStorage.token = result;
-    },
-
-    clearToken() {
-      this.token = null;
-      tokenStorage.clear();
+      this.token = token;
+      this.user = result.data.user;
     },
 
     logout() {
-      this.clearToken();
+      this.token = null;
       this.user = null;
     },
   },

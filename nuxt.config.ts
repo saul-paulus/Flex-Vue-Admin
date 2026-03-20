@@ -1,10 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@pinia/nuxt', '@nuxt/test-utils/module'],
+  modules: ['@nuxt/eslint', '@pinia/nuxt', '@nuxt/test-utils/module', 'pinia-plugin-persistedstate/nuxt'],
   devtools: { enabled: true },
   app: {
     head: {
-      title: 'BGI | SMPM',
+      title: 'Template | niceAdmin',
       meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1' }, { charset: 'utf-8' }],
       htmlAttrs: { lang: 'en' },
       link: [
@@ -53,8 +53,9 @@ export default defineNuxtConfig({
       stylistic: {
         indent: 2,
         quotes: 'single',
-        semi: true, // <-- Ubah ke TRUE agar sinkron dengan Prettier
+        semi: true,
       },
     },
   },
+  // runtimeConfig: {public: {apiBase: import.meta.env.VITE_API_BASE_URL}}
 });
