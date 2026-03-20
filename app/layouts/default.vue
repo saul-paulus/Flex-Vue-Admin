@@ -27,7 +27,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="admin-layout text-dark">
+  <div class="admin-layout text-dark" :class="{ 'sidebar-collapsed': !isSidebarOpen }">
     <!-- Header Full Width -->
     <LayoutHeader @toggle-sidebar="toggleSidebar" />
 
@@ -36,15 +36,14 @@ onUnmounted(() => {
       <LayoutSidebar :is-open="isSidebarOpen" @close="isSidebarOpen = false" />
 
       <!-- Main Content -->
-      <div class="main-content flex-grow-1 bg-light" :class="{ 'sidebar-collapsed': !isSidebarOpen }">
+      <div class="main-content flex-grow-1">
         <!-- Content Area -->
-        <main class="content-wrapper p-3 p-md-4">
+        <main class="h-100">
           <slot />
         </main>
       </div>
 
-      <!-- Overlay for offcanvas menu on mobile -->
-      <div v-if="isSidebarOpen" class="sidebar-overlay d-md-none" @click="isSidebarOpen = false" />
+      <div class="sidebar-overlay d-lg-none" :class="{ show: isSidebarOpen }" @click="isSidebarOpen = false" />
     </div>
   </div>
 </template>

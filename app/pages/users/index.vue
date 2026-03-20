@@ -102,22 +102,16 @@ const getStatusIconClass = (status: string) => {
     <!-- Header Page -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
       <div>
-        <h4 class="mb-1 fw-bold" style="color: var(--title-color)">People Directory</h4>
-        <p class="mb-0 small" style="color: var(--secondary-color-text)">
-          Centralized user operations, access status, and lifecycle management.
-        </p>
+        <h4 class="mb-1 fw-bold text-primary">People Directory</h4>
+        <p class="mb-0 small text-secondary">Centralized user operations, access status, and lifecycle management.</p>
       </div>
       <div class="d-flex gap-2">
         <button
-          class="btn btn-white border bg-white shadow-sm fw-medium px-3 d-flex align-items-center gap-2"
-          style="color: var(--title-color)"
+          class="btn btn-white border bg-elevated shadow-sm fw-medium px-3 d-flex align-items-center gap-2 text-primary"
         >
           <i class="bi bi-box-arrow-down text-muted" /> Export
         </button>
-        <button
-          class="btn btn-primary shadow-sm fw-medium px-3 d-flex align-items-center gap-2"
-          style="background-color: var(--apple-blue); border-color: var(--apple-blue)"
-        >
+        <button class="btn btn-primary shadow-sm fw-medium px-3 d-flex align-items-center gap-2">
           <i class="bi bi-plus-lg" /> Add User
         </button>
       </div>
@@ -127,16 +121,13 @@ const getStatusIconClass = (status: string) => {
     <div class="row g-4 mb-4">
       <!-- Total Users -->
       <div class="col-12 col-md-6 col-xl-3">
-        <div class="card border border-light shadow-sm h-100 bg-white" style="border-radius: var(--apple-radius)">
+        <div class="card shadow-sm h-100 rounded-md">
           <div class="card-body p-3 p-md-4 position-relative">
-            <div
-              class="small mb-1 text-uppercase fw-bold letter-spacing-1"
-              style="color: var(--secondary-color-text); font-size: 0.7rem"
-            >
+            <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
               TOTAL USERS
             </div>
-            <h3 class="fw-bolder mb-1" style="color: var(--title-color)">248</h3>
-            <span class="small" style="color: var(--secondary-color-text)">+18 this month</span>
+            <h3 class="fw-bolder mb-1 text-primary">248</h3>
+            <span class="small text-secondary">+18 this month</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
               <div
                 class="bg-primary-subtle text-primary rounded d-flex align-items-center justify-content-center"
@@ -151,16 +142,13 @@ const getStatusIconClass = (status: string) => {
 
       <!-- Active -->
       <div class="col-12 col-md-6 col-xl-3">
-        <div class="card border border-light shadow-sm h-100 bg-white" style="border-radius: var(--apple-radius)">
+        <div class="card shadow-sm h-100 rounded-md">
           <div class="card-body p-3 p-md-4 position-relative">
-            <div
-              class="small mb-1 text-uppercase fw-bold letter-spacing-1"
-              style="color: var(--secondary-color-text); font-size: 0.7rem"
-            >
+            <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
               ACTIVE
             </div>
-            <h3 class="fw-bolder mb-1" style="color: var(--title-color)">186</h3>
-            <span class="small" style="color: var(--secondary-color-text)">75% engagement</span>
+            <h3 class="fw-bolder mb-1 text-primary">186</h3>
+            <span class="small text-secondary">75% engagement</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
               <div
                 class="bg-success-subtle text-success rounded d-flex align-items-center justify-content-center"
@@ -175,16 +163,13 @@ const getStatusIconClass = (status: string) => {
 
       <!-- Pending -->
       <div class="col-12 col-md-6 col-xl-3">
-        <div class="card border border-light shadow-sm h-100 bg-white" style="border-radius: var(--apple-radius)">
+        <div class="card shadow-sm h-100 rounded-md">
           <div class="card-body p-3 p-md-4 position-relative">
-            <div
-              class="small mb-1 text-uppercase fw-bold letter-spacing-1"
-              style="color: var(--secondary-color-text); font-size: 0.7rem"
-            >
+            <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
               PENDING
             </div>
-            <h3 class="fw-bolder mb-1" style="color: var(--title-color)">24</h3>
-            <span class="small" style="color: var(--secondary-color-text)">Needs onboarding</span>
+            <h3 class="fw-bolder mb-1 text-primary">24</h3>
+            <span class="small text-secondary">Needs onboarding</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
               <div
                 class="bg-warning-subtle text-warning rounded d-flex align-items-center justify-content-center"
@@ -199,16 +184,13 @@ const getStatusIconClass = (status: string) => {
 
       <!-- Inactive -->
       <div class="col-12 col-md-6 col-xl-3">
-        <div class="card border border-light shadow-sm h-100 bg-white" style="border-radius: var(--apple-radius)">
+        <div class="card shadow-sm h-100 rounded-md">
           <div class="card-body p-3 p-md-4 position-relative">
-            <div
-              class="small mb-1 text-uppercase fw-bold letter-spacing-1"
-              style="color: var(--secondary-color-text); font-size: 0.7rem"
-            >
+            <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
               INACTIVE
             </div>
-            <h3 class="fw-bolder mb-1" style="color: var(--title-color)">38</h3>
-            <span class="small" style="color: var(--secondary-color-text)">Follow up required</span>
+            <h3 class="fw-bolder mb-1 text-primary">38</h3>
+            <span class="small text-secondary">Follow up required</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
               <div
                 class="bg-danger-subtle text-danger rounded d-flex align-items-center justify-content-center"
@@ -223,76 +205,61 @@ const getStatusIconClass = (status: string) => {
     </div>
 
     <!-- Data Table Card -->
-    <div class="card border border-light shadow-sm" style="border-radius: var(--apple-radius)">
-      <div class="card-header bg-white border-bottom p-3">
+    <div class="card shadow-sm rounded-md">
+      <div class="card-header border-bottom p-3">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
           <!-- Tabs/Pills -->
           <ul class="nav nav-pills custom-pills mb-0" style="gap: 5px">
             <li class="nav-item">
-              <a
-                class="nav-link active py-2 fw-medium px-3 d-flex align-items-center gap-1"
-                href="#"
-                style="font-size: 0.85rem"
-              >
+              <a class="nav-link active py-2 fw-medium px-3 d-flex align-items-center gap-1 fs-sm" href="#">
                 All
-                <span class="badge bg-secondary-subtle text-secondary rounded-pill ms-1" style="font-size: 0.7rem"
-                  >248</span
-                >
+                <span class="badge bg-secondary-subtle text-secondary rounded-pill ms-1 fs-xs">248</span>
               </a>
             </li>
             <li class="nav-item">
               <a
-                class="nav-link py-2 text-muted fw-medium px-3 text-hover-dark d-flex align-items-center gap-1"
+                class="nav-link py-2 text-muted fw-medium px-3 text-hover-dark d-flex align-items-center gap-1 fs-sm"
                 href="#"
-                style="font-size: 0.85rem"
               >
                 Active
-                <span class="badge bg-secondary-subtle text-secondary rounded-pill ms-1" style="font-size: 0.7rem"
-                  >186</span
-                >
+                <span class="badge bg-secondary-subtle text-secondary rounded-pill ms-1 fs-xs">186</span>
               </a>
             </li>
             <li class="nav-item">
               <a
-                class="nav-link py-2 text-muted fw-medium px-3 text-hover-dark d-flex align-items-center gap-1"
+                class="nav-link py-2 text-muted fw-medium px-3 text-hover-dark d-flex align-items-center gap-1 fs-sm"
                 href="#"
-                style="font-size: 0.85rem"
               >
                 Pending
-                <span class="badge bg-secondary-subtle text-secondary rounded-pill ms-1" style="font-size: 0.7rem"
-                  >24</span
-                >
+                <span class="badge bg-secondary-subtle text-secondary rounded-pill ms-1 fs-xs">24</span>
               </a>
             </li>
             <li class="nav-item">
               <a
-                class="nav-link py-2 text-muted fw-medium px-3 text-hover-dark d-flex align-items-center gap-1"
+                class="nav-link py-2 text-muted fw-medium px-3 text-hover-dark d-flex align-items-center gap-1 fs-sm"
                 href="#"
-                style="font-size: 0.85rem"
               >
                 Inactive
-                <span class="badge bg-secondary-subtle text-secondary rounded-pill ms-1" style="font-size: 0.7rem"
-                  >38</span
-                >
+                <span class="badge bg-secondary-subtle text-secondary rounded-pill ms-1 fs-xs">38</span>
               </a>
             </li>
           </ul>
 
           <!-- Filter & Search -->
           <div class="d-flex align-items-center gap-2">
-            <div class="input-group input-group-sm border rounded bg-white shadow-sm" style="width: 250px">
-              <span class="input-group-text bg-white border-0 text-muted"><i class="bi bi-search" /></span>
+            <div class="input-group input-group-sm border rounded bg-elevated shadow-sm" style="width: 250px">
+              <span class="input-group-text bg-elevated border-0 text-muted"><i class="bi bi-search" /></span>
               <input
                 type="text"
-                class="form-control border-0 shadow-none ps-0 bg-transparent"
+                class="form-control border-0 shadow-none ps-0 bg-transparent text-primary"
                 placeholder="Search users, email, role..."
               />
             </div>
 
             <button
-              class="btn btn-sm btn-white border bg-white text-dark d-flex align-items-center shadow-sm gap-2 px-3"
+              class="btn btn-sm btn-white border bg-elevated text-primary d-flex align-items-center shadow-sm gap-2 px-3"
             >
-              <i class="bi bi-funnel" /> Role
+              <i class="bi bi-funnel text-muted" /> Role
             </button>
           </div>
         </div>

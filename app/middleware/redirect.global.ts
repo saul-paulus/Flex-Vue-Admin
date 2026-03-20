@@ -4,7 +4,7 @@ export default defineNuxtRouteMiddleware((to) => {
   const authStore = useAuthStore();
 
   // Redirect to login if not authenticated and not on login page
-  if (!authStore.token && to.path !== '/auth/login') {
+  if (!authStore.token && !authStore.user && to.path !== '/auth/login') {
     return navigateTo('/auth/login');
   }
 

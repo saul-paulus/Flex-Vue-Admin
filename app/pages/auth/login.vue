@@ -11,6 +11,7 @@ const payloadCredential = reactive({
   password: '',
 });
 const rememberMe = ref(false);
+const showPassword = ref(false);
 const isLoading = ref(false);
 const isFormValidated = ref(false);
 const errorMessages = ref('');
@@ -20,24 +21,19 @@ const router = useRouter();
 const handleAuthLogin = async (event: Event) => {
   const form = event.target as HTMLFormElement;
 
-  // Jika masih ada input yang kosong, hentikan Submit dan munculkan teks merah
   if (!form.checkValidity()) {
     isFormValidated.value = true;
     return;
   }
 
-  // Bersihkan error lama dan jalankan spinner loading
   isFormValidated.value = false;
   errorMessages.value = '';
   isLoading.value = true;
 
   try {
     await authStore.fetchAuthlogin(payloadCredential);
-
-    // Navigasi ke Home / Dashboard jika backend sukses
     router.push('/');
   } catch (error: any) {
-    // Tampilkan pesan error ke dalam kotak merah alert HTML
     errorMessages.value = error?.data?.message || error?.message || String(error);
   } finally {
     isLoading.value = false;
@@ -47,175 +43,150 @@ const handleAuthLogin = async (event: Event) => {
 
 <template>
   <div class="row g-0 vh-100 overflow-hidden">
-    <!-- Left Column: Branding (Hidden on small screens) -->
+    <!-- Left Column: Branding -->
     <div
-      class="col-lg-5 col-xl-4 d-none d-lg-flex flex-column text-white p-5 position-relative"
-      style="background-color: var(--primary-color-1)"
+      class="col-lg-5 col-xl-4 d-none d-lg-flex flex-column text-white p-4 position-relative overflow-hidden"
+      style="background: linear-gradient(135deg, #020202 0%, #0a0a0c 100%)"
     >
-      <!-- Brand Logo -->
-      <div class="mb-5 d-flex align-items-center gap-2">
-        <i class="bi bi-heptagon-half fs-4" />
-        <h4 class="mb-0 fw-bold letter-spacing-1">niceAdmin</h4>
+      <div class="mb-5 d-flex align-items-center gap-2 position-relative" style="z-index: 2">
+        <i class="bi bi-heptagon-half fs-5" />
+        <h5 class="mb-0 fw-bold letter-spacing-1">niceAdmin</h5>
         <span
-          class="badge rounded-pill fw-bold ms-2"
-          style="background-color: rgba(255, 255, 255, 0.15); color: #fff; font-size: 0.6rem; letter-spacing: 0.5px"
-          >WORKSPACE INTELLIGENCE</span
+          class="badge rounded-pill fw-bold ms-2 bg-white bg-opacity-10 text-white border-0 fs-xs"
+          style="letter-spacing: 0.5px"
+          >PRO</span
         >
       </div>
 
-      <!-- Left Text Content -->
-      <div class="mt-auto mb-auto pe-4">
-        <h1 class="fw-bolder mb-4" style="line-height: 1.25; font-size: 2.2rem">
+      <div class="mt-auto mb-auto pe-4 position-relative" style="z-index: 2">
+        <h2 class="fw-bolder mb-3" style="line-height: 1.25; font-size: 1.8rem">
           Command your operations from one modern control center.
-        </h1>
-        <p class="mb-5" style="max-width: 400px; line-height: 1.6; font-size: 0.95rem; opacity: 0.85">
+        </h2>
+        <p class="mb-4 text-white text-opacity-75 small" style="max-width: 380px; line-height: 1.6">
           Track growth, team activity, and operational risk with a dashboard built for fast decisions.
         </p>
 
-        <!-- Feature List -->
-        <ul class="list-unstyled d-flex flex-column gap-3 small" style="opacity: 0.85">
-          <li class="d-flex align-items-center gap-3">
-            <i class="bi bi-check2-circle fs-5" />
+        <ul class="list-unstyled d-flex flex-column gap-2 fs-sm text-white text-opacity-75">
+          <li class="d-flex align-items-center gap-2">
+            <i class="bi bi-check2-circle" />
             <span class="fw-medium">Real-time business insights</span>
           </li>
-          <li class="d-flex align-items-center gap-3">
-            <i class="bi bi-shield-check fs-5" />
-            <span class="fw-medium">Enterprise-grade account protection</span>
+          <li class="d-flex align-items-center gap-2">
+            <i class="bi bi-shield-check" />
+            <span class="fw-medium">Enterprise-grade protection</span>
           </li>
-          <li class="d-flex align-items-center gap-3">
-            <i class="bi bi-lightning-charge fs-5" />
+          <li class="d-flex align-items-center gap-2">
+            <i class="bi bi-lightning-charge" />
             <span class="fw-medium">Fast collaboration workflows</span>
           </li>
         </ul>
       </div>
 
-      <!-- Decorative Background Elements (Optional) -->
       <div
-        class="position-absolute bottom-0 end-0 overflow-hidden"
-        style="width: 100%; height: 50%; z-index: 0; opacity: 0.05; pointer-events: none"
-      >
-        <svg
-          viewBox="0 0 200 200"
-          xmlns="http://www.w3.org/2000/svg"
-          class="position-absolute end-0 bottom-0 w-100 h-100"
-          style="transform: scale(2) translate(20%, 20%)"
-        >
-          <circle cx="100" cy="100" r="100" fill="white" />
-        </svg>
-      </div>
+        class="position-absolute translate-middle"
+        style="
+          top: 30%;
+          left: 0%;
+          width: 300px;
+          height: 300px;
+          background: radial-gradient(circle, rgba(10, 132, 255, 0.15) 0%, transparent 70%);
+          filter: blur(40px);
+          z-index: 1;
+        "
+      ></div>
     </div>
 
     <!-- Right Column: Login Form -->
     <div
       class="col-12 col-lg-7 col-xl-8 d-flex align-items-center justify-content-center position-relative overflow-y-auto"
-      style="background-color: var(--muted-bg)"
+      style="background-color: var(--bg-grouped)"
     >
       <div
-        class="w-100 px-4 py-5 px-md-5 d-flex flex-column align-items-center justify-content-center"
-        style="max-width: 520px; min-height: 100%"
+        class="w-100 px-3 py-5 d-flex flex-column align-items-center justify-content-center"
+        style="max-width: 400px; min-height: 100%"
       >
-        <!-- Card Container -->
-        <div class="card border-0 shadow-lg bg-white w-100 mb-4" style="border-radius: var(--apple-radius, 16px)">
-          <div class="card-body p-4 p-md-5">
-            <!-- Header -->
-            <div class="text-center mb-4 pb-2">
-              <h3 class="fw-bold mb-2" style="color: var(--title-color)">Welcome back</h3>
-              <p class="text-muted small" style="font-size: 0.85rem">
-                Sign in to continue to your niceAdmin workspace.
-              </p>
+        <div
+          class="card border shadow-lg bg-elevated w-100 mb-4 login-card h-auto"
+          style="border-radius: var(--radius-md) !important"
+        >
+          <div class="card-body p-4">
+            <div class="text-center mb-4">
+              <h4 class="fw-bold mb-1 text-primary">Welcome back</h4>
+              <p class="text-secondary fs-xs mb-0">Sign in to continue to your niceAdmin workspace.</p>
             </div>
-            <!-- Error Alert -->
+
             <div
               v-if="errorMessages"
-              class="alert alert-danger alert-dismissible fade show border-0 mb-4 shadow-sm"
-              role="alert"
-              style="
-                border-radius: var(--apple-radius, 12px);
-                background-color: rgba(220, 38, 38, 0.05);
-                color: #dc2626;
-              "
+              class="alert alert-danger border-0 mb-4 shadow-sm py-2 px-3 text-center"
+              style="border-radius: var(--radius-sm)"
             >
-              <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-exclamation-triangle-fill fs-5"></i>
-                <div class="small fw-medium">{{ errorMessages }}</div>
+              <div class="d-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-exclamation-triangle-fill fs-sm"></i>
+                <div class="fs-xs fw-medium">{{ errorMessages }}</div>
               </div>
-              <button
-                type="button"
-                class="btn-close small"
-                style="font-size: 0.75rem"
-                aria-label="Close"
-                @click="errorMessages = ''"
-              ></button>
             </div>
-            <!-- Card Form -->
+
             <form
               class="needs-validation"
               :class="{ 'was-validated': isFormValidated }"
               novalidate
               @submit.prevent="handleAuthLogin"
             >
-              <!-- Email -->
               <div class="mb-3">
-                <label class="form-label fw-bold small mb-1" style="color: var(--secondary-color-text)"
-                  >Id Personal</label
-                >
+                <label class="form-label fw-bold fs-xs text-secondary mb-1">Id Personal</label>
                 <input
                   v-model="payloadCredential.id_personal"
                   type="text"
-                  class="form-control form-control-lg border-light bg-light custom-input"
+                  class="form-control fs-md border bg-grouped custom-input"
                   placeholder="00710XXXX"
                   required
                 />
-                <div class="invalid-feedback">
+                <div class="invalid-feedback fs-xs">
                   <i class="bi bi-exclamation-circle me-1"></i>
-                  <span>Please enter a valid Id Personal</span>
+                  <span>Invalid Id Personal</span>
                 </div>
               </div>
 
-              <!-- Password -->
               <div class="mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                  <label class="form-label fw-bold small mb-0" style="color: var(--secondary-color-text)"
-                    >Password</label
-                  >
-                  <a href="#" class="text-decoration-none small fw-medium text-accent">Forgot password?</a>
+                  <label class="form-label fw-bold fs-xs text-secondary mb-0">Password</label>
+                  <a href="#" class="text-decoration-none fs-xs fw-medium text-accent">Forgot?</a>
                 </div>
                 <div class="input-group">
                   <input
                     v-model="payloadCredential.password"
-                    type="password"
-                    class="form-control form-control-lg border-light border-end-0 bg-light custom-input"
-                    placeholder="Enter your password"
+                    :type="showPassword ? 'text' : 'password'"
+                    class="form-control fs-md border border-end-0 bg-grouped custom-input"
+                    placeholder="Enter password"
                     required
                   />
-                  <button class="btn border-light border-start-0 bg-light text-muted px-3" type="button" tabindex="-1">
-                    <i class="bi bi-eye" />
+                  <button
+                    class="btn border border-start-0 bg-grouped text-muted px-2 py-0"
+                    type="button"
+                    tabindex="-1"
+                    @click="showPassword = !showPassword"
+                  >
+                    <i :class="showPassword ? 'bi bi-eye-slash fs-sm' : 'bi bi-eye fs-sm'" />
                   </button>
-                  <div class="invalid-feedback">
+                  <div class="invalid-feedback fs-xs">
                     <i class="bi bi-exclamation-circle me-1"></i>
-                    <span>Please enter your password</span>
+                    <span>Password required</span>
                   </div>
                 </div>
               </div>
 
-              <!-- Options -->
-              <div class="d-flex justify-content-between align-items-center mb-4 pt-1">
+              <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="form-check mb-0">
-                  <input id="rememberMe" v-model="rememberMe" class="form-check-input" type="checkbox" required />
-                  <label class="form-check-label small text-muted pt-1" for="rememberMe"> Remember me </label>
-                  <div class="invalid-feedback mt-2">
-                    <i class="bi bi-exclamation-circle me-1"></i>
-                    <span>Please check remember me</span>
-                  </div>
+                  <input id="rememberMe" v-model="rememberMe" class="form-check-input" type="checkbox" />
+                  <label class="form-check-label fs-xs text-secondary pt-1" for="rememberMe">Remember me</label>
                 </div>
-                <a href="#" class="text-decoration-none small fw-medium text-accent">Use SSO screen</a>
+                <a href="#" class="text-decoration-none fs-xs fw-medium text-accent">Use SSO</a>
               </div>
 
-              <!-- Submit Button -->
               <div class="mb-1">
                 <button
                   v-if="!isLoading"
-                  class="btn btn-sm text-white w-100 py-3 mb-4 fw-medium shadow-sm rounded-3 btn-accent"
+                  class="btn btn-primary w-100 py-2 mb-4 fw-bold shadow-sm rounded-md fs-md"
                   type="submit"
                 >
                   Sign In
@@ -223,60 +194,58 @@ const handleAuthLogin = async (event: Event) => {
                 <button
                   v-else
                   type="submit"
-                  class="btn btn-sm text-white w-100 py-3 mb-4 fw-medium shadow-sm rounded-3 btn-accent"
+                  class="btn btn-primary w-100 py-2 mb-4 fw-bold shadow-sm rounded-md fs-md"
                   disabled
                 >
                   <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-                  Loading...
+                  Sign In...
                 </button>
               </div>
 
-              <!-- Divider -->
               <div class="d-flex align-items-center mb-4">
-                <hr class="flex-grow-1 border-light" />
-                <span class="px-3 small text-muted" style="font-size: 0.75rem">or continue with</span>
-                <hr class="flex-grow-1 border-light" />
+                <hr class="flex-grow-1 border opacity-50" />
+                <span class="px-3 text-tertiary fs-xs uppercase letter-spacing-1">OR</span>
+                <hr class="flex-grow-1 border opacity-50" />
               </div>
 
-              <!-- Social Logins -->
-              <div class="row g-3 mb-4">
+              <div class="row g-2 mb-4">
                 <div class="col-6">
                   <button
-                    class="btn btn-white border w-100 text-dark fw-medium d-flex align-items-center justify-content-center gap-2 py-2 btn-social"
+                    type="button"
+                    class="btn btn-white border w-100 d-flex align-items-center justify-content-center gap-2 py-2 fs-xs fw-semibold bg-elevated text-primary"
                   >
-                    <i class="bi bi-google text-danger" />
-                    <span class="small" style="font-size: 0.85rem">Google</span>
+                    <i class="bi bi-google text-danger fs-sm" />
+                    Google
                   </button>
                 </div>
                 <div class="col-6">
                   <button
-                    class="btn btn-white border w-100 text-dark fw-medium d-flex align-items-center justify-content-center gap-2 py-2 btn-social"
+                    type="button"
+                    class="btn btn-white border w-100 d-flex align-items-center justify-content-center gap-2 py-2 fs-xs fw-semibold bg-elevated text-primary"
                   >
-                    <i class="bi bi-github" />
-                    <span class="small" style="font-size: 0.85rem">GitHub</span>
+                    <i class="bi bi-github fs-sm" />
+                    GitHub
                   </button>
                 </div>
               </div>
 
-              <div class="text-center small">
-                <span class="text-muted">Don't have an account?</span>
-                <a href="#" class="text-decoration-none fw-medium text-accent ms-1">Create one</a>
+              <div class="text-center fs-xs">
+                <span class="text-secondary">Don't have an account?</span>
+                <a href="#" class="text-decoration-none fw-bold text-accent ms-1">Create one</a>
               </div>
             </form>
           </div>
         </div>
 
-        <!-- Footer -->
-        <div class="text-center text-muted" style="font-size: 0.75rem">
-          <p class="mb-2">© 2024 niceAdmin. All rights reserved.</p>
-          <div class="mb-2">
-            <a href="#" class="text-decoration-none text-muted mx-1 text-hover-dark">Privacy</a>
-            &bull;
-            <a href="#" class="text-decoration-none text-muted mx-1 text-hover-dark">Terms</a>
-            &bull;
-            <a href="#" class="text-decoration-none text-muted mx-1 text-hover-dark">Help</a>
+        <div class="text-center text-tertiary fs-xs">
+          <p class="mb-2">© 2024 niceAdmin &bull; Workspace Intelligence</p>
+          <div class="d-flex justify-content-center gap-2">
+            <a href="#" class="text-decoration-none text-tertiary text-hover-dark">Privacy</a>
+            <span class="opacity-25">|</span>
+            <a href="#" class="text-decoration-none text-tertiary text-hover-dark">Terms</a>
+            <span class="opacity-25">|</span>
+            <a href="#" class="text-decoration-none text-tertiary text-hover-dark">Support</a>
           </div>
-          <div>Designed by <a href="#" class="text-decoration-none text-accent">BootstrapMade</a></div>
         </div>
       </div>
     </div>
@@ -289,33 +258,30 @@ const handleAuthLogin = async (event: Event) => {
   color: var(--accent) !important;
 }
 
-.btn-accent {
-  background-color: var(--accent) !important;
-  border-color: var(--accent) !important;
-  transition: all 0.2s ease;
+.login-card {
+  backdrop-filter: blur(25px) saturate(200%);
+  -webkit-backdrop-filter: blur(25px) saturate(200%);
+  background: rgba(var(--bg-elevated-rgb, 255, 255, 255), 0.8) !important;
+  transition: all 0.3s ease;
 }
 
-.btn-accent:hover {
-  filter: brightness(0.9);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+[data-bs-theme='dark'] .login-card {
+  background: rgba(28, 28, 30, 0.75) !important;
 }
 
 .custom-input {
-  font-size: 0.95rem;
   transition: all 0.2s ease;
 }
 
 .custom-input:focus {
-  background-color: #fff !important;
+  background-color: var(--bg-elevated) !important;
   border-color: var(--accent);
-  box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.15);
-  /* generic blueish halo based on Tailwind blue */
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15);
   outline: none;
 }
 
 .input-group:focus-within .btn {
-  background-color: #fff !important;
+  background-color: var(--bg-elevated) !important;
   border-color: var(--accent);
 }
 
@@ -323,19 +289,14 @@ const handleAuthLogin = async (event: Event) => {
   border-right-color: transparent !important;
 }
 
-.border-light {
-  border-color: #e2e8f0 !important;
-}
-
-.btn-social {
-  transition: background-color 0.2s;
-}
-
-.btn-social:hover {
-  background-color: var(--row-hover);
-}
-
 .text-hover-dark:hover {
-  color: var(--title-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+.letter-spacing-1 {
+  letter-spacing: 1px;
 }
 </style>

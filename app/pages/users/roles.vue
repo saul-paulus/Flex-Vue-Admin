@@ -334,9 +334,9 @@ const permissions = ref<PermissionGroup[]>([
     <!-- Header -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
       <div>
-        <h4 class="mb-1 fw-bold" style="color: var(--title-color)">Roles & Permissions</h4>
+        <h4 class="mb-1 fw-bold text-primary">Roles &amp; Permissions</h4>
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb mb-0 small" style="font-size: 0.8rem">
+          <ol class="breadcrumb mb-0 fs-xs">
             <li class="breadcrumb-item">
               <NuxtLink to="/" class="text-decoration-none text-muted">Home</NuxtLink>
             </li>
@@ -355,9 +355,9 @@ const permissions = ref<PermissionGroup[]>([
       <!-- Left Column: Roles List & Details -->
       <div class="col-12 col-xl-4 d-flex flex-column gap-4">
         <!-- Roles List -->
-        <div class="card border border-light shadow-sm bg-white" style="border-radius: var(--apple-radius)">
-          <div class="card-header bg-white border-bottom p-4 pb-3">
-            <h6 class="fw-bold mb-0" style="color: var(--title-color)">Roles</h6>
+        <div class="card shadow-sm rounded-md">
+          <div class="card-header border-bottom p-4 pb-3">
+            <h6 class="mb-0 fw-bold text-primary">Roles</h6>
           </div>
           <div class="card-body p-3">
             <div class="d-flex flex-column gap-2">
@@ -384,14 +384,10 @@ const permissions = ref<PermissionGroup[]>([
                   <i class="bi" style="font-size: 1.15rem" :class="`bi-${role.icon}`" />
                 </div>
                 <div>
-                  <div
-                    class="fw-bold"
-                    style="font-size: 0.95rem; letter-spacing: 0.2px"
-                    :class="activeRole.id === role.id ? 'text-teal' : 'text-dark'"
-                  >
+                  <div class="fw-bold fs-md" :class="activeRole.id === role.id ? 'text-teal' : 'text-dark'">
                     {{ role.name }}
                   </div>
-                  <div class="text-muted" style="font-size: 0.8rem">{{ role.users }} users</div>
+                  <div class="text-tertiary fs-sm">{{ role.users }} users</div>
                 </div>
               </div>
             </div>
@@ -399,40 +395,32 @@ const permissions = ref<PermissionGroup[]>([
         </div>
 
         <!-- Role Details -->
-        <div class="card border border-light shadow-sm bg-white" style="border-radius: var(--apple-radius)">
-          <div class="card-header bg-white border-bottom p-4 pb-3">
-            <h6 class="fw-bold mb-0" style="color: var(--title-color)">Role Details</h6>
+        <div class="card shadow-sm rounded-md">
+          <div class="card-header border-bottom p-4 pb-3">
+            <h6 class="mb-0 fw-bold text-primary">Role Details</h6>
           </div>
           <div class="card-body p-4 d-flex flex-column gap-4">
             <div>
-              <div class="text-muted small text-uppercase fw-bold letter-spacing-1 mb-1" style="font-size: 0.65rem">
-                NAME
-              </div>
-              <div class="fw-medium text-dark" style="font-size: 0.85rem">
+              <div class="text-tertiary text-uppercase fw-bold letter-spacing-1 mb-1 fs-10">NAME</div>
+              <div class="fw-medium text-primary fs-md">
                 {{ activeRole.name }}
               </div>
             </div>
             <div>
-              <div class="text-muted small text-uppercase fw-bold letter-spacing-1 mb-1" style="font-size: 0.65rem">
-                DESCRIPTION
-              </div>
-              <div class="text-dark" style="font-size: 0.85rem; line-height: 1.6">
+              <div class="text-tertiary text-uppercase fw-bold letter-spacing-1 mb-1 fs-10">DESCRIPTION</div>
+              <div class="text-primary fs-md lh-normal">
                 {{ activeRole.desc }}
               </div>
             </div>
             <div>
-              <div class="text-muted small text-uppercase fw-bold letter-spacing-1 mb-1" style="font-size: 0.65rem">
-                CREATED
-              </div>
-              <div class="text-dark" style="font-size: 0.85rem">
+              <div class="text-tertiary text-uppercase fw-bold letter-spacing-1 mb-1 fs-10">CREATED</div>
+              <div class="text-primary fs-md">
                 {{ activeRole.created }}
               </div>
             </div>
             <div>
-              <div class="text-muted small text-uppercase fw-bold letter-spacing-1 mb-1" style="font-size: 0.65rem">
-                LAST MODIFIED
-              </div>
-              <div class="text-dark" style="font-size: 0.85rem">
+              <div class="text-tertiary text-uppercase fw-bold letter-spacing-1 mb-1 fs-10">LAST MODIFIED</div>
+              <div class="text-primary fs-md">
                 {{ activeRole.modified }}
               </div>
             </div>
@@ -443,19 +431,14 @@ const permissions = ref<PermissionGroup[]>([
       <!-- Right Column: Matrix -->
       <div class="col-12 col-xl-8 d-flex flex-column gap-4">
         <!-- Permissions Matrix Card -->
-        <div class="card border border-light shadow-sm bg-white" style="border-radius: var(--apple-radius)">
-          <div class="card-header bg-white border-bottom p-4">
+        <div class="card shadow-sm rounded-md">
+          <div class="card-header border-bottom p-4">
             <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
               <div>
-                <h6 class="fw-bold mb-1" style="color: var(--title-color)">Permissions Matrix</h6>
-                <div class="text-muted small" style="font-size: 0.8rem">
-                  Configure access for {{ activeRole.name }} role
-                </div>
+                <h6 class="mb-1 fw-bold text-primary">Permissions Matrix</h6>
+                <div class="text-tertiary fs-xs">Configure access for {{ activeRole.name }} role</div>
               </div>
-              <button
-                class="btn bg-teal rounded text-white shadow-sm fw-medium px-3 d-flex align-items-center gap-2"
-                style="font-size: 0.9rem"
-              >
+              <button class="btn bg-teal rounded text-white shadow-sm fw-medium px-3 d-flex align-items-center gap-2">
                 <i class="bi bi-check2" /> Save Changes
               </button>
             </div>
@@ -463,7 +446,7 @@ const permissions = ref<PermissionGroup[]>([
 
           <div class="table-responsive">
             <table class="table align-middle mb-0 text-nowrap">
-              <thead class="bg-light text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px">
+              <thead class="bg-light text-tertiary fs-sm letter-spacing-1">
                 <tr>
                   <th scope="col" class="py-3 ps-4 border-0 fw-bold w-50" style="background-color: var(--zebra)">
                     MODULE
@@ -491,8 +474,8 @@ const permissions = ref<PermissionGroup[]>([
                   <tr class="bg-light">
                     <td
                       colspan="6"
-                      class="py-2 ps-4 fw-bolder text-dark"
-                      style="font-size: 0.8rem; background-color: var(--muted-bg)"
+                      class="py-2 ps-4 fw-bolder text-primary fs-sm"
+                      style="background-color: var(--muted-bg)"
                     >
                       <i class="bi me-2 text-muted" :class="`bi-${group.icon}`" />
                       {{ group.category }}
@@ -501,36 +484,36 @@ const permissions = ref<PermissionGroup[]>([
 
                   <!-- Items Rows -->
                   <tr v-for="(item, iIndex) in group.items" :key="`${gIndex}-${iIndex}`">
-                    <td class="ps-4 py-3 text-dark" style="font-size: 0.85rem">
+                    <td class="ps-4 py-3 text-dark fs-md">
                       {{ item.name }}
                     </td>
 
                     <td class="text-center py-3">
-                      <i v-if="item.view" class="bi bi-check-circle-fill text-teal fs-5" />
+                      <i v-if="item.view" class="bi bi-check-circle-fill text-teal fs-xl" />
                       <span v-else-if="item.v_dash" class="text-muted fw-bold">-</span>
                       <i v-else class="bi bi-circle text-muted" style="opacity: 0.3" />
                     </td>
 
                     <td class="text-center py-3">
-                      <i v-if="item.create" class="bi bi-check-circle-fill text-teal fs-5" />
+                      <i v-if="item.create" class="bi bi-check-circle-fill text-teal fs-xl" />
                       <span v-else-if="item.c_dash" class="text-muted fw-bold">-</span>
                       <i v-else class="bi bi-circle text-muted" style="opacity: 0.3" />
                     </td>
 
                     <td class="text-center py-3">
-                      <i v-if="item.edit" class="bi bi-check-circle-fill text-teal fs-5" />
+                      <i v-if="item.edit" class="bi bi-check-circle-fill text-teal fs-xl" />
                       <span v-else-if="item.e_dash" class="text-muted fw-bold">-</span>
                       <i v-else class="bi bi-circle text-muted" style="opacity: 0.3" />
                     </td>
 
                     <td class="text-center py-3">
-                      <i v-if="item.delete" class="bi bi-check-circle-fill text-teal fs-5" />
+                      <i v-if="item.delete" class="bi bi-check-circle-fill text-teal fs-xl" />
                       <span v-else-if="item.d_dash" class="text-muted fw-bold">-</span>
                       <i v-else class="bi bi-circle text-muted" style="opacity: 0.3" />
                     </td>
 
                     <td class="text-center pe-4 py-3">
-                      <i v-if="item.all" class="bi bi-check-circle-fill text-teal fs-5" />
+                      <i v-if="item.all" class="bi bi-check-circle-fill text-teal fs-xl" />
                       <span v-else-if="item.a_dash" class="text-muted fw-bold">-</span>
                       <i v-else class="bi bi-circle text-muted" style="opacity: 0.3" />
                     </td>
@@ -542,12 +525,12 @@ const permissions = ref<PermissionGroup[]>([
         </div>
 
         <!-- Bottom Partial Card (Users with this role) -->
-        <div class="card border border-light shadow-sm bg-white" style="border-radius: var(--apple-radius)">
-          <div class="card-header bg-white border-bottom p-4 pb-3 d-flex justify-content-between align-items-center">
-            <h6 class="fw-bold mb-0" style="color: var(--title-color)">Users with {{ activeRole.name }} Role</h6>
-            <span class="text-muted" style="font-size: 0.8rem">{{ activeRole.users }} users</span>
+        <div class="card shadow-sm rounded-md">
+          <div class="card-header border-bottom p-4 pb-3 d-flex justify-content-between align-items-center">
+            <h6 class="mb-0 fw-bold text-primary">Users with {{ activeRole.name }} Role</h6>
+            <span class="text-tertiary fs-sm">{{ activeRole.users }} users</span>
           </div>
-          <div class="card-body p-4 text-center text-muted" style="font-size: 0.85rem">
+          <div class="card-body p-4 text-center text-tertiary fs-md">
             User list associated with this role will appear here in production.
           </div>
         </div>
