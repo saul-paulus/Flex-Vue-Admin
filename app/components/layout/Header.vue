@@ -58,23 +58,20 @@ const handleSignOut = async () => {
         </NuxtLink>
 
         <!-- Sidebar Toggle -->
-        <button
-          class="icon-btn d-flex align-items-center justify-content-center w-36 h-36"
-          @click="emit('toggle-sidebar')"
-        >
+        <button class="header-icon-btn header-icon-btn-teal" @click="emit('toggle-sidebar')">
           <i class="bi bi-layout-sidebar fs-5" />
         </button>
 
-        <div class="input-group d-none d-md-flex align-items-center border px-3 py-1 search-box w-300 h-36">
+        <div class="input-group d-none d-md-flex align-items-center search-box search-pill px-3 py-1 w-300 h-36">
           <i class="bi bi-search me-2 text-muted" />
           <input
             type="text"
             class="form-control border-0 bg-transparent shadow-none fs-sm"
             :class="isDarkMode ? 'text-white' : 'text-dark'"
-            placeholder="Search..."
+            placeholder="Search users, invoices, tickets..."
           />
           <kbd
-            class="border ms-2 fw-bold px-2 rounded bg-base text-muted d-flex align-items-center justify-content-center fs-10 h-18 w-18"
+            class="border ms-2 fw-medium px-2 rounded bg-base text-muted d-flex align-items-center justify-content-center fs-10 h-18"
           >
             /
           </kbd>
@@ -84,20 +81,20 @@ const handleSignOut = async () => {
       <!-- Kanan: Menu Item Ekstra & Profil -->
       <div class="d-flex align-items-center gap-2 gap-md-3">
         <!-- Icon Group -->
-        <div class="d-none d-sm-flex align-items-center gap-1">
+        <div class="d-none d-sm-flex align-items-center gap-2">
           <!-- Bendera Bahasa -->
-          <button class="icon-btn d-flex align-items-center justify-content-center w-36 h-36">
+          <button class="header-icon-btn">
             <span class="fs-lg">🇺🇸</span>
           </button>
 
-          <!-- Grid / Apps -->
-          <button class="icon-btn d-flex align-items-center justify-content-center w-36 h-36">
-            <i class="bi bi-grid fs-6 text-muted" />
+          <!-- Grid Menu -->
+          <button class="header-icon-btn">
+            <i class="bi bi-grid-3x3-gap fs-6" />
           </button>
 
           <!-- Theme Toggle -->
           <button
-            class="icon-btn d-flex align-items-center justify-content-center w-36 h-36 transition-all"
+            class="header-icon-btn transition-all"
             :class="isDarkMode ? 'text-accent' : 'text-secondary'"
             title="Toggle theme"
             @click="toggleTheme"
@@ -105,20 +102,14 @@ const handleSignOut = async () => {
             <i :class="isDarkMode ? 'bi bi-sun-fill fs-6' : 'bi bi-moon-fill fs-6'" />
           </button>
 
-          <div class="vr mx-1 h-24" />
-
           <!-- Chat Badge -->
-          <button
-            class="icon-btn text-muted position-relative d-flex align-items-center justify-content-center w-36 h-36"
-          >
+          <button class="header-icon-btn position-relative">
             <i class="bi bi-chat-left-text fs-6" />
             <span class="badge-apple badge-apple-top bg-danger border border-white"> 5 </span>
           </button>
 
           <!-- Notifikasi Badge -->
-          <button
-            class="icon-btn text-muted position-relative d-flex align-items-center justify-content-center w-36 h-36"
-          >
+          <button class="header-icon-btn position-relative">
             <i class="bi bi-bell fs-6" />
             <span class="badge-apple badge-apple-top bg-danger border border-white"> 4 </span>
           </button>
@@ -142,11 +133,9 @@ const handleSignOut = async () => {
             />
             <div class="d-none d-md-block text-start ms-2 lh-1 text-truncate max-w-120">
               <span class="d-block fw-bold fs-sm">
-                {{ user?.username || 'Guest' }}
+                {{ user?.username || 'John Doe' }}
               </span>
-              <span class="text-secondary fs-11">
-                {{ user?.id_personal || 'No ID' }}
-              </span>
+              <span class="text-secondary fs-11"> Product Admin </span>
             </div>
             <i
               class="bi bi-chevron-down ms-2 small d-none d-md-inline text-muted fs-10 transition-all"
@@ -253,28 +242,5 @@ const handleSignOut = async () => {
 
 .pointer-events-none {
   pointer-events: none;
-}
-
-/* Icon Button - kotak dengan border tipis, hover border aktif */
-.icon-btn {
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  cursor: pointer;
-  padding: 0;
-  color: var(--text-secondary);
-  transition: all var(--transition-fast);
-  outline: none;
-}
-
-.icon-btn:hover {
-  border-color: var(--border);
-  background-color: var(--bg-grouped);
-  color: var(--text-primary);
-}
-
-.icon-btn:focus-visible {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.25);
 }
 </style>
