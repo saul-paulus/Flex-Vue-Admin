@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useAuthStore } from '~/stores/auth';
+
+const authStore = useAuthStore();
 definePageMeta({
   layout: 'auth',
 });
@@ -10,9 +13,8 @@ const payloadCredential = reactive({
 const rememberMe = ref(false);
 const isLoading = ref(false);
 const isFormValidated = ref(false);
-const errorMessages = ref(''); // Added based on the instruction's usage
+const errorMessages = ref('');
 
-const authStore = useAuthStore();
 const router = useRouter();
 
 const handleAuthLogin = async (event: Event) => {
@@ -30,20 +32,14 @@ const handleAuthLogin = async (event: Event) => {
   isLoading.value = true;
 
   try {
-    // Memanggil API login dari Backend melalui aksi Pinia
-    await authStore.login({
-      id_personal: payloadCredential.id_personal,
-      password: payloadCredential.password,
-    });
+    await authStore.login(payloadCredential.id_personal, payloadCredential.password);
 
     // Navigasi ke Home / Dashboard jika backend sukses
     router.push('/');
-  }
-  catch (error) {
-    // Tampilkan pesan JSON.message milik Backend ke dalam kotak merah alert HTML
-    errorMessages.value = String(error);
-  }
-  finally {
+  } catch (error: any) {
+    // Tampilkan pesan error ke dalam kotak merah alert HTML
+    errorMessages.value = error?.data?.message || error?.message || String(error);
+  } finally {
     isLoading.value = false;
   }
 };
@@ -59,35 +55,25 @@ const handleAuthLogin = async (event: Event) => {
       <!-- Brand Logo -->
       <div class="mb-5 d-flex align-items-center gap-2">
         <i class="bi bi-heptagon-half fs-4" />
-        <h4 class="mb-0 fw-bold letter-spacing-1">
-          niceAdmin
-        </h4>
+        <h4 class="mb-0 fw-bold letter-spacing-1">niceAdmin</h4>
         <span
           class="badge rounded-pill fw-bold ms-2"
           style="background-color: rgba(255, 255, 255, 0.15); color: #fff; font-size: 0.6rem; letter-spacing: 0.5px"
-        >WORKSPACE INTELLIGENCE</span>
+          >WORKSPACE INTELLIGENCE</span
+        >
       </div>
 
       <!-- Left Text Content -->
       <div class="mt-auto mb-auto pe-4">
-        <h1
-          class="fw-bolder mb-4"
-          style="line-height: 1.25; font-size: 2.2rem"
-        >
+        <h1 class="fw-bolder mb-4" style="line-height: 1.25; font-size: 2.2rem">
           Command your operations from one modern control center.
         </h1>
-        <p
-          class="mb-5"
-          style="max-width: 400px; line-height: 1.6; font-size: 0.95rem; opacity: 0.85"
-        >
+        <p class="mb-5" style="max-width: 400px; line-height: 1.6; font-size: 0.95rem; opacity: 0.85">
           Track growth, team activity, and operational risk with a dashboard built for fast decisions.
         </p>
 
         <!-- Feature List -->
-        <ul
-          class="list-unstyled d-flex flex-column gap-3 small"
-          style="opacity: 0.85"
-        >
+        <ul class="list-unstyled d-flex flex-column gap-3 small" style="opacity: 0.85">
           <li class="d-flex align-items-center gap-3">
             <i class="bi bi-check2-circle fs-5" />
             <span class="fw-medium">Real-time business insights</span>
@@ -114,12 +100,7 @@ const handleAuthLogin = async (event: Event) => {
           class="position-absolute end-0 bottom-0 w-100 h-100"
           style="transform: scale(2) translate(20%, 20%)"
         >
-          <circle
-            cx="100"
-            cy="100"
-            r="100"
-            fill="white"
-          />
+          <circle cx="100" cy="100" r="100" fill="white" />
         </svg>
       </div>
     </div>
@@ -134,23 +115,12 @@ const handleAuthLogin = async (event: Event) => {
         style="max-width: 520px; min-height: 100%"
       >
         <!-- Card Container -->
-        <div
-          class="card border-0 shadow-lg bg-white w-100 mb-4"
-          style="border-radius: var(--apple-radius, 16px)"
-        >
+        <div class="card border-0 shadow-lg bg-white w-100 mb-4" style="border-radius: var(--apple-radius, 16px)">
           <div class="card-body p-4 p-md-5">
             <!-- Header -->
             <div class="text-center mb-4 pb-2">
-              <h3
-                class="fw-bold mb-2"
-                style="color: var(--title-color)"
-              >
-                Welcome back
-              </h3>
-              <p
-                class="text-muted small"
-                style="font-size: 0.85rem"
-              >
+              <h3 class="fw-bold mb-2" style="color: var(--title-color)">Welcome back</h3>
+              <p class="text-muted small" style="font-size: 0.85rem">
                 Sign in to continue to your niceAdmin workspace.
               </p>
             </div>
@@ -163,10 +133,9 @@ const handleAuthLogin = async (event: Event) => {
             >
               <!-- Email -->
               <div class="mb-3">
-                <label
-                  class="form-label fw-bold small mb-1"
-                  style="color: var(--secondary-color-text)"
-                >Id Personal</label>
+                <label class="form-label fw-bold small mb-1" style="color: var(--secondary-color-text)"
+                  >Id Personal</label
+                >
                 <input
                   v-model="payloadCredential.id_personal"
                   type="text"
@@ -183,14 +152,10 @@ const handleAuthLogin = async (event: Event) => {
               <!-- Password -->
               <div class="mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                  <label
-                    class="form-label fw-bold small mb-0"
-                    style="color: var(--secondary-color-text)"
-                  >Password</label>
-                  <a
-                    href="#"
-                    class="text-decoration-none small fw-medium text-accent"
-                  >Forgot password?</a>
+                  <label class="form-label fw-bold small mb-0" style="color: var(--secondary-color-text)"
+                    >Password</label
+                  >
+                  <a href="#" class="text-decoration-none small fw-medium text-accent">Forgot password?</a>
                 </div>
                 <div class="input-group">
                   <input
@@ -200,11 +165,7 @@ const handleAuthLogin = async (event: Event) => {
                     placeholder="Enter your password"
                     required
                   />
-                  <button
-                    class="btn border-light border-start-0 bg-light text-muted px-3"
-                    type="button"
-                    tabindex="-1"
-                  >
+                  <button class="btn border-light border-start-0 bg-light text-muted px-3" type="button" tabindex="-1">
                     <i class="bi bi-eye" />
                   </button>
                   <div class="invalid-feedback">
@@ -217,26 +178,14 @@ const handleAuthLogin = async (event: Event) => {
               <!-- Options -->
               <div class="d-flex justify-content-between align-items-center mb-4 pt-1">
                 <div class="form-check mb-0">
-                  <input
-                    id="rememberMe"
-                    v-model="rememberMe"
-                    class="form-check-input"
-                    type="checkbox"
-                    required
-                  />
-                  <label
-                    class="form-check-label small text-muted pt-1"
-                    for="rememberMe"
-                  > Remember me </label>
+                  <input id="rememberMe" v-model="rememberMe" class="form-check-input" type="checkbox" required />
+                  <label class="form-check-label small text-muted pt-1" for="rememberMe"> Remember me </label>
                   <div class="invalid-feedback mt-2">
                     <i class="bi bi-exclamation-circle me-1"></i>
                     <span>Please check remember me</span>
                   </div>
                 </div>
-                <a
-                  href="#"
-                  class="text-decoration-none small fw-medium text-accent"
-                >Use SSO screen</a>
+                <a href="#" class="text-decoration-none small fw-medium text-accent">Use SSO screen</a>
               </div>
 
               <!-- Submit Button -->
@@ -254,10 +203,7 @@ const handleAuthLogin = async (event: Event) => {
                   class="btn btn-sm text-white w-100 py-3 mb-4 fw-medium shadow-sm rounded-3 btn-accent"
                   disabled
                 >
-                  <span
-                    class="spinner-border spinner-border-sm me-2"
-                    aria-hidden="true"
-                  ></span>
+                  <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
                   Loading...
                 </button>
               </div>
@@ -265,76 +211,49 @@ const handleAuthLogin = async (event: Event) => {
               <!-- Divider -->
               <div class="d-flex align-items-center mb-4">
                 <hr class="flex-grow-1 border-light" />
-                <span
-                  class="px-3 small text-muted"
-                  style="font-size: 0.75rem"
-                >or continue with</span>
+                <span class="px-3 small text-muted" style="font-size: 0.75rem">or continue with</span>
                 <hr class="flex-grow-1 border-light" />
               </div>
 
               <!-- Social Logins -->
               <div class="row g-3 mb-4">
                 <div class="col-6">
-                  <button class="btn btn-white border w-100 text-dark fw-medium d-flex align-items-center justify-content-center gap-2 py-2 btn-social">
+                  <button
+                    class="btn btn-white border w-100 text-dark fw-medium d-flex align-items-center justify-content-center gap-2 py-2 btn-social"
+                  >
                     <i class="bi bi-google text-danger" />
-                    <span
-                      class="small"
-                      style="font-size: 0.85rem"
-                    >Google</span>
+                    <span class="small" style="font-size: 0.85rem">Google</span>
                   </button>
                 </div>
                 <div class="col-6">
-                  <button class="btn btn-white border w-100 text-dark fw-medium d-flex align-items-center justify-content-center gap-2 py-2 btn-social">
+                  <button
+                    class="btn btn-white border w-100 text-dark fw-medium d-flex align-items-center justify-content-center gap-2 py-2 btn-social"
+                  >
                     <i class="bi bi-github" />
-                    <span
-                      class="small"
-                      style="font-size: 0.85rem"
-                    >GitHub</span>
+                    <span class="small" style="font-size: 0.85rem">GitHub</span>
                   </button>
                 </div>
               </div>
 
               <div class="text-center small">
                 <span class="text-muted">Don't have an account?</span>
-                <a
-                  href="#"
-                  class="text-decoration-none fw-medium text-accent ms-1"
-                >Create one</a>
+                <a href="#" class="text-decoration-none fw-medium text-accent ms-1">Create one</a>
               </div>
             </form>
           </div>
         </div>
 
         <!-- Footer -->
-        <div
-          class="text-center text-muted"
-          style="font-size: 0.75rem"
-        >
-          <p class="mb-2">
-            © 2024 niceAdmin. All rights reserved.
-          </p>
+        <div class="text-center text-muted" style="font-size: 0.75rem">
+          <p class="mb-2">© 2024 niceAdmin. All rights reserved.</p>
           <div class="mb-2">
-            <a
-              href="#"
-              class="text-decoration-none text-muted mx-1 text-hover-dark"
-            >Privacy</a>
+            <a href="#" class="text-decoration-none text-muted mx-1 text-hover-dark">Privacy</a>
             &bull;
-            <a
-              href="#"
-              class="text-decoration-none text-muted mx-1 text-hover-dark"
-            >Terms</a>
+            <a href="#" class="text-decoration-none text-muted mx-1 text-hover-dark">Terms</a>
             &bull;
-            <a
-              href="#"
-              class="text-decoration-none text-muted mx-1 text-hover-dark"
-            >Help</a>
+            <a href="#" class="text-decoration-none text-muted mx-1 text-hover-dark">Help</a>
           </div>
-          <div>
-            Designed by <a
-              href="#"
-              class="text-decoration-none text-accent"
-            >BootstrapMade</a>
-          </div>
+          <div>Designed by <a href="#" class="text-decoration-none text-accent">BootstrapMade</a></div>
         </div>
       </div>
     </div>
@@ -346,11 +265,13 @@ const handleAuthLogin = async (event: Event) => {
 .text-accent {
   color: var(--accent) !important;
 }
+
 .btn-accent {
   background-color: var(--accent) !important;
   border-color: var(--accent) !important;
   transition: all 0.2s ease;
 }
+
 .btn-accent:hover {
   filter: brightness(0.9);
   transform: translateY(-1px);
@@ -361,16 +282,20 @@ const handleAuthLogin = async (event: Event) => {
   font-size: 0.95rem;
   transition: all 0.2s ease;
 }
+
 .custom-input:focus {
   background-color: #fff !important;
   border-color: var(--accent);
-  box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.15); /* generic blueish halo based on Tailwind blue */
+  box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.15);
+  /* generic blueish halo based on Tailwind blue */
   outline: none;
 }
+
 .input-group:focus-within .btn {
   background-color: #fff !important;
   border-color: var(--accent);
 }
+
 .input-group:focus-within .custom-input {
   border-right-color: transparent !important;
 }
@@ -382,6 +307,7 @@ const handleAuthLogin = async (event: Event) => {
 .btn-social {
   transition: background-color 0.2s;
 }
+
 .btn-social:hover {
   background-color: var(--row-hover);
 }

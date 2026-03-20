@@ -8,10 +8,7 @@ const emit = defineEmits(['toggle-sidebar']);
       <!-- Kiri: Toggle Sidebar & Kotak Pencarian -->
       <div class="d-flex align-items-center gap-3">
         <!-- Branding Logo -->
-        <NuxtLink
-          to="/"
-          class="text-decoration-none d-flex align-items-center fw-bolder fs-5 text-dark gap-2 me-md-2"
-        >
+        <NuxtLink to="/" class="text-decoration-none d-flex align-items-center fw-bolder fs-5 text-dark gap-2 me-md-2">
           <i class="bi bi-heptagon-half text-primary fs-4" />
           <span class="d-none d-lg-block">niceAdmin</span>
         </NuxtLink>
@@ -24,9 +21,7 @@ const emit = defineEmits(['toggle-sidebar']);
           <i class="bi bi-layout-sidebar" />
         </button>
 
-        <div
-          class="input-group d-none d-md-flex align-items-center border rounded-pill px-3 py-1 bg-light search-box"
-        >
+        <div class="input-group d-none d-md-flex align-items-center border rounded-pill px-3 py-1 bg-light search-box">
           <i class="bi bi-search text-muted me-2" />
           <input
             type="text"
@@ -52,10 +47,7 @@ const emit = defineEmits(['toggle-sidebar']);
             <span style="font-size: 1.1rem; line-height: 1">🇺🇸</span>
           </button>
 
-          <div
-            class="vr bg-light mx-1"
-            style="height: 20px; width: 1px"
-          />
+          <div class="vr bg-light mx-1" style="height: 20px; width: 1px" />
 
           <!-- Grid Aplikasi -->
           <button
@@ -73,10 +65,7 @@ const emit = defineEmits(['toggle-sidebar']);
             <i class="bi bi-moon fs-6" />
           </button>
 
-          <div
-            class="vr bg-light mx-1"
-            style="height: 20px; width: 1px"
-          />
+          <div class="vr bg-light mx-1" style="height: 20px; width: 1px" />
 
           <!-- Chat Badge -->
           <button
@@ -86,11 +75,7 @@ const emit = defineEmits(['toggle-sidebar']);
             <i class="bi bi-chat-left-text fs-6" />
             <span
               class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white"
-              style="
-                font-size: 0.6rem;
-                padding: 0.2rem 0.35rem;
-                transform: translate(-40%, 20%) !important;
-              "
+              style="font-size: 0.6rem; padding: 0.2rem 0.35rem; transform: translate(-40%, 20%) !important"
             >
               5
             </span>
@@ -104,11 +89,7 @@ const emit = defineEmits(['toggle-sidebar']);
             <i class="bi bi-bell fs-6" />
             <span
               class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white"
-              style="
-                font-size: 0.6rem;
-                padding: 0.2rem 0.35rem;
-                transform: translate(-40%, 20%) !important;
-              "
+              style="font-size: 0.6rem; padding: 0.2rem 0.35rem; transform: translate(-40%, 20%) !important"
             >
               4
             </span>
@@ -133,16 +114,10 @@ const emit = defineEmits(['toggle-sidebar']);
               height="38"
             />
             <div class="d-none d-md-block text-start ms-2 lh-1">
-              <span
-                class="d-block fw-bold"
-                style="color: var(--title-color); font-size: 0.85rem"
-              >John Doe</span>
+              <span class="d-block fw-bold" style="color: var(--title-color); font-size: 0.85rem">John Doe</span>
               <span style="color: var(--secondary-color-text); font-size: 0.75rem">Product Admin</span>
             </div>
-            <i
-              class="bi bi-chevron-down ms-2 small text-muted d-none d-md-inline"
-              style="font-size: 0.7rem"
-            />
+            <i class="bi bi-chevron-down ms-2 small text-muted d-none d-md-inline" style="font-size: 0.7rem" />
           </a>
           <!-- Bootstrap Dropdown Menu -->
           <ul
@@ -150,10 +125,7 @@ const emit = defineEmits(['toggle-sidebar']);
             style="width: 260px; border-radius: var(--apple-radius, 14px)"
           >
             <!-- Header Dropdown -->
-            <li
-              class="p-3 border-bottom d-flex align-items-center gap-3"
-              style="background-color: #f8fafc"
-            >
+            <li class="p-3 border-bottom d-flex align-items-center gap-3" style="background-color: #f8fafc">
               <img
                 src="https://ui-avatars.com/api/?name=John+Doe&background=0D8ABC&color=fff"
                 alt="User"
@@ -162,10 +134,9 @@ const emit = defineEmits(['toggle-sidebar']);
                 height="48"
               />
               <div class="lh-1">
-                <span
-                  class="d-block fw-bold"
-                  style="color: var(--title-color); font-size: 0.95rem; margin-bottom: 5px"
-                >John Doe</span>
+                <span class="d-block fw-bold" style="color: var(--title-color); font-size: 0.95rem; margin-bottom: 5px"
+                  >John Doe</span
+                >
                 <span style="color: var(--secondary-color-text); font-size: 0.8rem">john.doe@example.com</span>
               </div>
             </li>
@@ -235,10 +206,7 @@ const emit = defineEmits(['toggle-sidebar']);
             </div>
 
             <li>
-              <hr
-                class="dropdown-divider m-0"
-                style="border-color: var(--border); opacity: 1"
-              />
+              <hr class="dropdown-divider m-0" style="border-color: var(--border); opacity: 1" />
             </li>
 
             <!-- Footer Dropdown -->

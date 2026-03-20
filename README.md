@@ -46,7 +46,7 @@ The codebase is surgically divided into isolated layers to guarantee that the co
 │
 ├── infrastructure/             # 🔌 External Implementation Layer
 │   ├── api/                    # HTTP client network abstractions and interceptors
-│   ├── storage/                # Cookie and LocalStorage persistence adaptors 
+│   ├── storage/                # Cookie and LocalStorage persistence adaptors
 │   └── adapters/               # Transformers morphing external JSON to Domain Entities
 │
 ├── server/                     # 🖥️ Built-in Backend / Nitro Routes
@@ -60,14 +60,16 @@ The codebase is surgically divided into isolated layers to guarantee that the co
 ```
 
 ### Architectural Stratification Rules:
+
 1. **Domain Layer**: The absolute core. Possesses maximum stability. It knows absolutely nothing about Vue, Nuxt, external APIs, or the browser DOM.
-2. **Application Layer**: Coordinates sequential interactions between the user's intent, external sources, and the static Domain schemas. 
+2. **Application Layer**: Coordinates sequential interactions between the user's intent, external sources, and the static Domain schemas.
 3. **Infrastructure Layer**: Touches the unpredictable outside world. Contains data fetching libraries, browser APIs manipulation, and data schema normalization.
 4. **App (Presentation) Layer**: The visual endpoint. Exclusively handles DOM rendering, consumes coordinated logic from the Application layer, and listens to Vue reactivity via Pinia.
 
 ## ⚙️ Getting Started
 
 ### Prerequisites
+
 - Node.js (v18.x or newer recommended)
 - Package Managers: `npm`, `pnpm`, or `yarn`
 
@@ -87,7 +89,7 @@ Spin up the development server featuring Vite-powered Hot Module Replacement (HM
 
 ```bash
 npm run dev
-# or 
+# or
 pnpm dev
 ```
 
@@ -115,5 +117,6 @@ npm run test
 ## 🔒 Automated Code Quality Enforcement
 
 This repository implements **Husky** out of the box to defensively hijack vulnerable actions before merging code.
+
 - **Pre-commit Trigger**: Fires **lint-staged**, aggressively auditing modified `.vue` and `.ts` files synchronously utilizing the ESLint and Prettier config matrix to halt syntactically flawed code.
 - **Commit-msg Trigger**: Evaluates text input through **Commitlint**, assuring your log history remains semantically deterministic and adheres accurately to the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) standard.

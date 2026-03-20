@@ -1,19 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: [
-    '@nuxt/eslint',
-    '@pinia/nuxt',
-    '@pinia-plugin-persistedstate/nuxt',
-    '@nuxt/test-utils/module',
-  ],
+  modules: ['@nuxt/eslint', '@pinia/nuxt', '@nuxt/test-utils/module'],
   devtools: { enabled: true },
   app: {
     head: {
       title: 'BGI | SMPM',
-      meta: [
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { charset: 'utf-8' },
-      ],
+      meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1' }, { charset: 'utf-8' }],
       htmlAttrs: { lang: 'en' },
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/bgi_favicon.ico' },

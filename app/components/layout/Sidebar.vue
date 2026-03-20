@@ -16,12 +16,11 @@ watch(
   (newPath) => {
     if (newPath.startsWith('/users')) {
       openMenu.value = 'users';
-    }
-    else {
+    } else {
       // If navigating to Dashboard or others, close the accordion
       openMenu.value = null;
     }
-  },
+  }
 );
 
 const toggleMenu = (menu: string) => {
@@ -32,7 +31,7 @@ const toggleMenu = (menu: string) => {
 <template>
   <aside
     class="sidebar bg-white border-end d-flex flex-column shadow-sm"
-    :class="{ 'show': isOpen, 'hide-desktop': !isOpen }"
+    :class="{ show: isOpen, 'hide-desktop': !isOpen }"
   >
     <!-- Navigation -->
     <div class="sidebar-nav flex-grow-1 overflow-auto py-3">
@@ -44,13 +43,12 @@ const toggleMenu = (menu: string) => {
             :class="{ 'text-muted': $route.path !== '/' }"
             exact-active-class="active"
           >
-            <div class="d-flex align-items-center gap-3">
-              <i class="bi bi-grid-fill" /> Dashboard
-            </div>
+            <div class="d-flex align-items-center gap-3"><i class="bi bi-grid-fill" /> Dashboard</div>
             <span
               class="badge rounded-pill fs-60 shadow-sm"
               :class="$route.path === '/' ? 'bg-white text-primary' : 'bg-primary text-white'"
-            >MAIN</span>
+              >MAIN</span
+            >
           </NuxtLink>
         </li>
 
@@ -58,19 +56,12 @@ const toggleMenu = (menu: string) => {
           <a
             href="#"
             class="nav-link menu-link rounded px-3 py-2 d-flex align-items-center justify-content-between"
-            :class="
-              $route.path.startsWith('/users')
-                ? 'bg-primary-subtle text-primary fw-bold'
-                : 'text-muted'
-            "
+            :class="$route.path.startsWith('/users') ? 'bg-primary-subtle text-primary fw-bold' : 'text-muted'"
             style="transition: all 0.2s ease"
             @click.prevent="toggleMenu('users')"
           >
             <div class="d-flex align-items-center gap-3"><i class="bi bi-people" /> Users</div>
-            <i
-              class="bi small"
-              :class="openMenu === 'users' ? 'bi-chevron-down' : 'bi-chevron-right'"
-            />
+            <i class="bi small" :class="openMenu === 'users' ? 'bi-chevron-down' : 'bi-chevron-right'" />
           </a>
           <!-- Submenu Container -->
           <ul
@@ -85,10 +76,7 @@ const toggleMenu = (menu: string) => {
                 exact-active-class="active-submenu text-primary fw-bold"
                 style="font-size: 0.8rem"
               >
-                <i
-                  class="bi bi-circle fs-60"
-                  :class="{ 'text-primary': $route.path === '/users' }"
-                />
+                <i class="bi bi-circle fs-60" :class="{ 'text-primary': $route.path === '/users' }" />
                 Users List
               </NuxtLink>
             </li>
@@ -99,10 +87,7 @@ const toggleMenu = (menu: string) => {
                 exact-active-class="active-submenu text-primary fw-bold"
                 style="font-size: 0.8rem"
               >
-                <i
-                  class="bi bi-circle fs-60"
-                  :class="{ 'text-primary': $route.path === '/users/view' }"
-                />
+                <i class="bi bi-circle fs-60" :class="{ 'text-primary': $route.path === '/users/view' }" />
                 User View
               </NuxtLink>
             </li>
@@ -113,10 +98,7 @@ const toggleMenu = (menu: string) => {
                 exact-active-class="active-submenu text-primary fw-bold"
                 style="font-size: 0.8rem"
               >
-                <i
-                  class="bi bi-circle fs-60"
-                  :class="{ 'text-primary': $route.path === '/users/edit' }"
-                />
+                <i class="bi bi-circle fs-60" :class="{ 'text-primary': $route.path === '/users/edit' }" />
                 User Edit
               </NuxtLink>
             </li>
@@ -127,10 +109,7 @@ const toggleMenu = (menu: string) => {
                 exact-active-class="active-submenu text-primary fw-bold"
                 style="font-size: 0.8rem"
               >
-                <i
-                  class="bi bi-circle fs-60"
-                  :class="{ 'text-primary': $route.path === '/users/profile' }"
-                />
+                <i class="bi bi-circle fs-60" :class="{ 'text-primary': $route.path === '/users/profile' }" />
                 Profile
               </NuxtLink>
             </li>
@@ -141,10 +120,7 @@ const toggleMenu = (menu: string) => {
                 exact-active-class="active-submenu text-primary fw-bold"
                 style="font-size: 0.8rem"
               >
-                <i
-                  class="bi bi-circle fs-60"
-                  :class="{ 'text-primary': $route.path === '/users/settings' }"
-                />
+                <i class="bi bi-circle fs-60" :class="{ 'text-primary': $route.path === '/users/settings' }" />
                 Settings
               </NuxtLink>
             </li>
@@ -155,10 +131,7 @@ const toggleMenu = (menu: string) => {
                 exact-active-class="active-submenu text-primary fw-bold"
                 style="font-size: 0.8rem"
               >
-                <i
-                  class="bi bi-circle fs-60"
-                  :class="{ 'text-primary': $route.path === '/users/roles' }"
-                />
+                <i class="bi bi-circle fs-60" :class="{ 'text-primary': $route.path === '/users/roles' }" />
                 Roles &amp; Permissions
               </NuxtLink>
             </li>
@@ -170,56 +143,39 @@ const toggleMenu = (menu: string) => {
             to="#"
             class="nav-link menu-link rounded px-3 py-2 d-flex align-items-center justify-content-between text-muted"
           >
-            <div class="d-flex align-items-center gap-3">
-              <i class="bi bi-shield-lock" /> Authentication
-            </div>
+            <div class="d-flex align-items-center gap-3"><i class="bi bi-shield-lock" /> Authentication</div>
             <i class="bi bi-chevron-right small" />
           </NuxtLink>
         </li>
 
-        <li class="px-3 mt-4 mb-2 text-uppercase text-muted fw-bold nav-section-title">
-          Productivity Apps
-        </li>
+        <li class="px-3 mt-4 mb-2 text-uppercase text-muted fw-bold nav-section-title">Productivity Apps</li>
 
         <li class="nav-item px-3 mb-1">
-          <NuxtLink
-            to="#"
-            class="nav-link menu-link rounded px-3 py-2 d-flex align-items-center text-muted gap-3"
-          >
+          <NuxtLink to="#" class="nav-link menu-link rounded px-3 py-2 d-flex align-items-center text-muted gap-3">
             <i class="bi bi-calendar3" /> Calendar
           </NuxtLink>
         </li>
 
         <li class="nav-item px-3 mb-1">
-          <NuxtLink
-            to="#"
-            class="nav-link menu-link rounded px-3 py-2 d-flex align-items-center text-muted gap-3"
-          >
+          <NuxtLink to="#" class="nav-link menu-link rounded px-3 py-2 d-flex align-items-center text-muted gap-3">
             <i class="bi bi-kanban" /> Kanban Board
           </NuxtLink>
         </li>
 
         <li class="nav-item px-3 mb-1">
-          <NuxtLink
-            to="#"
-            class="nav-link menu-link rounded px-3 py-2 d-flex align-items-center text-muted gap-3"
-          >
+          <NuxtLink to="#" class="nav-link menu-link rounded px-3 py-2 d-flex align-items-center text-muted gap-3">
             <i class="bi bi-chat-square-dots" /> Chat
           </NuxtLink>
         </li>
 
-        <li class="px-3 mt-4 mb-2 text-uppercase text-muted fw-bold nav-section-title">
-          Interface
-        </li>
+        <li class="px-3 mt-4 mb-2 text-uppercase text-muted fw-bold nav-section-title">Interface</li>
 
         <li class="nav-item px-3 mb-1">
           <NuxtLink
             to="#"
             class="nav-link menu-link rounded px-3 py-2 d-flex align-items-center justify-content-between text-muted"
           >
-            <div class="d-flex align-items-center gap-3">
-              <i class="bi bi-ui-checks-grid" /> Components
-            </div>
+            <div class="d-flex align-items-center gap-3"><i class="bi bi-ui-checks-grid" /> Components</div>
             <i class="bi bi-chevron-right small" />
           </NuxtLink>
         </li>
@@ -238,12 +194,8 @@ const toggleMenu = (menu: string) => {
         />
         <div class="w-100 d-flex justify-content-between align-items-center">
           <div>
-            <h6 class="mb-0 fw-bold fs-80">
-              John Doe
-            </h6>
-            <div class="text-muted text-uppercase fs-65">
-              PRODUCT ADMIN
-            </div>
+            <h6 class="mb-0 fw-bold fs-80">John Doe</h6>
+            <div class="text-muted text-uppercase fs-65">PRODUCT ADMIN</div>
           </div>
           <button class="btn btn-sm btn-link text-muted p-0 border-0">
             <i class="bi bi-box-arrow-right" />

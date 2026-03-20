@@ -8,8 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     el = el.trim();
     if (all) {
       return [...document.querySelectorAll(el)];
-    }
-    else {
+    } else {
       return document.querySelector(el);
     }
   };
@@ -42,8 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!section) return;
       if (position >= section.offsetTop && position <= section.offsetTop + section.offsetHeight) {
         navbarlink.classList.add('active');
-      }
-      else {
+      } else {
         navbarlink.classList.remove('active');
       }
     });
@@ -56,8 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const headerScrolled = () => {
       if (window.scrollY > 100) {
         selectHeader.classList.add('header-scrolled');
-      }
-      else {
+      } else {
         selectHeader.classList.remove('header-scrolled');
       }
     };
@@ -73,8 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const toggleBacktotop = () => {
       if (window.scrollY > 100) {
         backtotop.classList.add('active');
-      }
-      else {
+      } else {
         backtotop.classList.remove('active');
       }
     };
@@ -98,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         form.classList.add('was-validated');
       },
-      false,
+      false
     );
   });
 });

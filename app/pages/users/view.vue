@@ -18,37 +18,18 @@ const user = ref({
 <template>
   <div class="container-fluid py-2">
     <!-- Header -->
-    <div
-      class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3"
-    >
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
       <div>
-        <h4
-          class="mb-1 fw-bold"
-          style="color: var(--title-color)"
-        >
-          User Command Profile
-        </h4>
+        <h4 class="mb-1 fw-bold" style="color: var(--title-color)">User Command Profile</h4>
         <nav aria-label="breadcrumb">
-          <ol
-            class="breadcrumb mb-0 small"
-            style="font-size: 0.8rem"
-          >
+          <ol class="breadcrumb mb-0 small" style="font-size: 0.8rem">
             <li class="breadcrumb-item">
-              <NuxtLink
-                to="/"
-                class="text-decoration-none text-muted"
-              >Home</NuxtLink>
+              <NuxtLink to="/" class="text-decoration-none text-muted">Home</NuxtLink>
             </li>
             <li class="breadcrumb-item">
-              <NuxtLink
-                to="/users"
-                class="text-decoration-none text-muted"
-              >Users</NuxtLink>
+              <NuxtLink to="/users" class="text-decoration-none text-muted">Users</NuxtLink>
             </li>
-            <li
-              class="breadcrumb-item active text-dark fw-medium"
-              aria-current="page"
-            >
+            <li class="breadcrumb-item active text-dark fw-medium" aria-current="page">
               {{ user.name }}
             </li>
           </ol>
@@ -74,15 +55,10 @@ const user = ref({
       <!-- Left Column -->
       <div class="col-12 col-xl-8 d-flex flex-column gap-4">
         <!-- Profile Card -->
-        <div
-          class="card border border-light shadow-sm bg-white"
-          style="border-radius: var(--apple-radius)"
-        >
+        <div class="card border border-light shadow-sm bg-white" style="border-radius: var(--apple-radius)">
           <div class="card-body p-4">
             <!-- Profile Info Row -->
-            <div
-              class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start mb-4 gap-3"
-            >
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start mb-4 gap-3">
               <div class="d-flex gap-3 gap-md-4 align-items-center">
                 <div class="position-relative">
                   <img
@@ -98,23 +74,17 @@ const user = ref({
                   />
                 </div>
                 <div>
-                  <h4
-                    class="fw-bolder mb-1"
-                    style="color: var(--title-color)"
-                  >
+                  <h4 class="fw-bolder mb-1" style="color: var(--title-color)">
                     {{ user.name }}
                   </h4>
-                  <p
-                    class="text-muted mb-2"
-                    style="font-size: 0.85rem"
-                  >
+                  <p class="text-muted mb-2" style="font-size: 0.85rem">
                     {{ user.email }}
                   </p>
                   <div class="d-flex flex-wrap gap-2">
-                    <span class="badge bg-light text-dark border px-2 py-1 fw-medium"><i class="bi bi-shield-check text-muted me-1" /> {{ user.role }}</span>
-                    <span class="badge bg-light text-dark border px-2 py-1 fw-medium text-muted">{{
-                      user.id
-                    }}</span>
+                    <span class="badge bg-light text-dark border px-2 py-1 fw-medium"
+                      ><i class="bi bi-shield-check text-muted me-1" /> {{ user.role }}</span
+                    >
+                    <span class="badge bg-light text-dark border px-2 py-1 fw-medium text-muted">{{ user.id }}</span>
                     <span class="badge bg-light text-dark border px-2 py-1 fw-medium text-muted">{{
                       user.department
                     }}</span>
@@ -133,9 +103,7 @@ const user = ref({
             <!-- Stats Row -->
             <div class="row g-3 mb-4">
               <div class="col-6 col-md-3">
-                <div
-                  class="p-3 border rounded-3 bg-light d-flex justify-content-between align-items-start h-100"
-                >
+                <div class="p-3 border rounded-3 bg-light d-flex justify-content-between align-items-start h-100">
                   <div>
                     <div
                       class="text-muted small text-uppercase fw-bold mb-1"
@@ -143,12 +111,7 @@ const user = ref({
                     >
                       LOGINS
                     </div>
-                    <div
-                      class="fw-bolder fs-5"
-                      style="color: var(--title-color)"
-                    >
-                      156
-                    </div>
+                    <div class="fw-bolder fs-5" style="color: var(--title-color)">156</div>
                   </div>
                   <div
                     class="bg-info-subtle text-info rounded p-1 d-flex align-items-center justify-content-center"
@@ -159,9 +122,7 @@ const user = ref({
                 </div>
               </div>
               <div class="col-6 col-md-3">
-                <div
-                  class="p-3 border rounded-3 bg-light d-flex justify-content-between align-items-start h-100"
-                >
+                <div class="p-3 border rounded-3 bg-light d-flex justify-content-between align-items-start h-100">
                   <div>
                     <div
                       class="text-muted small text-uppercase fw-bold mb-1"
@@ -169,12 +130,7 @@ const user = ref({
                     >
                       TASKS CLOSED
                     </div>
-                    <div
-                      class="fw-bolder fs-5"
-                      style="color: var(--title-color)"
-                    >
-                      42
-                    </div>
+                    <div class="fw-bolder fs-5" style="color: var(--title-color)">42</div>
                   </div>
                   <div
                     class="bg-success-subtle text-success rounded p-1 d-flex align-items-center justify-content-center"
@@ -185,9 +141,7 @@ const user = ref({
                 </div>
               </div>
               <div class="col-6 col-md-3">
-                <div
-                  class="p-3 border rounded-3 bg-light d-flex justify-content-between align-items-start h-100"
-                >
+                <div class="p-3 border rounded-3 bg-light d-flex justify-content-between align-items-start h-100">
                   <div>
                     <div
                       class="text-muted small text-uppercase fw-bold mb-1"
@@ -195,12 +149,7 @@ const user = ref({
                     >
                       PROJECTS
                     </div>
-                    <div
-                      class="fw-bolder fs-5"
-                      style="color: var(--title-color)"
-                    >
-                      18
-                    </div>
+                    <div class="fw-bolder fs-5" style="color: var(--title-color)">18</div>
                   </div>
                   <div
                     class="bg-primary-subtle text-primary rounded p-1 d-flex align-items-center justify-content-center"
@@ -211,9 +160,7 @@ const user = ref({
                 </div>
               </div>
               <div class="col-6 col-md-3">
-                <div
-                  class="p-3 border rounded-3 bg-light d-flex justify-content-between align-items-start h-100"
-                >
+                <div class="p-3 border rounded-3 bg-light d-flex justify-content-between align-items-start h-100">
                   <div>
                     <div
                       class="text-muted small text-uppercase fw-bold mb-1"
@@ -221,12 +168,7 @@ const user = ref({
                     >
                       TEAMS
                     </div>
-                    <div
-                      class="fw-bolder fs-5"
-                      style="color: var(--title-color)"
-                    >
-                      7
-                    </div>
+                    <div class="fw-bolder fs-5" style="color: var(--title-color)">7</div>
                   </div>
                   <div
                     class="bg-warning-subtle text-warning rounded p-1 d-flex align-items-center justify-content-center"
@@ -241,67 +183,29 @@ const user = ref({
             <!-- Details Table -->
             <div class="row g-3 px-2">
               <div class="col-12 col-md-6 d-flex justify-content-between border-bottom pb-2">
-                <span
-                  class="text-muted"
-                  style="font-size: 0.85rem"
-                >Phone</span>
-                <span
-                  class="fw-medium text-dark"
-                  style="font-size: 0.85rem"
-                >{{ user.phone }}</span>
+                <span class="text-muted" style="font-size: 0.85rem">Phone</span>
+                <span class="fw-medium text-dark" style="font-size: 0.85rem">{{ user.phone }}</span>
               </div>
               <div class="col-12 col-md-6 d-flex justify-content-between border-bottom pb-2">
-                <span
-                  class="text-muted"
-                  style="font-size: 0.85rem"
-                >Location</span>
-                <span
-                  class="fw-medium text-dark"
-                  style="font-size: 0.85rem"
-                >{{
-                  user.location
-                }}</span>
+                <span class="text-muted" style="font-size: 0.85rem">Location</span>
+                <span class="fw-medium text-dark" style="font-size: 0.85rem">{{ user.location }}</span>
               </div>
               <div class="col-12 col-md-6 d-flex justify-content-between pt-1">
-                <span
-                  class="text-muted"
-                  style="font-size: 0.85rem"
-                >Manager</span>
-                <span
-                  class="fw-medium text-dark"
-                  style="font-size: 0.85rem"
-                >{{
-                  user.manager
-                }}</span>
+                <span class="text-muted" style="font-size: 0.85rem">Manager</span>
+                <span class="fw-medium text-dark" style="font-size: 0.85rem">{{ user.manager }}</span>
               </div>
               <div class="col-12 col-md-6 d-flex justify-content-between pt-1">
-                <span
-                  class="text-muted"
-                  style="font-size: 0.85rem"
-                >Joined</span>
-                <span
-                  class="fw-medium text-dark"
-                  style="font-size: 0.85rem"
-                >{{
-                  user.joined
-                }}</span>
+                <span class="text-muted" style="font-size: 0.85rem">Joined</span>
+                <span class="fw-medium text-dark" style="font-size: 0.85rem">{{ user.joined }}</span>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Activity Timeline -->
-        <div
-          class="card border border-light shadow-sm bg-white"
-          style="border-radius: var(--apple-radius)"
-        >
+        <div class="card border border-light shadow-sm bg-white" style="border-radius: var(--apple-radius)">
           <div class="card-header bg-white border-bottom p-4 pb-3">
-            <h6
-              class="fw-bold mb-0"
-              style="color: var(--title-color)"
-            >
-              Activity Timeline
-            </h6>
+            <h6 class="fw-bold mb-0" style="color: var(--title-color)">Activity Timeline</h6>
           </div>
           <div class="card-body p-4">
             <div class="timeline position-relative ms-2 pe-2 pb-2">
@@ -311,64 +215,24 @@ const user = ref({
                   class="timeline-indicator position-absolute bg-success rounded-circle border border-2 border-white shadow-sm"
                   style="width: 12px; height: 12px; left: -6px; top: 4px"
                 />
-                <div
-                  class="timeline-line position-absolute bg-light h-100"
-                  style="width: 2px; left: -1px; top: 16px"
-                />
-                <h6
-                  class="fw-bold mb-1"
-                  style="font-size: 0.9rem; color: var(--title-color)"
-                >
-                  Logged In
-                </h6>
-                <p
-                  class="text-muted mb-1"
-                  style="font-size: 0.85rem"
-                >
-                  Chrome on Windows - New York, USA
-                </p>
-                <div
-                  class="text-muted"
-                  style="font-size: 0.75rem"
-                >
-                  Just now
-                </div>
+                <div class="timeline-line position-absolute bg-light h-100" style="width: 2px; left: -1px; top: 16px" />
+                <h6 class="fw-bold mb-1" style="font-size: 0.9rem; color: var(--title-color)">Logged In</h6>
+                <p class="text-muted mb-1" style="font-size: 0.85rem">Chrome on Windows - New York, USA</p>
+                <div class="text-muted" style="font-size: 0.75rem">Just now</div>
               </div>
 
               <!-- Item 2 -->
               <div class="timeline-item position-relative pb-4 ps-4">
                 <div
                   class="timeline-indicator position-absolute rounded-circle border border-2 border-white shadow-sm"
-                  style="
-                    width: 12px;
-                    height: 12px;
-                    left: -6px;
-                    top: 4px;
-                    background-color: var(--apple-blue);
-                  "
+                  style="width: 12px; height: 12px; left: -6px; top: 4px; background-color: var(--apple-blue)"
                 />
-                <div
-                  class="timeline-line position-absolute bg-light h-100"
-                  style="width: 2px; left: -1px; top: 16px"
-                />
-                <h6
-                  class="fw-bold mb-1"
-                  style="font-size: 0.9rem; color: var(--title-color)"
-                >
+                <div class="timeline-line position-absolute bg-light h-100" style="width: 2px; left: -1px; top: 16px" />
+                <h6 class="fw-bold mb-1" style="font-size: 0.9rem; color: var(--title-color)">
                   Updated profile information
                 </h6>
-                <p
-                  class="text-muted mb-1"
-                  style="font-size: 0.85rem"
-                >
-                  Changed phone number and location
-                </p>
-                <div
-                  class="text-muted"
-                  style="font-size: 0.75rem"
-                >
-                  2 hours ago
-                </div>
+                <p class="text-muted mb-1" style="font-size: 0.85rem">Changed phone number and location</p>
+                <div class="text-muted" style="font-size: 0.75rem">2 hours ago</div>
               </div>
 
               <!-- Item 3 -->
@@ -377,28 +241,12 @@ const user = ref({
                   class="timeline-indicator position-absolute bg-warning rounded-circle border border-2 border-white shadow-sm"
                   style="width: 12px; height: 12px; left: -6px; top: 4px"
                 />
-                <div
-                  class="timeline-line position-absolute bg-light h-100"
-                  style="width: 2px; left: -1px; top: 16px"
-                />
-                <h6
-                  class="fw-bold mb-1"
-                  style="font-size: 0.9rem; color: var(--title-color)"
-                >
+                <div class="timeline-line position-absolute bg-light h-100" style="width: 2px; left: -1px; top: 16px" />
+                <h6 class="fw-bold mb-1" style="font-size: 0.9rem; color: var(--title-color)">
                   Enabled Two-Factor Authentication
                 </h6>
-                <p
-                  class="text-muted mb-1"
-                  style="font-size: 0.85rem"
-                >
-                  Using authenticator app
-                </p>
-                <div
-                  class="text-muted"
-                  style="font-size: 0.75rem"
-                >
-                  Yesterday at 3:45 PM
-                </div>
+                <p class="text-muted mb-1" style="font-size: 0.85rem">Using authenticator app</p>
+                <div class="text-muted" style="font-size: 0.75rem">Yesterday at 3:45 PM</div>
               </div>
 
               <!-- Item 4 -->
@@ -407,28 +255,12 @@ const user = ref({
                   class="timeline-indicator position-absolute bg-primary rounded-circle border border-2 border-white shadow-sm"
                   style="width: 12px; height: 12px; left: -6px; top: 4px"
                 />
-                <div
-                  class="timeline-line position-absolute bg-light h-100"
-                  style="width: 2px; left: -1px; top: 16px"
-                />
-                <h6
-                  class="fw-bold mb-1"
-                  style="font-size: 0.9rem; color: var(--title-color)"
-                >
+                <div class="timeline-line position-absolute bg-light h-100" style="width: 2px; left: -1px; top: 16px" />
+                <h6 class="fw-bold mb-1" style="font-size: 0.9rem; color: var(--title-color)">
                   Joined Engineering team
                 </h6>
-                <p
-                  class="text-muted mb-1"
-                  style="font-size: 0.85rem"
-                >
-                  Added by Chris Thompson
-                </p>
-                <div
-                  class="text-muted"
-                  style="font-size: 0.75rem"
-                >
-                  3 days ago
-                </div>
+                <p class="text-muted mb-1" style="font-size: 0.85rem">Added by Chris Thompson</p>
+                <div class="text-muted" style="font-size: 0.75rem">3 days ago</div>
               </div>
 
               <!-- Item 5 -->
@@ -437,24 +269,11 @@ const user = ref({
                   class="timeline-indicator position-absolute bg-success rounded-circle border border-2 border-white shadow-sm"
                   style="width: 12px; height: 12px; left: -6px; top: 4px"
                 />
-                <h6
-                  class="fw-bold mb-1"
-                  style="font-size: 0.9rem; color: var(--title-color)"
-                >
+                <h6 class="fw-bold mb-1" style="font-size: 0.9rem; color: var(--title-color)">
                   Completed 5 tasks in Project Alpha
                 </h6>
-                <p
-                  class="text-muted mb-1"
-                  style="font-size: 0.85rem"
-                >
-                  Sprint v2 milestone reached
-                </p>
-                <div
-                  class="text-muted"
-                  style="font-size: 0.75rem"
-                >
-                  5 days ago
-                </div>
+                <p class="text-muted mb-1" style="font-size: 0.85rem">Sprint v2 milestone reached</p>
+                <div class="text-muted" style="font-size: 0.75rem">5 days ago</div>
               </div>
             </div>
           </div>
@@ -464,72 +283,34 @@ const user = ref({
       <!-- Right Column -->
       <div class="col-12 col-xl-4 d-flex flex-column gap-4">
         <!-- Account Health Card -->
-        <div
-          class="card border border-light shadow-sm bg-white"
-          style="border-radius: var(--apple-radius)"
-        >
+        <div class="card border border-light shadow-sm bg-white" style="border-radius: var(--apple-radius)">
           <div class="card-header bg-white border-bottom p-4 pb-3">
-            <h6
-              class="fw-bold mb-0"
-              style="color: var(--title-color)"
-            >
-              Account Health
-            </h6>
+            <h6 class="fw-bold mb-0" style="color: var(--title-color)">Account Health</h6>
           </div>
           <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <span
-                class="text-muted"
-                style="font-size: 0.85rem"
-              >Status</span>
-              <span
-                class="fw-medium text-dark"
-                style="font-size: 0.85rem"
-              >Active</span>
+              <span class="text-muted" style="font-size: 0.85rem">Status</span>
+              <span class="fw-medium text-dark" style="font-size: 0.85rem">Active</span>
             </div>
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <span
-                class="text-muted"
-                style="font-size: 0.85rem"
-              >Email Verification</span>
-              <span
-                class="fw-medium text-success d-flex align-items-center gap-1"
-                style="font-size: 0.85rem"
-              >
+              <span class="text-muted" style="font-size: 0.85rem">Email Verification</span>
+              <span class="fw-medium text-success d-flex align-items-center gap-1" style="font-size: 0.85rem">
                 <i class="bi bi-check-circle-fill" /> Verified
               </span>
             </div>
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <span
-                class="text-muted"
-                style="font-size: 0.85rem"
-              >2FA</span>
-              <span
-                class="fw-medium text-success d-flex align-items-center gap-1"
-                style="font-size: 0.85rem"
-              >
+              <span class="text-muted" style="font-size: 0.85rem">2FA</span>
+              <span class="fw-medium text-success d-flex align-items-center gap-1" style="font-size: 0.85rem">
                 <i class="bi bi-shield-check" /> Enabled
               </span>
             </div>
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <span
-                class="text-muted"
-                style="font-size: 0.85rem"
-              >Last Login</span>
-              <span
-                class="fw-medium text-dark"
-                style="font-size: 0.85rem"
-              >Just now</span>
+              <span class="text-muted" style="font-size: 0.85rem">Last Login</span>
+              <span class="fw-medium text-dark" style="font-size: 0.85rem">Just now</span>
             </div>
             <div class="d-flex justify-content-between align-items-center mb-4">
-              <span
-                class="text-muted"
-                style="font-size: 0.85rem"
-              >Risk Score</span>
-              <span
-                class="fw-medium text-dark"
-                style="font-size: 0.85rem"
-              >Low</span>
+              <span class="text-muted" style="font-size: 0.85rem">Risk Score</span>
+              <span class="fw-medium text-dark" style="font-size: 0.85rem">Low</span>
             </div>
 
             <!-- Team Memberships -->
@@ -542,18 +323,8 @@ const user = ref({
                   <i class="bi bi-code-slash" />
                 </div>
                 <div class="flex-grow-1">
-                  <div
-                    class="fw-bold"
-                    style="font-size: 0.85rem; color: var(--title-color)"
-                  >
-                    Engineering
-                  </div>
-                  <div
-                    class="text-muted"
-                    style="font-size: 0.75rem"
-                  >
-                    12 members
-                  </div>
+                  <div class="fw-bold" style="font-size: 0.85rem; color: var(--title-color)">Engineering</div>
+                  <div class="text-muted" style="font-size: 0.75rem">12 members</div>
                 </div>
               </div>
               <div class="p-2 border rounded d-flex align-items-center gap-3">
@@ -564,18 +335,8 @@ const user = ref({
                   <i class="bi bi-box" />
                 </div>
                 <div class="flex-grow-1">
-                  <div
-                    class="fw-bold"
-                    style="font-size: 0.85rem; color: var(--title-color)"
-                  >
-                    Product
-                  </div>
-                  <div
-                    class="text-muted"
-                    style="font-size: 0.75rem"
-                  >
-                    5 members
-                  </div>
+                  <div class="fw-bold" style="font-size: 0.85rem; color: var(--title-color)">Product</div>
+                  <div class="text-muted" style="font-size: 0.75rem">5 members</div>
                 </div>
               </div>
               <div class="p-2 border rounded d-flex align-items-center gap-3">
@@ -586,18 +347,8 @@ const user = ref({
                   <i class="bi bi-palette" />
                 </div>
                 <div class="flex-grow-1">
-                  <div
-                    class="fw-bold"
-                    style="font-size: 0.85rem; color: var(--title-color)"
-                  >
-                    Design
-                  </div>
-                  <div
-                    class="text-muted"
-                    style="font-size: 0.75rem"
-                  >
-                    8 members
-                  </div>
+                  <div class="fw-bold" style="font-size: 0.85rem; color: var(--title-color)">Design</div>
+                  <div class="text-muted" style="font-size: 0.75rem">8 members</div>
                 </div>
               </div>
             </div>
@@ -605,17 +356,9 @@ const user = ref({
         </div>
 
         <!-- Access Rights Card -->
-        <div
-          class="card border border-light shadow-sm bg-white"
-          style="border-radius: var(--apple-radius)"
-        >
+        <div class="card border border-light shadow-sm bg-white" style="border-radius: var(--apple-radius)">
           <div class="card-header bg-white border-bottom p-4 pb-3">
-            <h6
-              class="fw-bold mb-0"
-              style="color: var(--title-color)"
-            >
-              Access Rights
-            </h6>
+            <h6 class="fw-bold mb-0" style="color: var(--title-color)">Access Rights</h6>
           </div>
           <div class="card-body p-4">
             <div
@@ -625,17 +368,11 @@ const user = ref({
               <i class="bi bi-info-circle mt-1" />
               <div>
                 Admin role with full system scope. Managed via
-                <a
-                  href="#"
-                  class="text-primary fw-medium"
-                >Roles &amp; Permissions</a>.
+                <a href="#" class="text-primary fw-medium">Roles &amp; Permissions</a>.
               </div>
             </div>
 
-            <ul
-              class="list-unstyled mb-0"
-              style="font-size: 0.85rem"
-            >
+            <ul class="list-unstyled mb-0" style="font-size: 0.85rem">
               <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
                 <span class="text-dark">Dashboard</span> <i class="bi bi-check2 text-success" />
               </li>
@@ -656,17 +393,9 @@ const user = ref({
         </div>
 
         <!-- Active Sessions Card -->
-        <div
-          class="card border border-light shadow-sm bg-white"
-          style="border-radius: var(--apple-radius)"
-        >
+        <div class="card border border-light shadow-sm bg-white" style="border-radius: var(--apple-radius)">
           <div class="card-header bg-white border-bottom p-4 pb-3">
-            <h6
-              class="fw-bold mb-0"
-              style="color: var(--title-color)"
-            >
-              Active Sessions
-            </h6>
+            <h6 class="fw-bold mb-0" style="color: var(--title-color)">Active Sessions</h6>
           </div>
           <div class="card-body p-4">
             <div class="p-3 border rounded d-flex align-items-center gap-3">
@@ -678,23 +407,12 @@ const user = ref({
               </div>
               <div class="flex-grow-1">
                 <div class="d-flex align-items-center gap-2 mb-1">
-                  <div
-                    class="fw-bold"
-                    style="font-size: 0.85rem; color: var(--title-color)"
+                  <div class="fw-bold" style="font-size: 0.85rem; color: var(--title-color)">Chrome on Windows</div>
+                  <span class="badge bg-success-subtle text-success rounded-pill fw-medium" style="font-size: 0.65rem"
+                    >Current</span
                   >
-                    Chrome on Windows
-                  </div>
-                  <span
-                    class="badge bg-success-subtle text-success rounded-pill fw-medium"
-                    style="font-size: 0.65rem"
-                  >Current</span>
                 </div>
-                <div
-                  class="text-muted"
-                  style="font-size: 0.75rem"
-                >
-                  New York • Active now
-                </div>
+                <div class="text-muted" style="font-size: 0.75rem">New York • Active now</div>
               </div>
             </div>
           </div>
@@ -705,10 +423,10 @@ const user = ref({
 </template>
 
 <style scoped>
-  .card {
-    transition: all 0.2s ease;
-  }
-  .card:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
-  }
+.card {
+  transition: all 0.2s ease;
+}
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+}
 </style>
