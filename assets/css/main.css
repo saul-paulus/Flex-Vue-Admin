@@ -510,14 +510,15 @@ small,
 
 /* Dropdown Customization */
 .dropdown-menu {
+  width: 200px;
   position: absolute;
   right: -1rem;
   top: 2.8rem;
   background: var(--bg-elevated);
   border-color: var(--border);
-  box-shadow: var(--shadow-lg);
-  border-radius: var(--radius-md);
-  padding: var(--space-2);
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-sm);
+  padding: var(--space-5);
 }
 
 .dropdown-item {
