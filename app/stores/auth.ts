@@ -10,13 +10,20 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async fetchAuthlogin(payload: { id_personal: string; password: string }) {
-      const { $authRepository } = useNuxtApp();
+      if (payload.id_personal === '007100' && payload.password === '90') {
+        // Mock successful login
+        this.token = 'dummy-token-12345';
+        this.user = {
+          id: 1,
+          id_personal: '007100',
+          name: 'Administrator',
+          email: 'admin@niceadmin.com',
+        } as AuthUser;
+        return;
+      }
 
-      const result = await $authRepository.login(payload);
-      const token = result.data.access_token;
-
-      this.token = token;
-      this.user = result.data.user;
+      // Simulate API call failure for any other credentials
+      throw new Error('Invalid Id Personal or Password');
     },
 
     logout() {

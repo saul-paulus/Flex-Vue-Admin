@@ -296,6 +296,7 @@ const handleAuthLogin = async (event: Event) => {
 .uppercase {
   text-transform: uppercase;
 }
+
 .letter-spacing-1 {
   letter-spacing: 1px;
 }
