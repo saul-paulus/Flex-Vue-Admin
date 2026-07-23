@@ -1,34 +1,70 @@
 import { defineStore } from 'pinia';
-import type { AuthUser } from '~/domain/entities/Auth';
+import type { AuthUser, LoginPayload } from '~/domain/entities/Auth';
+import { AuthService } from '~/infrastructure/api/AuthService';
+import { tokenStorage } from '~/infrastructure/storage/tokenStorage';
+
+function getAuthRepository() {
+  try {
+    const nuxtApp = useNuxtApp();
+    if (nuxtApp?.$authRepository) {
+      return nuxtApp.$authRepository;
+    }
+  } catch (_e) {
+    // ignore if called outside nuxt context
+  }
+  return new AuthService();
+}
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: null as string | null | undefined,
+    token: (tokenStorage.token || null) as string | null | undefined,
     user: null as AuthUser | null | undefined,
   }),
   persist: true,
 
   actions: {
-    async fetchAuthlogin(payload: { id_personal: string; password: string }) {
-      if (payload.id_personal === '007100' && payload.password === '90') {
-        // Mock successful login
-        this.token = 'dummy-token-12345';
-        this.user = {
-          id: 1,
-          id_personal: '007100',
-          name: 'Administrator',
-          email: 'admin@niceadmin.com',
-        } as AuthUser;
-        return;
-      }
+    async fetchAuthlogin(payload: LoginPayload) {
+      const authRepository = getAuthRepository();
+      const response = await authRepository.login(payload);
 
-      // Simulate API call failure for any other credentials
-      throw new Error('Invalid Id Personal or Password');
+      if (response && response.success && response.data?.access_token) {
+        this.token = response.data.access_token;
+        tokenStorage.token = response.data.access_token;
+
+        await this.fetchUserMe();
+        return response;
+      } else {
+        throw new Error(response?.message || 'Invalid Id Personal or Password');
+      }
+    },
+
+    async login(id_personal: string, password: string) {
+      return this.fetchAuthlogin({ id_personal, password });
+    },
+
+    async fetchUserMe() {
+      const authRepository = getAuthRepository();
+      try {
+        const response = await authRepository.getUserMe();
+        if (response && response.success && response.data) {
+          this.user = response.data;
+          return response.data;
+        }
+      } catch (error) {
+        console.error('Failed to fetch user me:', error);
+      }
+      return null;
+    },
+
+    clearToken() {
+      this.token = null;
+      tokenStorage.clear();
     },
 
     logout() {
       this.token = null;
       this.user = null;
+      tokenStorage.clear();
     },
   },
 });

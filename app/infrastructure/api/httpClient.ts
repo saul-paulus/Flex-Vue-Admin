@@ -2,7 +2,7 @@ import { $fetch, type FetchOptions } from 'ofetch';
 import { useAuthStore } from '~/stores/auth';
 
 const fetcher = $fetch.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081/api/v1',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
   onRequest({ options }) {
     // Dapatkan instance auth store
     const authStore = useAuthStore();
@@ -21,7 +21,7 @@ const fetcher = $fetch.create({
       const authStore = useAuthStore();
       authStore.logout();
       // Paksa navigasi ke halaman login
-      navigateTo('/login');
+      navigateTo('/auth/login');
     }
   },
 });

@@ -57,7 +57,6 @@ const handleAuthLogin = async (event: Event) => {
           >PRO</span
         >
       </div>
-
       <div class="mt-auto mb-auto pe-4 position-relative" style="z-index: 2">
         <h2 class="fw-bolder mb-3" style="line-height: 1.25; font-size: 1.8rem">
           Command your operations from one modern control center.
@@ -65,7 +64,6 @@ const handleAuthLogin = async (event: Event) => {
         <p class="mb-4 text-white text-opacity-75 small" style="max-width: 380px; line-height: 1.6">
           Track growth, team activity, and operational risk with a dashboard built for fast decisions.
         </p>
-
         <ul class="list-unstyled d-flex flex-column gap-2 fs-sm text-white text-opacity-75">
           <li class="d-flex align-items-center gap-2">
             <i class="bi bi-check2-circle" />

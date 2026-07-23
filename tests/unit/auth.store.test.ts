@@ -8,6 +8,7 @@ import { tokenStorage } from '~/infrastructure/storage/tokenStorage';
 const { mockRepo } = vi.hoisted(() => ({
   mockRepo: {
     login: vi.fn(),
+    getUserMe: vi.fn(),
   },
 }));
 
@@ -44,13 +45,43 @@ describe('auth store', () => {
 
   it('should login successfully', async () => {
     const store = useAuthStore();
-    const mockToken = 'new-token';
-    mockRepo.login.mockResolvedValueOnce(mockToken);
+    const mockLoginResponse = {
+      success: true,
+      responseCode: 200,
+      message: 'User berhasil login',
+      data: {
+        access_token: 'new-token',
+        token_type: 'Bearer',
+        expires_in: 3600,
+      },
+      meta: null,
+      links: null,
+    };
+    const mockUserResponse = {
+      success: true,
+      responseCode: 200,
+      message: 'User berhasil diambil',
+      data: {
+        id: 9,
+        username: 'Test User',
+        id_personal: '1234567890',
+        codeuker: '6617',
+        id_wewenang: 1,
+        is_active: 1,
+      },
+      meta: null,
+      links: null,
+    };
 
-    await store.login('user123', 'pass123');
+    mockRepo.login.mockResolvedValueOnce(mockLoginResponse);
+    mockRepo.getUserMe.mockResolvedValueOnce(mockUserResponse);
 
-    expect(store.token).toBe(mockToken);
-    expect(mockRepo.login).toHaveBeenCalledWith({ id_personal: 'user123', password: 'pass123' });
+    await store.login('1234567890', 'password');
+
+    expect(store.token).toBe('new-token');
+    expect(store.user?.username).toBe('Test User');
+    expect(mockRepo.login).toHaveBeenCalledWith({ id_personal: '1234567890', password: 'password' });
+    expect(mockRepo.getUserMe).toHaveBeenCalled();
   });
 
   it('should clearToken correctly', () => {
@@ -66,7 +97,14 @@ describe('auth store', () => {
   it('should logout correctly', () => {
     const store = useAuthStore();
     store.token = 'some-token';
-    store.user = { id_personal: '1', name: 'Test User' };
+    store.user = {
+      id: 9,
+      username: 'Test User',
+      id_personal: '1234567890',
+      codeuker: '6617',
+      id_wewenang: 1,
+      is_active: 1,
+    };
 
     store.logout();
 
