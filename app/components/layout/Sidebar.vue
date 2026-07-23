@@ -29,6 +29,11 @@ watch(
 const toggleMenu = (menu: string) => {
   openMenu.value = openMenu.value === menu ? null : menu;
 };
+
+const handleLogout = async () => {
+  await authStore.logout();
+  await navigateTo('/auth/login');
+};
 </script>
 
 <template>
@@ -122,7 +127,7 @@ const toggleMenu = (menu: string) => {
               {{ user?.id_personal || 'No ID' }}
             </div>
           </div>
-          <button class="btn btn-sm btn-link text-secondary p-0 border-0" @click="authStore.logout()">
+          <button class="btn btn-sm btn-link text-secondary p-0 border-0" @click="handleLogout">
             <i class="bi bi-box-arrow-right" />
           </button>
         </div>

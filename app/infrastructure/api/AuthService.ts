@@ -1,4 +1,4 @@
-import type { AuthLoginResponse, AuthUserResponse, LoginPayload } from '~/domain/entities/Auth';
+import type { AuthLoginResponse, AuthLogoutResponse, AuthUserResponse, LoginPayload } from '~/domain/entities/Auth';
 import type { AuthRepository } from '~/domain/repositories/AuthRepository';
 
 import { httpClient } from './httpClient';
@@ -37,6 +37,15 @@ export const MOCK_USER_ME_RESPONSE: AuthUserResponse = {
   links: null,
 };
 
+export const MOCK_LOGOUT_SUCCESS_RESPONSE: AuthLogoutResponse = {
+  success: true,
+  responseCode: 200,
+  message: 'User berhasil logout',
+  data: null,
+  meta: null,
+  links: null,
+};
+
 export class AuthService implements AuthRepository {
   async login(LoginPayload: LoginPayload): Promise<AuthLoginResponse> {
     try {
@@ -56,6 +65,15 @@ export class AuthService implements AuthRepository {
       return data;
     } catch (_error) {
       return MOCK_USER_ME_RESPONSE;
+    }
+  }
+
+  async logout(): Promise<AuthLogoutResponse> {
+    try {
+      const data = await httpClient.post<AuthLogoutResponse>('/auth/logout');
+      return data;
+    } catch (_error) {
+      return MOCK_LOGOUT_SUCCESS_RESPONSE;
     }
   }
 }

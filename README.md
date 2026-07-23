@@ -129,14 +129,17 @@ Untuk keperluan uji coba (_testing_) tanpa harus menghubungkan ke database secar
    - Token akses (`access_token`) akan disimpan ke dalam state Pinia dan browser cookie secara otomatis.
    - Aplikasi kemudian memanggil `GET /api/v1/auth/me` untuk mendapatkan data pengguna (`Test User`).
 
-5. **Pengalihan Halaman (Redirect)**:
-   Setelah login berhasil, Anda akan otomatis diarahkan ke halaman **Dashboard** (`http://localhost:3000/dashboard`).
+5. **Pengalihan Halaman & Proteksi Route Guard**:
+   - Setelah login berhasil, Anda akan otomatis diarahkan ke halaman **Dashboard** (`http://localhost:3000/dashboard`).
+   - **PENTING**: Selama token autentikasi masih tersimpan (belum logout), pengguna **TIDAK BISA** membuka kembali halaman login (`http://localhost:3000/auth/login`). Jika pengguna mencoba mengetikkan URL `/auth/login` secara manual di peramban, middleware akan secara otomatis menolak dan mengarahkannya kembali ke halaman Dashboard.
 
 6. **Memeriksa Data Pengguna**:
    Nama pengguna (`Test User`) dan ID Personal (`1234567890`) akan tampil pada **Header** (kanan atas) dan **Sidebar** (kiri bawah).
 
-7. **Cara Logout**:
-   Klik profil di sebelah kanan atas Header lalu pilih **Sign Out**, atau klik tombol ikon Logout pada bagian bawah Sidebar.
+7. **Cara Logout & Penghapusan Token**:
+   - Untuk dapat membuka kembali halaman login atau mengganti akun, pengguna **HARUS** melakukan logout untuk menghapus token.
+   - Logout dapat dilakukan dengan mengeklik profil di kanan atas Header lalu pilih **Sign Out**, mengeklik ikon Logout pada Sidebar, atau membuka alamat `http://localhost:3000/auth/logout`.
+   - Proses logout akan memanggil Endpoint `POST /api/auth/logout`, mengosongkan state Pinia & browser cookie, lalu mengarahkan kembali ke `/auth/login`.
 
 ---
 
@@ -188,6 +191,21 @@ Untuk keperluan uji coba (_testing_) tanpa harus menghubungkan ke database secar
       "created_at": "2026-07-10T01:20:13.000000Z",
       "updated_at": "2026-07-10T01:20:13.000000Z"
     },
+    "meta": null,
+    "links": null
+  }
+  ```
+
+#### 3. Endpoint Logout (`POST /api/auth/logout`)
+
+- **Header**: `Authorization: Bearer <access_token>`
+- **Response (HTTP 200 OK)**:
+  ```json
+  {
+    "success": true,
+    "responseCode": 200,
+    "message": "User berhasil logout",
+    "data": null,
     "meta": null,
     "links": null
   }

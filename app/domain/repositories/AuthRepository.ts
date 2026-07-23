@@ -1,4 +1,4 @@
-import type { AuthLoginResponse, AuthUserResponse, LoginPayload } from '../entities/Auth';
+import type { AuthLoginResponse, AuthLogoutResponse, AuthUserResponse, LoginPayload } from '../entities/Auth';
 
 export interface AuthRepository {
   /**
@@ -13,4 +13,10 @@ export interface AuthRepository {
    * @returns Promise yang menyelesaikan dengan AuthUserResponse
    */
   getUserMe(): Promise<AuthUserResponse>;
+
+  /**
+   * Melakukan proses logout
+   * @returns Promise yang menyelesaikan dengan AuthLogoutResponse
+   */
+  logout(): Promise<AuthLogoutResponse>;
 }

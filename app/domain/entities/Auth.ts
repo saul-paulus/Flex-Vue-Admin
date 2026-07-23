@@ -33,3 +33,4 @@ export interface ApiResponse<T> {
 
 export type AuthLoginResponse = ApiResponse<AuthTokenData>;
 export type AuthUserResponse = ApiResponse<AuthUser>;
+export type AuthLogoutResponse = ApiResponse<null>;

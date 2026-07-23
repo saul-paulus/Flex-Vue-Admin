@@ -61,10 +61,17 @@ export const useAuthStore = defineStore('auth', {
       tokenStorage.clear();
     },
 
-    logout() {
-      this.token = null;
-      this.user = null;
-      tokenStorage.clear();
+    async logout() {
+      const authRepository = getAuthRepository();
+      try {
+        await authRepository.logout();
+      } catch (_e) {
+        // ignore logout API error
+      } finally {
+        this.token = null;
+        this.user = null;
+        tokenStorage.clear();
+      }
     },
   },
 });
