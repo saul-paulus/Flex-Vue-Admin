@@ -18,7 +18,7 @@ const errorMessages = ref('');
 
 const router = useRouter();
 
-const handleAuthLogin = async (event: Event) => {
+const handleSubmitLogin = async (event: Event) => {
   const form = event.target as HTMLFormElement;
 
   if (!form.checkValidity()) {
@@ -79,7 +79,6 @@ const handleAuthLogin = async (event: Event) => {
           </li>
         </ul>
       </div>
-
       <div
         class="position-absolute translate-middle"
         style="
@@ -93,7 +92,6 @@ const handleAuthLogin = async (event: Event) => {
         "
       ></div>
     </div>
-
     <!-- Right Column: Login Form -->
     <div
       class="col-12 col-lg-7 col-xl-8 d-flex align-items-center justify-content-center position-relative overflow-y-auto"
@@ -112,7 +110,6 @@ const handleAuthLogin = async (event: Event) => {
               <h4 class="fw-bold mb-1 text-primary">Welcome back</h4>
               <p class="text-secondary fs-xs mb-0">Sign in to continue to your niceAdmin workspace.</p>
             </div>
-
             <div
               v-if="errorMessages"
               class="alert alert-danger border-0 mb-4 shadow-sm py-2 px-3 text-center"
@@ -123,12 +120,11 @@ const handleAuthLogin = async (event: Event) => {
                 <div class="fs-xs fw-medium">{{ errorMessages }}</div>
               </div>
             </div>
-
             <form
               class="needs-validation"
               :class="{ 'was-validated': isFormValidated }"
               novalidate
-              @submit.prevent="handleAuthLogin"
+              @submit.prevent="handleSubmitLogin"
             >
               <div class="mb-3">
                 <label class="form-label fw-bold fs-xs text-secondary mb-1">Id Personal</label>
@@ -144,7 +140,6 @@ const handleAuthLogin = async (event: Event) => {
                   <span>Invalid Id Personal</span>
                 </div>
               </div>
-
               <div class="mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                   <label class="form-label fw-bold fs-xs text-secondary mb-0">Password</label>
@@ -172,15 +167,17 @@ const handleAuthLogin = async (event: Event) => {
                   </div>
                 </div>
               </div>
-
               <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="form-check mb-0">
-                  <input id="rememberMe" v-model="rememberMe" class="form-check-input" type="checkbox" />
+                  <input id="rememberMe" v-model="rememberMe" class="form-check-input" type="checkbox" required />
                   <label class="form-check-label fs-xs text-secondary pt-1" for="rememberMe">Remember me</label>
+                  <div class="invalid-feedback fs-xs">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    <span>Remember me required</span>
+                  </div>
                 </div>
                 <a href="#" class="text-decoration-none fs-xs fw-medium text-accent">Use SSO</a>
               </div>
-
               <div class="mb-1">
                 <button
                   v-if="!isLoading"
@@ -199,13 +196,11 @@ const handleAuthLogin = async (event: Event) => {
                   Sign In...
                 </button>
               </div>
-
               <div class="d-flex align-items-center mb-4">
                 <hr class="flex-grow-1 border opacity-50" />
                 <span class="px-3 text-tertiary fs-xs uppercase letter-spacing-1">OR</span>
                 <hr class="flex-grow-1 border opacity-50" />
               </div>
-
               <div class="row g-2 mb-4">
                 <div class="col-6">
                   <button
@@ -226,7 +221,6 @@ const handleAuthLogin = async (event: Event) => {
                   </button>
                 </div>
               </div>
-
               <div class="text-center fs-xs">
                 <span class="text-secondary">Don't have an account?</span>
                 <a href="#" class="text-decoration-none fw-bold text-accent ms-1">Create one</a>
@@ -234,7 +228,6 @@ const handleAuthLogin = async (event: Event) => {
             </form>
           </div>
         </div>
-
         <div class="text-center text-tertiary fs-xs">
           <p class="mb-2">© 2024 niceAdmin &bull; Workspace Intelligence</p>
           <div class="d-flex justify-content-center gap-2">
