@@ -1,5 +1,6 @@
 # niceAdmin - Dashboard Administrasi Enterprise Nuxt 4
 
+![alt text](image.png)
 Aplikasi dashboard administrasi tingkat enterprise yang scalable dan siap untuk produksi, dibangun menggunakan **Nuxt 4** dan **Vue 3**. Proyek ini menerapkan prinsip **Clean Architecture** secara ketat untuk memisahkan logika bisnis dari framework UI, sehingga meningkatkan pemeliharaan kode, mempermudah pengujian, dan menjamin skalabilitas jangka panjang.
 
 ---
