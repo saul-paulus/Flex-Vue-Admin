@@ -1,92 +1,36 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, computed, ref } from 'vue';
+import { useUsers } from '../../composables/useUsers';
 
-const users = ref([
-  {
-    id: 1,
-    name: 'Sarah Johnson',
-    email: 'sarah.j@example.com',
-    avatar: 'https://i.pravatar.cc/150?u=sarah',
-    role: 'Admin',
-    status: 'Active',
-    lastActive: 'Just now',
-    joined: 'Jan 15, 2024',
-  },
-  {
-    id: 2,
-    name: 'Michael Chen',
-    email: 'm.chen@example.com',
-    avatar: 'https://i.pravatar.cc/150?u=michael',
-    role: 'Manager',
-    status: 'Active',
-    lastActive: '5 mins ago',
-    joined: 'Feb 12, 2024',
-  },
-  {
-    id: 3,
-    name: 'Emily Rodriguez',
-    email: 'emily@example.com',
-    avatar: 'https://i.pravatar.cc/150?u=emily',
-    role: 'User',
-    status: 'Active',
-    lastActive: '2 hours ago',
-    joined: 'Mar 12, 2024',
-  },
-  {
-    id: 4,
-    name: 'David Kim',
-    email: 'd.kim@example.com',
-    avatar: 'https://i.pravatar.cc/150?u=david',
-    role: 'User',
-    status: 'Inactive',
-    lastActive: '5 days ago',
-    joined: 'Jun 25, 2024',
-  },
-  {
-    id: 5,
-    name: 'Jessica Taylor',
-    email: 'j.taylor@example.com',
-    avatar: 'https://i.pravatar.cc/150?u=jessica',
-    role: 'Manager',
-    status: 'Active',
-    lastActive: '1 hour ago',
-    joined: 'Oct 5, 2023',
-  },
-  {
-    id: 6,
-    name: 'Robert Martinez',
-    email: 'r.martinez@example.com',
-    avatar: 'https://i.pravatar.cc/150?u=robert',
-    role: 'User',
-    status: 'Active',
-    lastActive: '30 mins ago',
-    joined: 'Apr 19, 2024',
-  },
-  {
-    id: 7,
-    name: 'Amanda Wilson',
-    email: 'a.wilson@example.com',
-    avatar: 'https://i.pravatar.cc/150?u=amanda',
-    role: 'User',
-    status: 'Pending',
-    lastActive: 'Never',
-    joined: 'May 2, 2024',
-  },
-  {
-    id: 8,
-    name: 'Chris Thompson',
-    email: 'c.thompson@example.com',
-    avatar: 'https://i.pravatar.cc/150?u=chris',
-    role: 'Admin',
-    status: 'Active',
-    lastActive: '15 mins ago',
-    joined: 'Nov 30, 2023',
-  },
-]);
+const {
+  users,
+  tabs,
+  roleFilters,
+  searchQuery,
+  activeTab,
+  selectedRole,
+  sortField,
+  sortDirection,
+  pagination,
+  isLoading,
+  getUsers,
+  getSummary,
+  searchUsers,
+  filterUsers,
+  sortUsers,
+  setPage,
+} = useUsers();
+
+onMounted(async () => {
+  await getUsers();
+});
+
+const currentSummary = computed(() => getSummary());
 
 const getRoleBadgeClasses = (role: string) => {
   if (role === 'Admin') return 'bg-danger-subtle text-danger';
   if (role === 'Manager') return 'bg-warning-subtle text-warning';
+  if (role === 'Supervisor') return 'bg-info-subtle text-info';
   return 'bg-primary-subtle text-primary';
 };
 
@@ -94,6 +38,33 @@ const getStatusIconClass = (status: string) => {
   if (status === 'Active') return 'text-success';
   if (status === 'Pending') return 'text-warning';
   return 'text-secondary';
+};
+
+// Compute visible pagination items (pages array with ellipsis)
+const visiblePages = computed(() => {
+  const current = pagination.value.page;
+  const last = pagination.value.last_page;
+  const delta = 1;
+  const range: (number | string)[] = [];
+
+  for (let i = 1; i <= last; i++) {
+    if (i === 1 || i === last || (i >= current - delta && i <= current + delta)) {
+      range.push(i);
+    } else if (range[range.length - 1] !== '...') {
+      range.push('...');
+    }
+  }
+  return range;
+});
+
+const showRoleDropdown = ref(false);
+const toggleRoleDropdown = () => {
+  showRoleDropdown.value = !showRoleDropdown.value;
+};
+
+const selectRoleFilter = (roleValue: string) => {
+  filterUsers(undefined, roleValue);
+  showRoleDropdown.value = false;
 };
 </script>
 
@@ -126,8 +97,8 @@ const getStatusIconClass = (status: string) => {
             <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
               TOTAL USERS
             </div>
-            <h3 class="fw-bolder mb-1 text-primary">248</h3>
-            <span class="small text-secondary">+18 this month</span>
+            <h3 class="fw-bolder mb-1 text-primary">{{ currentSummary.total_users }}</h3>
+            <span class="small text-secondary">{{ currentSummary.growth || '+18 this month' }}</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
               <div
                 class="bg-primary-subtle text-primary rounded d-flex align-items-center justify-content-center"
@@ -147,8 +118,8 @@ const getStatusIconClass = (status: string) => {
             <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
               ACTIVE
             </div>
-            <h3 class="fw-bolder mb-1 text-primary">186</h3>
-            <span class="small text-secondary">75% engagement</span>
+            <h3 class="fw-bolder mb-1 text-primary">{{ currentSummary.active }}</h3>
+            <span class="small text-secondary">{{ currentSummary.engagement || '75% engagement' }}</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
               <div
                 class="bg-success-subtle text-success rounded d-flex align-items-center justify-content-center"
@@ -168,8 +139,8 @@ const getStatusIconClass = (status: string) => {
             <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
               PENDING
             </div>
-            <h3 class="fw-bolder mb-1 text-primary">24</h3>
-            <span class="small text-secondary">Needs onboarding</span>
+            <h3 class="fw-bolder mb-1 text-primary">{{ currentSummary.pending }}</h3>
+            <span class="small text-secondary">{{ currentSummary.onboarding || 'Needs onboarding' }}</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
               <div
                 class="bg-warning-subtle text-warning rounded d-flex align-items-center justify-content-center"
@@ -189,8 +160,8 @@ const getStatusIconClass = (status: string) => {
             <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
               INACTIVE
             </div>
-            <h3 class="fw-bolder mb-1 text-primary">38</h3>
-            <span class="small text-secondary">Follow up required</span>
+            <h3 class="fw-bolder mb-1 text-primary">{{ currentSummary.inactive }}</h3>
+            <span class="small text-secondary">{{ currentSummary.follow_up || 'Follow up required' }}</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
               <div
                 class="bg-danger-subtle text-danger rounded d-flex align-items-center justify-content-center"
@@ -210,37 +181,18 @@ const getStatusIconClass = (status: string) => {
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
           <!-- Tabs/Pills -->
           <ul class="nav nav-pills custom-pills mb-0" style="gap: 5px">
-            <li class="nav-item">
-              <a class="nav-link active py-2 fw-medium px-3 d-flex align-items-center gap-1 fs-sm" href="#">
-                All
-                <span class="badge bg-secondary-subtle text-secondary rounded-pill ms-1 fs-xs">248</span>
-              </a>
-            </li>
-            <li class="nav-item">
+            <li v-for="tab in tabs" :key="tab.key" class="nav-item">
               <a
-                class="nav-link py-2 text-muted fw-medium px-3 text-hover-dark d-flex align-items-center gap-1 fs-sm"
+                class="nav-link py-2 fw-medium px-3 d-flex align-items-center gap-1 fs-sm"
+                :class="{
+                  active: activeTab === tab.key,
+                  'text-muted text-hover-dark': activeTab !== tab.key,
+                }"
                 href="#"
+                @click.prevent="filterUsers(tab.key, undefined)"
               >
-                Active
-                <span class="badge bg-secondary-subtle text-secondary rounded-pill ms-1 fs-xs">186</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link py-2 text-muted fw-medium px-3 text-hover-dark d-flex align-items-center gap-1 fs-sm"
-                href="#"
-              >
-                Pending
-                <span class="badge bg-secondary-subtle text-secondary rounded-pill ms-1 fs-xs">24</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link py-2 text-muted fw-medium px-3 text-hover-dark d-flex align-items-center gap-1 fs-sm"
-                href="#"
-              >
-                Inactive
-                <span class="badge bg-secondary-subtle text-secondary rounded-pill ms-1 fs-xs">38</span>
+                {{ tab.label }}
+                <span class="badge bg-secondary-subtle text-secondary rounded-pill ms-1 fs-xs">{{ tab.count }}</span>
               </a>
             </li>
           </ul>
@@ -253,14 +205,41 @@ const getStatusIconClass = (status: string) => {
                 type="text"
                 class="form-control border-0 shadow-none ps-0 bg-transparent text-primary"
                 placeholder="Search users, email, role..."
+                :value="searchQuery"
+                @input="searchUsers(($event.target as HTMLInputElement).value)"
               />
             </div>
 
-            <button
-              class="btn btn-sm btn-white border bg-elevated text-primary d-flex align-items-center shadow-sm gap-2 px-3"
-            >
-              <i class="bi bi-funnel text-muted" /> Role
-            </button>
+            <!-- Role Filter Dropdown -->
+            <div class="position-relative">
+              <button
+                class="btn btn-sm btn-white border bg-elevated text-primary d-flex align-items-center shadow-sm gap-2 px-3"
+                type="button"
+                @click="toggleRoleDropdown"
+              >
+                <i class="bi bi-funnel text-muted" />
+                <span>{{ selectedRole || 'Role' }}</span>
+                <i class="bi bi-chevron-down text-muted fs-xs" />
+              </button>
+
+              <div
+                v-if="showRoleDropdown"
+                class="dropdown-menu dropdown-menu-end show shadow-sm border mt-1"
+                style="position: absolute; right: 0; top: 100%; z-index: 1050; min-width: 140px"
+              >
+                <button
+                  v-for="rf in roleFilters"
+                  :key="rf.value"
+                  class="dropdown-item btn-sm d-flex align-items-center justify-content-between py-2"
+                  :class="{ active: selectedRole === rf.value }"
+                  type="button"
+                  @click="selectRoleFilter(rf.value)"
+                >
+                  <span>{{ rf.label }}</span>
+                  <i v-if="selectedRole === rf.value" class="bi bi-check2 ms-2" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -273,17 +252,101 @@ const getStatusIconClass = (status: string) => {
               <th scope="col" class="py-3 ps-4 border-0 fw-bold" style="width: 40px; background-color: var(--zebra)">
                 <input class="form-check-input" type="checkbox" value="" />
               </th>
-              <th scope="col" class="py-3 border-0 fw-bold" style="background-color: var(--zebra)">USER</th>
-              <th scope="col" class="py-3 border-0 fw-bold" style="background-color: var(--zebra)">ROLE</th>
-              <th scope="col" class="py-3 border-0 fw-bold" style="background-color: var(--zebra)">STATUS</th>
-              <th scope="col" class="py-3 border-0 fw-bold" style="background-color: var(--zebra)">LAST ACTIVE</th>
-              <th scope="col" class="py-3 border-0 fw-bold" style="background-color: var(--zebra)">JOINED</th>
+              <th
+                scope="col"
+                class="py-3 border-0 fw-bold cursor-pointer user-select-none"
+                style="background-color: var(--zebra)"
+                @click="sortUsers('name')"
+              >
+                USER
+                <i
+                  class="bi ms-1"
+                  :class="{
+                    'bi-arrow-up': sortField === 'name' && sortDirection === 'asc',
+                    'bi-arrow-down': sortField === 'name' && sortDirection === 'desc',
+                    'bi-arrow-down-up opacity-50': sortField !== 'name',
+                  }"
+                />
+              </th>
+              <th
+                scope="col"
+                class="py-3 border-0 fw-bold cursor-pointer user-select-none"
+                style="background-color: var(--zebra)"
+                @click="sortUsers('role')"
+              >
+                ROLE
+                <i
+                  class="bi ms-1"
+                  :class="{
+                    'bi-arrow-up': sortField === 'role' && sortDirection === 'asc',
+                    'bi-arrow-down': sortField === 'role' && sortDirection === 'desc',
+                    'bi-arrow-down-up opacity-50': sortField !== 'role',
+                  }"
+                />
+              </th>
+              <th
+                scope="col"
+                class="py-3 border-0 fw-bold cursor-pointer user-select-none"
+                style="background-color: var(--zebra)"
+                @click="sortUsers('status')"
+              >
+                STATUS
+                <i
+                  class="bi ms-1"
+                  :class="{
+                    'bi-arrow-up': sortField === 'status' && sortDirection === 'asc',
+                    'bi-arrow-down': sortField === 'status' && sortDirection === 'desc',
+                    'bi-arrow-down-up opacity-50': sortField !== 'status',
+                  }"
+                />
+              </th>
+              <th
+                scope="col"
+                class="py-3 border-0 fw-bold cursor-pointer user-select-none"
+                style="background-color: var(--zebra)"
+                @click="sortUsers('last_activity')"
+              >
+                LAST ACTIVE
+                <i
+                  class="bi ms-1"
+                  :class="{
+                    'bi-arrow-up': sortField === 'last_activity' && sortDirection === 'asc',
+                    'bi-arrow-down': sortField === 'last_activity' && sortDirection === 'desc',
+                    'bi-arrow-down-up opacity-50': sortField !== 'last_activity',
+                  }"
+                />
+              </th>
+              <th
+                scope="col"
+                class="py-3 border-0 fw-bold cursor-pointer user-select-none"
+                style="background-color: var(--zebra)"
+                @click="sortUsers('joined_at')"
+              >
+                JOINED
+                <i
+                  class="bi ms-1"
+                  :class="{
+                    'bi-arrow-up': sortField === 'joined_at' && sortDirection === 'asc',
+                    'bi-arrow-down': sortField === 'joined_at' && sortDirection === 'desc',
+                    'bi-arrow-down-up opacity-50': sortField !== 'joined_at',
+                  }"
+                />
+              </th>
               <th scope="col" class="py-3 pe-4 border-0 fw-bold text-end" style="background-color: var(--zebra)">
                 ACTIONS
               </th>
             </tr>
           </thead>
           <tbody class="border-top-0">
+            <tr v-if="isLoading">
+              <td colspan="7" class="text-center py-4 text-muted">
+                <div class="spinner-border spinner-border-sm me-2 text-primary" role="status" />
+                Loading users...
+              </td>
+            </tr>
+            <tr v-else-if="users.length === 0">
+              <td colspan="7" class="text-center py-4 text-muted">No users found matching current filters.</td>
+            </tr>
             <tr v-for="user in users" :key="user.id">
               <td class="ps-4 py-3">
                 <input class="form-check-input" type="checkbox" value="" />
@@ -293,7 +356,7 @@ const getStatusIconClass = (status: string) => {
                   <img :src="user.avatar" class="rounded-circle shadow-sm" width="40" height="40" alt="Avatar" />
                   <div>
                     <div class="fw-bolder" style="font-size: 0.9rem; color: var(--title-color)">
-                      {{ user.name }}
+                      {{ user.full_name }}
                     </div>
                     <div style="font-size: 0.8rem; color: var(--secondary-color-text)">
                       {{ user.email }}
@@ -309,6 +372,7 @@ const getStatusIconClass = (status: string) => {
                 >
                   <i v-if="user.role === 'Admin'" class="bi bi-person-badge-fill" />
                   <i v-else-if="user.role === 'Manager'" class="bi bi-person-workspace" />
+                  <i v-else-if="user.role === 'Supervisor'" class="bi bi-shield-lock-fill" />
                   <i v-else class="bi bi-person-fill" />
                   {{ user.role }}
                 </span>
@@ -323,20 +387,20 @@ const getStatusIconClass = (status: string) => {
                 </div>
               </td>
               <td class="py-3" style="font-size: 0.85rem; color: var(--secondary-color-text)">
-                {{ user.lastActive }}
+                {{ user.last_activity }}
               </td>
               <td class="py-3" style="font-size: 0.85rem; color: var(--secondary-color-text)">
-                {{ user.joined }}
+                {{ user.joined_at }}
               </td>
               <td class="text-end pe-4 py-3">
                 <div class="d-flex align-items-center justify-content-end gap-2 text-muted">
-                  <button class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary">
+                  <button class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary" title="View Detail">
                     <i class="bi bi-eye" />
                   </button>
-                  <button class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary">
+                  <button class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary" title="Edit User">
                     <i class="bi bi-pencil" />
                   </button>
-                  <button class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary">
+                  <button class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary" title="More Actions">
                     <i class="bi bi-three-dots" />
                   </button>
                 </div>
@@ -351,36 +415,50 @@ const getStatusIconClass = (status: string) => {
         class="card-footer bg-white border-top p-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3"
         style="border-bottom-left-radius: var(--apple-radius); border-bottom-right-radius: var(--apple-radius)"
       >
-        <div class="fs-70" style="color: var(--secondary-color-text)">Showing 1-8 of 248 users</div>
+        <div class="fs-70" style="color: var(--secondary-color-text)">
+          Showing
+          {{ pagination.total > 0 ? (pagination.page - 1) * pagination.per_page + 1 : 0 }}-{{
+            Math.min(pagination.page * pagination.per_page, pagination.total)
+          }}
+          of {{ pagination.total }} users
+        </div>
         <nav aria-label="Page navigation">
           <ul class="pagination pagination-sm mb-0 gap-1">
-            <li class="page-item disabled">
-              <a class="page-link border-0 text-muted bg-transparent" href="#" tabindex="-1" aria-disabled="true"
-                ><i class="bi bi-chevron-left"
-              /></a>
-            </li>
-            <li class="page-item active" aria-current="page">
+            <li class="page-item" :class="{ disabled: pagination.page <= 1 }">
               <a
-                class="page-link border-0 rounded text-white shadow-sm"
-                style="background-color: var(--accent)"
+                class="page-link border-0 text-muted bg-transparent"
                 href="#"
-                >1</a
+                @click.prevent="setPage(pagination.page - 1)"
               >
+                <i class="bi bi-chevron-left" />
+              </a>
             </li>
-            <li class="page-item">
-              <a class="page-link border-0 rounded text-muted text-hover-dark bg-transparent" href="#">2</a>
-            </li>
-            <li class="page-item">
-              <a class="page-link border-0 rounded text-muted text-hover-dark bg-transparent" href="#">3</a>
-            </li>
-            <li class="page-item">
-              <span class="page-link border-0 rounded text-muted bg-transparent px-1">...</span>
-            </li>
-            <li class="page-item">
-              <a class="page-link border-0 rounded text-muted text-hover-dark bg-transparent" href="#">31</a>
-            </li>
-            <li class="page-item">
-              <a class="page-link border-0 text-muted bg-transparent" href="#"><i class="bi bi-chevron-right" /></a>
+
+            <template v-for="(p, index) in visiblePages" :key="index">
+              <li v-if="p === '...'" class="page-item">
+                <span class="page-link border-0 rounded text-muted bg-transparent px-1">...</span>
+              </li>
+              <li v-else class="page-item" :class="{ active: p === pagination.page }">
+                <a
+                  class="page-link border-0 rounded text-hover-dark"
+                  :class="p === pagination.page ? 'text-white shadow-sm' : 'text-muted bg-transparent'"
+                  :style="p === pagination.page ? { backgroundColor: 'var(--accent)' } : {}"
+                  href="#"
+                  @click.prevent="setPage(Number(p))"
+                >
+                  {{ p }}
+                </a>
+              </li>
+            </template>
+
+            <li class="page-item" :class="{ disabled: pagination.page >= pagination.last_page }">
+              <a
+                class="page-link border-0 text-muted bg-transparent"
+                href="#"
+                @click.prevent="setPage(pagination.page + 1)"
+              >
+                <i class="bi bi-chevron-right" />
+              </a>
             </li>
           </ul>
         </nav>
@@ -390,6 +468,9 @@ const getStatusIconClass = (status: string) => {
 </template>
 
 <style scoped>
+.cursor-pointer {
+  cursor: pointer;
+}
 .custom-pills .nav-link {
   border-radius: var(--radius-md) !important;
 }
