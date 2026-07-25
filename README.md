@@ -72,6 +72,29 @@ In Nuxt 4, the primary code directory is located inside the `app/` folder. Appli
 
 ---
 
+## 🔌 Real API Integration & Migration Guide
+
+Framework ini didesain menggunakan **Hexagonal Architecture / Repository Pattern** sehingga migrasi dari Mock Data ke **Real Backend API** dapat dilakukan tanpa menyentuh layer Domain, Application, maupun Presentation (UI).
+
+### Menghubungkan ke Real Backend API
+
+Cukup atur variabel lingkungan `NUXT_PUBLIC_API_BASE` pada file `.env`:
+
+```env
+NUXT_PUBLIC_API_BASE=https://api.yourcompany.com/api
+```
+
+Saat `NUXT_PUBLIC_API_BASE` diisi, **DI Container** (`app/plugins/auth.ts`) secara otomatis beralih dari `Mock*Repository` ke **`*ApiRepository`** (`AuthApiRepository`, `UserApiRepository`, `RoleApiRepository`).
+
+### Mengapa Migrasi ke Real API Tanpa Hambatan (Zero-Friction)?
+
+1. **Domain Layer Terproteksi**: Tipe entity (`AuthUser`, `UserItem`, `RoleItem`) dan interface (`UserRepository`, `RoleRepository`) tidak akan berubah sedikitpun saat backend diganti.
+2. **Infrastructure Mapper Boundary**: `UserMapper`, `RoleMapper`, dan `AuthMapper` mengisolasi perbedaan format backend (misal: `snake_case` backend ↔ `camelCase` frontend).
+3. **Centralized Endpoints**: Semua rute API dikelola di `app/infrastructure/api/endpoints.ts`.
+4. **Standardized Error Normalization**: `apiErrorHandler.ts` secara otomatis mengubah error HTTP (400, 401, 403, 404, 422, 500) menjadi pesan error yang aman dan ramah pengguna.
+
+---
+
 ## ⚙️ Getting Started
 
 ### Prerequisites
