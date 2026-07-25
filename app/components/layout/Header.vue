@@ -54,7 +54,7 @@ const handleSignOut = async () => {
           :class="isDarkMode ? 'text-white' : 'text-dark'"
         >
           <i class="bi bi-heptagon-half fs-4 text-accent" />
-          <span class="d-none d-md-block">niceAdmin</span>
+          <span class="d-none d-md-block">flexVueAdmin</span>
         </NuxtLink>
         <!-- Sidebar Toggle -->
         <button class="header-icon-btn header-icon-btn-teal" @click="emit('toggle-sidebar')">

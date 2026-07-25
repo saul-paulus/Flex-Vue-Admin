@@ -50,7 +50,7 @@ const handleSubmitLogin = async (event: Event) => {
     >
       <div class="mb-5 d-flex align-items-center gap-2 position-relative" style="z-index: 2">
         <i class="bi bi-heptagon-half fs-5" />
-        <h5 class="mb-0 fw-bold letter-spacing-1">niceAdmin</h5>
+        <h5 class="mb-0 fw-bold letter-spacing-1">flexVueAdmin</h5>
         <span
           class="badge rounded-pill fw-bold ms-2 bg-white bg-opacity-10 text-white border-0 fs-xs"
           style="letter-spacing: 0.5px"
@@ -108,7 +108,7 @@ const handleSubmitLogin = async (event: Event) => {
           <div class="card-body p-4">
             <div class="text-center mb-4">
               <h4 class="fw-bold mb-1 text-primary">Welcome back</h4>
-              <p class="text-secondary fs-xs mb-0">Sign in to continue to your niceAdmin workspace.</p>
+              <p class="text-secondary fs-xs mb-0">Sign in to continue to your flexVueAdmin workspace.</p>
             </div>
             <div
               v-if="errorMessages"
@@ -229,7 +229,7 @@ const handleSubmitLogin = async (event: Event) => {
           </div>
         </div>
         <div class="text-center text-tertiary fs-xs">
-          <p class="mb-2">© 2024 niceAdmin &bull; Workspace Intelligence</p>
+          <p class="mb-2">© 2024 flexVueAdmin &bull; Workspace Intelligence</p>
           <div class="d-flex justify-content-center gap-2">
             <a href="#" class="text-decoration-none text-tertiary text-hover-dark">Privacy</a>
             <span class="opacity-25">|</span>

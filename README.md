@@ -1,4 +1,4 @@
-# niceAdmin - Enterprise Nuxt 4 Administration Dashboard
+# Flex Vue Admin - Nuxt 4 Administration Dashboard
 
 ![alt text](image.png)
 

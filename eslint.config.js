@@ -11,7 +11,7 @@ export default withNuxt(
       '.output/**',
       'test.bundle.js',
       'assets/js/**',
-      'src/assets/niceadmin/vendor/**',
+      'src/assets/flexvueadmin/vendor/**',
     ],
   },
   {
