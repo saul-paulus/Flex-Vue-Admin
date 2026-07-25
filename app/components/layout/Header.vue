@@ -60,7 +60,6 @@ const handleSignOut = async () => {
         <button class="header-icon-btn header-icon-btn-teal" @click="emit('toggle-sidebar')">
           <i class="bi bi-layout-sidebar fs-5" />
         </button>
-
         <div class="input-group d-none d-md-flex align-items-center search-box search-pill px-3 py-1 w-300 h-36">
           <i class="bi bi-search me-2 text-muted" />
           <input
@@ -89,13 +88,11 @@ const handleSignOut = async () => {
           >
             <i :class="isDarkMode ? 'bi bi-sun-fill fs-6' : 'bi bi-moon-fill fs-6'" />
           </button>
-
           <!-- Chat Badge -->
           <button class="header-icon-btn position-relative">
             <i class="bi bi-chat-left-text fs-6" />
             <span class="badge-apple badge-apple-top bg-danger border border-white"> 5 </span>
           </button>
-
           <!-- Notifikasi Badge -->
           <button class="header-icon-btn position-relative">
             <i class="bi bi-bell fs-6" />
@@ -128,7 +125,6 @@ const handleSignOut = async () => {
               :class="{ 'rotate-180': isDropdownOpen }"
             />
           </a>
-
           <ul
             class="dropdown-menu dropdown-menu-end shadow-lg border mt-2 p-0 overflow-hidden transition-all d-block-important"
             :class="{
@@ -153,7 +149,6 @@ const handleSignOut = async () => {
                 </span>
               </div>
             </li>
-
             <!-- Menu Items -->
             <div class="p-2 d-flex flex-column gap-1">
               <li>
@@ -183,7 +178,6 @@ const handleSignOut = async () => {
                 </a>
               </li>
             </div>
-
             <li class="border-t-apple mt-1 p-2">
               <a
                 class="dropdown-item py-2 rounded-3 text-danger fw-bold d-flex align-items-center justify-content-center gap-2 fs-md"
