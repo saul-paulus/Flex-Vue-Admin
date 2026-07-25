@@ -256,6 +256,64 @@ npm run test
 
 ---
 
+## 🔌 Real API Integration & Migration Guide
+
+Thanks to the **Clean Architecture & Dependency Injection (DI)** design implemented in this repository, migrating from Mock Data to a Real Production API backend requires **zero changes to UI components, Nuxt pages, or Pinia stores**.
+
+### 🛠️ Migration Steps
+
+#### 1. Environment Configuration (`.env`)
+
+Set `NUXT_PUBLIC_API_BASE` in your `.env` file to your backend API base URL:
+
+```env
+# .env
+NUXT_PUBLIC_API_BASE=https://api.yourdomain.com/v1
+```
+
+> 💡 **Automatic Repository Switch**:
+> The Dependency Injection plugin ([`app/plugins/auth.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/plugins/auth.ts)) automatically detects this environment variable and switches from Mock Repositories to API Repositories (`AuthApiRepository`, `UserApiRepository`, `RoleApiRepository`).
+
+#### 2. Configure API Endpoints (`app/infrastructure/api/endpoints.ts`)
+
+Map your backend REST API endpoints in [`app/infrastructure/api/endpoints.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/api/endpoints.ts):
+
+```typescript
+export const API_ENDPOINTS = {
+  AUTH: {
+    LOGIN: '/auth/login',
+    LOGOUT: '/auth/logout',
+    ME: '/auth/me',
+    REFRESH: '/auth/refresh',
+  },
+  USERS: {
+    BASE: '/users',
+    DETAIL: (id: number | string) => `/users/${id}`,
+  },
+  ROLES: {
+    BASE: '/roles',
+    PERMISSIONS: (id: number | string) => `/roles/${id}/permissions`,
+  },
+} as const;
+```
+
+#### 3. Map Data Payloads with Data Mappers (`app/infrastructure/mappers/`)
+
+Data Mappers act as boundaries between raw backend DTO JSON payloads and pure Domain Entities:
+
+- **User Mapper**: [`app/infrastructure/mappers/UserMapper.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/mappers/UserMapper.ts)
+- **Role Mapper**: [`app/infrastructure/mappers/RoleMapper.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/mappers/RoleMapper.ts)
+- **Auth Mapper**: [`app/infrastructure/mappers/AuthMapper.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/mappers/AuthMapper.ts)
+
+#### 4. Automatic JWT Token Handling
+
+The HTTP Client ([`app/infrastructure/api/httpClient.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/api/httpClient.ts)) automatically handles:
+
+- Authorization header injection (`Bearer <token>`).
+- 401 Unauthorized handling (automatic session invalidation & redirect to `/auth/login`).
+
+---
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
