@@ -1,0 +1,295 @@
+{
+  "success": true,
+  "message": "Roles and permissions retrieved successfully.",
+  "data": {
+    "roles": [
+      {
+        "id": 1,
+        "name": "Administrator",
+        "users_count": 8,
+        "icon": "shield-lock-fill",
+        "color": "danger",
+        "description": "Full system access with all permissions enabled. Can manage users, roles, and system settings.",
+        "created_at": "January 1, 2024",
+        "updated_at": "May 15, 2024",
+        "matrix": {
+          "Analytics Dashboard": {
+            "view": true,
+            "create": false,
+            "edit": false,
+            "delete": false,
+            "all": true,
+            "c_dash": true,
+            "e_dash": true,
+            "d_dash": true
+          },
+          "Reports": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Users": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Roles & Permissions": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Teams": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Pages": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Blog Posts": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Media Library": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Products": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Orders": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Customers": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Coupons": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "General Settings": {
+            "view": true,
+            "create": false,
+            "edit": true,
+            "delete": false,
+            "all": true,
+            "c_dash": true,
+            "d_dash": true
+          },
+          "Email Templates": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "API Keys": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Backup & Restore": {
+            "view": true,
+            "create": true,
+            "edit": false,
+            "delete": true,
+            "all": true,
+            "e_dash": true
+          }
+        }
+      },
+      {
+        "id": 2,
+        "name": "Manager",
+        "users_count": 15,
+        "icon": "person-badge-fill",
+        "color": "warning",
+        "description": "Can manage most system settings and users, but cannot alter roles.",
+        "created_at": "February 10, 2024",
+        "updated_at": "May 10, 2024",
+        "matrix": {
+          "Analytics Dashboard": {
+            "view": true,
+            "create": false,
+            "edit": false,
+            "delete": false,
+            "all": false,
+            "c_dash": true,
+            "e_dash": true,
+            "d_dash": true
+          },
+          "Reports": { "view": true, "create": true, "edit": true, "delete": false, "all": false },
+          "Users": { "view": true, "create": true, "edit": true, "delete": false, "all": false },
+          "Roles & Permissions": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Teams": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Pages": { "view": true, "create": true, "edit": true, "delete": false, "all": false },
+          "Blog Posts": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Media Library": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Products": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Orders": { "view": true, "create": true, "edit": true, "delete": false, "all": false },
+          "Customers": { "view": true, "create": true, "edit": true, "delete": false, "all": false },
+          "Coupons": { "view": true, "create": true, "edit": true, "delete": false, "all": false },
+          "General Settings": {
+            "view": true,
+            "create": false,
+            "edit": false,
+            "delete": false,
+            "all": false,
+            "c_dash": true,
+            "d_dash": true
+          },
+          "Email Templates": { "view": true, "create": true, "edit": true, "delete": false, "all": false },
+          "API Keys": { "view": false, "create": false, "edit": false, "delete": false, "all": false },
+          "Backup & Restore": {
+            "view": false,
+            "create": false,
+            "edit": false,
+            "delete": false,
+            "all": false,
+            "e_dash": true
+          }
+        }
+      },
+      {
+        "id": 3,
+        "name": "Editor",
+        "users_count": 32,
+        "icon": "pencil-square",
+        "color": "primary",
+        "description": "Can edit content and manage basic settings.",
+        "created_at": "March 5, 2024",
+        "updated_at": "April 20, 2024",
+        "matrix": {
+          "Analytics Dashboard": {
+            "view": true,
+            "create": false,
+            "edit": false,
+            "delete": false,
+            "all": false,
+            "c_dash": true,
+            "e_dash": true,
+            "d_dash": true
+          },
+          "Reports": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Users": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Roles & Permissions": { "view": false, "create": false, "edit": false, "delete": false, "all": false },
+          "Teams": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Pages": { "view": true, "create": true, "edit": true, "delete": false, "all": false },
+          "Blog Posts": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Media Library": { "view": true, "create": true, "edit": true, "delete": true, "all": true },
+          "Products": { "view": true, "create": false, "edit": true, "delete": false, "all": false },
+          "Orders": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Customers": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Coupons": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "General Settings": {
+            "view": false,
+            "create": false,
+            "edit": false,
+            "delete": false,
+            "all": false,
+            "c_dash": true,
+            "d_dash": true
+          },
+          "Email Templates": { "view": true, "create": false, "edit": true, "delete": false, "all": false },
+          "API Keys": { "view": false, "create": false, "edit": false, "delete": false, "all": false },
+          "Backup & Restore": {
+            "view": false,
+            "create": false,
+            "edit": false,
+            "delete": false,
+            "all": false,
+            "e_dash": true
+          }
+        }
+      },
+      {
+        "id": 4,
+        "name": "User",
+        "users_count": 156,
+        "icon": "person-fill",
+        "color": "info",
+        "description": "Standard user access. Can view and interact with content.",
+        "created_at": "January 15, 2024",
+        "updated_at": "May 1, 2024",
+        "matrix": {
+          "Analytics Dashboard": {
+            "view": true,
+            "create": false,
+            "edit": false,
+            "delete": false,
+            "all": false,
+            "c_dash": true,
+            "e_dash": true,
+            "d_dash": true
+          },
+          "Reports": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Users": { "view": false, "create": false, "edit": false, "delete": false, "all": false },
+          "Roles & Permissions": { "view": false, "create": false, "edit": false, "delete": false, "all": false },
+          "Teams": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Pages": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Blog Posts": { "view": true, "create": true, "edit": false, "delete": false, "all": false },
+          "Media Library": { "view": true, "create": true, "edit": false, "delete": false, "all": false },
+          "Products": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Orders": { "view": true, "create": true, "edit": false, "delete": false, "all": false },
+          "Customers": { "view": false, "create": false, "edit": false, "delete": false, "all": false },
+          "Coupons": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "General Settings": {
+            "view": false,
+            "create": false,
+            "edit": false,
+            "delete": false,
+            "all": false,
+            "c_dash": true,
+            "d_dash": true
+          },
+          "Email Templates": { "view": false, "create": false, "edit": false, "delete": false, "all": false },
+          "API Keys": { "view": false, "create": false, "edit": false, "delete": false, "all": false },
+          "Backup & Restore": {
+            "view": false,
+            "create": false,
+            "edit": false,
+            "delete": false,
+            "all": false,
+            "e_dash": true
+          }
+        }
+      },
+      {
+        "id": 5,
+        "name": "Viewer",
+        "users_count": 45,
+        "icon": "eye-fill",
+        "color": "secondary",
+        "description": "Read-only access to the system.",
+        "created_at": "April 1, 2024",
+        "updated_at": "April 1, 2024",
+        "matrix": {
+          "Analytics Dashboard": {
+            "view": true,
+            "create": false,
+            "edit": false,
+            "delete": false,
+            "all": false,
+            "c_dash": true,
+            "e_dash": true,
+            "d_dash": true
+          },
+          "Reports": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Users": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Roles & Permissions": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Teams": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Pages": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Blog Posts": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Media Library": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Products": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Orders": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Customers": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "Coupons": { "view": true, "create": false, "edit": false, "delete": false, "all": false },
+          "General Settings": {
+            "view": false,
+            "create": false,
+            "edit": false,
+            "delete": false,
+            "all": false,
+            "c_dash": true,
+            "d_dash": true
+          },
+          "Email Templates": { "view": false, "create": false, "edit": false, "delete": false, "all": false },
+          "API Keys": { "view": false, "create": false, "edit": false, "delete": false, "all": false },
+          "Backup & Restore": {
+            "view": false,
+            "create": false,
+            "edit": false,
+            "delete": false,
+            "all": false,
+            "e_dash": true
+          }
+        }
+      }
+    ],
+    "permission_groups": [
+      {
+        "category": "Dashboard",
+        "icon": "grid-1x2",
+        "items": ["Analytics Dashboard", "Reports"]
+      },
+      {
+        "category": "User Management",
+        "icon": "people",
+        "items": ["Users", "Roles & Permissions", "Teams"]
+      },
+      {
+        "category": "Content Management",
+        "icon": "file-earmark-text",
+        "items": ["Pages", "Blog Posts", "Media Library"]
+      },
+      {
+        "category": "E-commerce",
+        "icon": "cart3",
+        "items": ["Products", "Orders", "Customers", "Coupons"]
+      },
+      {
+        "category": "System Settings",
+        "icon": "gear",
+        "items": ["General Settings", "Email Templates", "API Keys", "Backup & Restore"]
+      }
+    ]
+  }
+}
