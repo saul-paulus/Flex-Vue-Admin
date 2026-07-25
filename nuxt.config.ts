@@ -39,6 +39,11 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
 
   vite: {
+    build: {
+      modulePreload: {
+        polyfill: false,
+      },
+    },
     optimizeDeps: {
       include: ['@vue/devtools-core', '@vue/devtools-kit'],
     },
