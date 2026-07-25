@@ -56,7 +56,6 @@ const handleSignOut = async () => {
           <i class="bi bi-heptagon-half fs-4 text-accent" />
           <span class="d-none d-md-block">niceAdmin</span>
         </NuxtLink>
-
         <!-- Sidebar Toggle -->
         <button class="header-icon-btn header-icon-btn-teal" @click="emit('toggle-sidebar')">
           <i class="bi bi-layout-sidebar fs-5" />
@@ -77,21 +76,10 @@ const handleSignOut = async () => {
           </kbd>
         </div>
       </div>
-
       <!-- Kanan: Menu Item Ekstra & Profil -->
       <div class="d-flex align-items-center gap-2 gap-md-3">
         <!-- Icon Group -->
         <div class="d-none d-sm-flex align-items-center gap-2">
-          <!-- Bendera Bahasa -->
-          <button class="header-icon-btn">
-            <span class="fs-lg">🇺🇸</span>
-          </button>
-
-          <!-- Grid Menu -->
-          <button class="header-icon-btn">
-            <i class="bi bi-grid-3x3-gap fs-6" />
-          </button>
-
           <!-- Theme Toggle -->
           <button
             class="header-icon-btn transition-all"
@@ -114,9 +102,7 @@ const handleSignOut = async () => {
             <span class="badge-apple badge-apple-top bg-danger border border-white"> 4 </span>
           </button>
         </div>
-
         <div class="vr mx-2 d-none d-sm-block h-24" />
-
         <!-- Dropdown Profil -->
         <div ref="dropdownRef" class="dropdown">
           <a
