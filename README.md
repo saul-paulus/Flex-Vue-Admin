@@ -2,7 +2,7 @@
 
 ![alt text](image.png)
 ![alt text](image-1.png)
-A scalable, production-ready enterprise administration dashboard application built using **Nuxt 4** and **Vue 3**. This project strictly implements **Clean Architecture** principles to decouple business logic from the UI framework, enhancing code maintainability, testability, and long-term scalability.
+A scalable, production-ready administration dashboard application built using **Nuxt 4** and **Vue 3**. This project strictly implements **Clean Architecture** principles to decouple business logic from the UI framework, enhancing code maintainability, testability, and long-term scalability.
 
 ---
 
