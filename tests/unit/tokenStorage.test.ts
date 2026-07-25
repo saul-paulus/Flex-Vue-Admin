@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeEach } from 'vitest';
-import { tokenStorage } from '~/infrastructure/storage/tokenStorage';
+import { cookieTokenStorage } from '~/infrastructure/storage/tokenStorage';
 
-describe('tokenStorage', () => {
+describe('cookieTokenStorage', () => {
   beforeEach(() => {
     // Clear cookies before each test
     document.cookie.split(';').forEach((c) => {
@@ -9,29 +9,26 @@ describe('tokenStorage', () => {
     });
   });
 
-  it('should set and get token correctly', () => {
+  it('should save and get token correctly', () => {
     const testToken = 'test-token-123';
-    tokenStorage.token = testToken;
-    expect(tokenStorage.token).toBe(testToken);
+    cookieTokenStorage.save(testToken);
+    expect(cookieTokenStorage.get()).toBe(testToken);
   });
 
   it('should return null if no token is set', () => {
-    expect(tokenStorage.token).toBeNull();
+    expect(cookieTokenStorage.get()).toBeNull();
   });
 
   it('should clear token correctly', () => {
-    tokenStorage.token = 'to-be-cleared';
-    tokenStorage.clear();
-    expect(tokenStorage.token).toBeNull();
+    cookieTokenStorage.save('to-be-cleared');
+    cookieTokenStorage.clear();
+    expect(cookieTokenStorage.get()).toBeNull();
   });
 
-  it('should handle undefined/null when setting token', () => {
-    tokenStorage.token = 'initial';
-    tokenStorage.token = undefined;
-    expect(tokenStorage.token).toBeNull();
-
-    tokenStorage.token = 'initial-2';
-    tokenStorage.token = null;
-    expect(tokenStorage.token).toBeNull();
+  it('should implement TokenStoragePort interface', () => {
+    // Verify the interface shape
+    expect(typeof cookieTokenStorage.get).toBe('function');
+    expect(typeof cookieTokenStorage.save).toBe('function');
+    expect(typeof cookieTokenStorage.clear).toBe('function');
   });
 });

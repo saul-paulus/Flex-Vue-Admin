@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useAuthStore } from '~/stores/auth';
-
+const { $loginUseCase, $getCurrentUserUseCase } = useNuxtApp();
 const authStore = useAuthStore();
+
 definePageMeta({
   layout: 'auth',
 });
@@ -31,10 +31,28 @@ const handleSubmitLogin = async (event: Event) => {
   isLoading.value = true;
 
   try {
-    await authStore.fetchAuthlogin(payloadCredential);
-    router.push('/');
-  } catch (error: any) {
-    errorMessages.value = error?.data?.message || error?.message || String(error);
+    const loginResult = await $loginUseCase.execute({
+      personalId: payloadCredential.id_personal,
+      password: payloadCredential.password,
+    });
+
+    if (loginResult.isFail()) {
+      errorMessages.value = loginResult.error;
+      return;
+    }
+
+    // Set token in store
+    authStore.setToken(loginResult.value.accessToken);
+
+    // Fetch user profile
+    const userResult = await $getCurrentUserUseCase.execute();
+    if (userResult.isOk()) {
+      authStore.setUser(userResult.value);
+    }
+
+    router.push('/dashboard');
+  } catch (error: unknown) {
+    errorMessages.value = error instanceof Error ? error.message : String(error);
   } finally {
     isLoading.value = false;
   }

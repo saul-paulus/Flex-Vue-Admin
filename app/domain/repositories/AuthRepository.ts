@@ -1,22 +1,31 @@
-import type { AuthLoginResponse, AuthLogoutResponse, AuthUserResponse, LoginPayload } from '../entities/Auth';
+import type { AuthToken, AuthUser, LoginCredentials } from '../entities/Auth';
+import type { Result } from '../core/Result';
 
+/**
+ * Repository interface for authentication operations.
+ *
+ * This is a domain contract — implementations live in the infrastructure layer.
+ * The repository returns domain types (AuthToken, AuthUser), NOT API response envelopes.
+ *
+ * @see infrastructure/api/AuthApiRepository.ts for the concrete implementation
+ */
 export interface AuthRepository {
   /**
-   * Melakukan proses login dengan memanggil API
-   * @param payload - Data login yang berisi id_personal dan password
-   * @returns Promise yang menyelesaikan dengan AuthLoginResponse jika berhasil
+   * Authenticate a user with the given credentials.
+   * @param credentials - Login credentials (personalId + password)
+   * @returns Result containing AuthToken on success, or error message on failure
    */
-  login(payload: LoginPayload): Promise<AuthLoginResponse>;
+  login(credentials: LoginCredentials): Promise<Result<AuthToken, string>>;
 
   /**
-   * Mengambil data user yang sedang login
-   * @returns Promise yang menyelesaikan dengan AuthUserResponse
+   * Retrieve the currently authenticated user's profile.
+   * @returns Result containing AuthUser on success, or error message on failure
    */
-  getUserMe(): Promise<AuthUserResponse>;
+  getCurrentUser(): Promise<Result<AuthUser, string>>;
 
   /**
-   * Melakukan proses logout
-   * @returns Promise yang menyelesaikan dengan AuthLogoutResponse
+   * Invalidate the current user's session.
+   * @returns Result indicating success or failure
    */
-  logout(): Promise<AuthLogoutResponse>;
+  logout(): Promise<Result<void, string>>;
 }

@@ -2,34 +2,6 @@ import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
 
 import { useAuthStore } from '~/stores/auth';
-import { tokenStorage } from '~/infrastructure/storage/tokenStorage';
-
-// Use vi.hoisted for stable mock references
-const { mockRepo } = vi.hoisted(() => ({
-  mockRepo: {
-    login: vi.fn(),
-    getUserMe: vi.fn(),
-  },
-}));
-
-// Mock tokenStorage
-vi.mock('~/infrastructure/storage/tokenStorage', () => ({
-  tokenStorage: {
-    get token() {
-      return null;
-    },
-    set token(_: any) {},
-    clear: vi.fn(),
-  },
-}));
-
-// Mock Nuxt globals
-vi.stubGlobal(
-  'useNuxtApp',
-  vi.fn(() => ({
-    $authRepository: mockRepo,
-  }))
-);
 
 describe('auth store', () => {
   beforeEach(() => {
@@ -41,75 +13,70 @@ describe('auth store', () => {
     const store = useAuthStore();
     expect(store.token).toBeNull();
     expect(store.user).toBeNull();
+    expect(store.isAuthenticated).toBe(false);
   });
 
-  it('should login successfully', async () => {
+  it('should setAuth correctly', () => {
     const store = useAuthStore();
-    const mockLoginResponse = {
-      success: true,
-      responseCode: 200,
-      message: 'User berhasil login',
-      data: {
-        access_token: 'new-token',
-        token_type: 'Bearer',
-        expires_in: 3600,
-      },
-      meta: null,
-      links: null,
-    };
-    const mockUserResponse = {
-      success: true,
-      responseCode: 200,
-      message: 'User berhasil diambil',
-      data: {
-        id: 9,
-        username: 'Test User',
-        id_personal: '1234567890',
-        codeuker: '6617',
-        id_wewenang: 1,
-        is_active: 1,
-      },
-      meta: null,
-      links: null,
+
+    const mockUser = {
+      id: 9,
+      username: 'Test User',
+      personalId: '1234567890',
+      authorityLevel: 1,
+      isActive: true,
     };
 
-    mockRepo.login.mockResolvedValueOnce(mockLoginResponse);
-    mockRepo.getUserMe.mockResolvedValueOnce(mockUserResponse);
-
-    await store.login('1234567890', 'password');
+    store.setAuth('new-token', mockUser);
 
     expect(store.token).toBe('new-token');
     expect(store.user?.username).toBe('Test User');
-    expect(mockRepo.login).toHaveBeenCalledWith({ id_personal: '1234567890', password: 'password' });
-    expect(mockRepo.getUserMe).toHaveBeenCalled();
+    expect(store.isAuthenticated).toBe(true);
+    expect(store.username).toBe('Test User');
+    expect(store.personalId).toBe('1234567890');
   });
 
-  it('should clearToken correctly', () => {
+  it('should setToken correctly', () => {
     const store = useAuthStore();
-    store.token = 'some-token';
-
-    store.clearToken();
-
-    expect(store.token).toBeNull();
-    expect(tokenStorage.clear).toHaveBeenCalled();
+    store.setToken('my-token');
+    expect(store.token).toBe('my-token');
+    // isAuthenticated requires both token AND user
+    expect(store.isAuthenticated).toBe(false);
   });
 
-  it('should logout correctly', () => {
+  it('should setUser correctly', () => {
     const store = useAuthStore();
-    store.token = 'some-token';
-    store.user = {
+    const mockUser = {
       id: 9,
       username: 'Test User',
-      id_personal: '1234567890',
-      codeuker: '6617',
-      id_wewenang: 1,
-      is_active: 1,
+      personalId: '1234567890',
+      authorityLevel: 1,
+      isActive: true,
     };
 
-    store.logout();
+    store.setUser(mockUser);
+    expect(store.user?.username).toBe('Test User');
+  });
+
+  it('should clearAuth correctly', () => {
+    const store = useAuthStore();
+
+    store.setAuth('some-token', {
+      id: 9,
+      username: 'Test User',
+      personalId: '1234567890',
+      authorityLevel: 1,
+      isActive: true,
+    });
+
+    expect(store.isAuthenticated).toBe(true);
+
+    store.clearAuth();
 
     expect(store.token).toBeNull();
     expect(store.user).toBeNull();
-    expect(tokenStorage.clear).toHaveBeenCalled();
+    expect(store.isAuthenticated).toBe(false);
+    expect(store.username).toBe('');
+    expect(store.personalId).toBe('');
   });
 });

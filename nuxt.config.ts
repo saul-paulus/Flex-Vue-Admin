@@ -11,30 +11,28 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         {
           rel: 'stylesheet',
-          href: '',
-        },
-        {
-          rel: 'stylesheet',
           href: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css',
         },
       ],
-      script: [
-        {
-          src: '',
-        },
-      ],
-      noscript: [
-        // <noscript>JavaScript is required</noscript>
-        { textContent: 'JavaScript is required' },
-      ],
+      noscript: [{ textContent: 'JavaScript is required' }],
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
     },
   },
   css: ['~~/assets/scss/app.scss', '~~/assets/css/main.css'],
+
+  // ── Runtime Configuration ──
+  // Access via useRuntimeConfig() in composables/plugins/middleware
+  // Override with environment variables: NUXT_PUBLIC_API_BASE
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || '',
+    },
+  },
+
   sourcemap: {
     server: false,
-    client: false, // mematikan sourcemap di sisi peramban
+    client: false,
   },
   compatibilityDate: '2025-07-15',
 
@@ -65,5 +63,4 @@ export default defineNuxtConfig({
       },
     },
   },
-  // runtimeConfig: {public: {apiBase: import.meta.env.VITE_API_BASE_URL}}
 });

@@ -37,8 +37,7 @@ onUnmounted(() => {
 });
 
 const handleSignOut = async () => {
-  authStore.logout();
-  await navigateTo('/login');
+  await navigateTo('/auth/logout');
 };
 </script>
 

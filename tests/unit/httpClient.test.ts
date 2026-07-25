@@ -1,7 +1,8 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 
-import { httpClient } from '~/infrastructure/api/httpClient';
-import { useAuthStore } from '~/stores/auth';
+// Import AFTER mocking
+import { createHttpClient } from '~/infrastructure/api/httpClient';
+import type { TokenProvider } from '~/domain/ports/TokenPorts';
 
 // Use vi.hoisted to ensure the mock is available during hoisting
 const { innerMockFetch } = vi.hoisted(() => ({
@@ -15,23 +16,16 @@ vi.mock('ofetch', () => ({
   },
 }));
 
-// Mock useAuthStore
-vi.mock('~/stores/auth', () => ({
-  useAuthStore: vi.fn(),
-}));
-
-// Mock Nuxt globals
-vi.stubGlobal('navigateTo', vi.fn());
-
-const mockAuthStore = vi.mocked(useAuthStore);
-
 describe('httpClient', () => {
+  let httpClient: ReturnType<typeof createHttpClient>;
+  let mockTokenProvider: TokenProvider;
+
   beforeEach(() => {
     vi.clearAllMocks();
-    mockAuthStore.mockReturnValue({
-      token: 'mock-token',
-      clearToken: vi.fn(),
-    } as any);
+    mockTokenProvider = {
+      getToken: vi.fn(() => 'mock-token'),
+    };
+    httpClient = createHttpClient(mockTokenProvider, { baseURL: '/api' });
   });
 
   it('should call fetch with GET method', async () => {
@@ -52,6 +46,13 @@ describe('httpClient', () => {
     const body = { foo: 'bar' };
     await httpClient.put('/test', body);
     expect(innerMockFetch).toHaveBeenCalledWith('/test', expect.objectContaining({ method: 'PUT', body }));
+  });
+
+  it('should call fetch with PATCH method and body', async () => {
+    innerMockFetch.mockResolvedValueOnce({ success: true });
+    const body = { foo: 'bar' };
+    await httpClient.patch('/test', body);
+    expect(innerMockFetch).toHaveBeenCalledWith('/test', expect.objectContaining({ method: 'PATCH', body }));
   });
 
   it('should call fetch with DELETE method', async () => {

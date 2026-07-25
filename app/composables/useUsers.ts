@@ -1,48 +1,48 @@
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { UsersService } from '../services/users.service';
-import type { UserItem, UserSummary, TabItem, RoleFilterOption, UserPagination } from '../services/users.service';
-
-const masterUsers = ref<UserItem[]>([]);
-const summary = ref<UserSummary>({
-  total_users: 0,
-  active: 0,
-  pending: 0,
-  inactive: 0,
-  growth: '+18 this month',
-  engagement: '75% engagement',
-  onboarding: 'Needs onboarding',
-  follow_up: 'Follow up required',
-});
-
-const tabs = ref<TabItem[]>([
-  { key: 'all', label: 'All', count: 0 },
-  { key: 'active', label: 'Active', count: 0 },
-  { key: 'pending', label: 'Pending', count: 0 },
-  { key: 'inactive', label: 'Inactive', count: 0 },
-]);
-
-const roleFilters = ref<RoleFilterOption[]>([
-  { label: 'All Roles', value: '' },
-  { label: 'Admin', value: 'Admin' },
-  { label: 'Manager', value: 'Manager' },
-  { label: 'Supervisor', value: 'Supervisor' },
-  { label: 'User', value: 'User' },
-]);
-
-const searchQuery = ref('');
-const activeTab = ref('all');
-const selectedRole = ref('');
-const sortField = ref('id');
-const sortDirection = ref<'asc' | 'desc'>('asc');
-
-const currentPage = ref(1);
-const perPage = ref(10);
-const isLoading = ref(false);
-const isLoaded = ref(false);
+import type { UserItem, UserSummary, TabItem, RoleFilterOption, UserPagination } from '~/domain/entities/User';
 
 export function useUsers() {
+  const masterUsers = useState<UserItem[]>('users:master', () => []);
+  const summary = useState<UserSummary>('users:summary', () => ({
+    total_users: 0,
+    active: 0,
+    pending: 0,
+    inactive: 0,
+    growth: '+18 this month',
+    engagement: '75% engagement',
+    onboarding: 'Needs onboarding',
+    follow_up: 'Follow up required',
+  }));
+
+  const tabs = useState<TabItem[]>('users:tabs', () => [
+    { key: 'all', label: 'All', count: 0 },
+    { key: 'active', label: 'Active', count: 0 },
+    { key: 'pending', label: 'Pending', count: 0 },
+    { key: 'inactive', label: 'Inactive', count: 0 },
+  ]);
+
+  const roleFilters = useState<RoleFilterOption[]>('users:roleFilters', () => [
+    { label: 'All Roles', value: '' },
+    { label: 'Admin', value: 'Admin' },
+    { label: 'Manager', value: 'Manager' },
+    { label: 'Supervisor', value: 'Supervisor' },
+    { label: 'User', value: 'User' },
+  ]);
+
+  const searchQuery = useState('users:searchQuery', () => '');
+  const activeTab = useState('users:activeTab', () => 'all');
+  const selectedRole = useState('users:selectedRole', () => '');
+  const sortField = useState('users:sortField', () => 'id');
+  const sortDirection = useState<'asc' | 'desc'>('users:sortDirection', () => 'asc');
+
+  const currentPage = useState('users:currentPage', () => 1);
+  const perPage = useState('users:perPage', () => 10);
+  const isLoading = useState('users:isLoading', () => false);
+  const isLoaded = useState('users:isLoaded', () => false);
+
   /**
-   * Fetches data from mock service
+   * Fetches data from service
    */
   const getUsers = async () => {
     if (isLoaded.value && masterUsers.value.length > 0) {
@@ -203,8 +203,8 @@ export function useUsers() {
         if (typeof valA === 'string' && typeof valB === 'string') {
           return valA.localeCompare(valB) * order;
         }
-        if (valA < valB) return -1 * order;
-        if (valA > valB) return 1 * order;
+        if (valA! < valB!) return -1 * order;
+        if (valA! > valB!) return 1 * order;
         return 0;
       });
     }

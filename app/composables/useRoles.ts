@@ -1,15 +1,15 @@
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { RolesService } from '../services/roles.service';
-import type { RoleItem, PermissionGroupItem, RoleMatrixItem } from '../services/roles.service';
-
-const masterRoles = ref<RoleItem[]>([]);
-const permissionGroups = ref<PermissionGroupItem[]>([]);
-const activeRoleId = ref<number>(1);
-const isLoading = ref<boolean>(false);
-const isLoaded = ref<boolean>(false);
-const isSaving = ref<boolean>(false);
+import type { RoleItem, PermissionGroupItem } from '../services/roles.service';
 
 export function useRoles() {
+  const masterRoles = useState<RoleItem[]>('roles:master', () => []);
+  const permissionGroups = useState<PermissionGroupItem[]>('roles:groups', () => []);
+  const activeRoleId = useState<number>('roles:activeId', () => 1);
+  const isLoading = useState<boolean>('roles:isLoading', () => false);
+  const isLoaded = useState<boolean>('roles:isLoaded', () => false);
+  const isSaving = useState<boolean>('roles:isSaving', () => false);
+
   /**
    * Fetch roles and permission groups
    */

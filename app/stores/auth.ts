@@ -1,77 +1,76 @@
 import { defineStore } from 'pinia';
-import type { AuthUser, LoginPayload } from '~/domain/entities/Auth';
-import { AuthService } from '~/infrastructure/api/AuthService';
-import { tokenStorage } from '~/infrastructure/storage/tokenStorage';
+import { ref, computed } from 'vue';
+import type { AuthUser } from '~/domain/entities/Auth';
 
-function getAuthRepository() {
-  try {
-    const nuxtApp = useNuxtApp();
-    if (nuxtApp?.$authRepository) {
-      return nuxtApp.$authRepository;
+/**
+ * Auth Store — Thin reactive state container for authentication.
+ *
+ * This store ONLY manages reactive state. All business logic
+ * is delegated to use cases in the application layer.
+ *
+ * Responsibilities:
+ * - Hold current auth token (reactive)
+ * - Hold current user data (reactive)
+ * - Provide computed helpers (isAuthenticated)
+ * - Expose simple setters/clearers
+ *
+ * NOT responsible for:
+ * - API calls (use cases handle this)
+ * - Token persistence (TokenStoragePort handles this)
+ * - Business validation (domain layer handles this)
+ */
+export const useAuthStore = defineStore(
+  'auth',
+  () => {
+    // ──── State ────
+    const token = ref<string | null>(null);
+    const user = ref<AuthUser | null>(null);
+
+    // ──── Computed ────
+    const isAuthenticated = computed(() => !!token.value && !!user.value);
+    const username = computed(() => user.value?.username ?? '');
+    const personalId = computed(() => user.value?.personalId ?? '');
+
+    // ──── Actions ────
+
+    /** Set authentication data after successful login */
+    function setAuth(newToken: string, newUser: AuthUser) {
+      token.value = newToken;
+      user.value = newUser;
     }
-  } catch (_e) {
-    // ignore if called outside nuxt context
-  }
-  return new AuthService();
-}
 
-export const useAuthStore = defineStore('auth', {
-  state: () => ({
-    token: (tokenStorage.token || null) as string | null | undefined,
-    user: null as AuthUser | null | undefined,
-  }),
-  persist: true,
+    /** Update only the user profile */
+    function setUser(newUser: AuthUser) {
+      user.value = newUser;
+    }
 
-  actions: {
-    async fetchAuthlogin(payload: LoginPayload) {
-      const authRepository = getAuthRepository();
-      const response = await authRepository.login(payload);
+    /** Set only the token (before user is fetched) */
+    function setToken(newToken: string) {
+      token.value = newToken;
+    }
 
-      if (response && response.success && response.data?.access_token) {
-        this.token = response.data.access_token;
-        tokenStorage.token = response.data.access_token;
+    /** Clear all auth state (logout) */
+    function clearAuth() {
+      token.value = null;
+      user.value = null;
+    }
 
-        await this.fetchUserMe();
-        return response;
-      } else {
-        throw new Error(response?.message || 'Invalid Id Personal or Password');
-      }
-    },
-
-    async login(id_personal: string, password: string) {
-      return this.fetchAuthlogin({ id_personal, password });
-    },
-
-    async fetchUserMe() {
-      const authRepository = getAuthRepository();
-      try {
-        const response = await authRepository.getUserMe();
-        if (response && response.success && response.data) {
-          this.user = response.data;
-          return response.data;
-        }
-      } catch (error) {
-        console.error('Failed to fetch user me:', error);
-      }
-      return null;
-    },
-
-    clearToken() {
-      this.token = null;
-      tokenStorage.clear();
-    },
-
-    async logout() {
-      const authRepository = getAuthRepository();
-      try {
-        await authRepository.logout();
-      } catch (_e) {
-        // ignore logout API error
-      } finally {
-        this.token = null;
-        this.user = null;
-        tokenStorage.clear();
-      }
-    },
+    return {
+      // State
+      token,
+      user,
+      // Computed
+      isAuthenticated,
+      username,
+      personalId,
+      // Actions
+      setAuth,
+      setUser,
+      setToken,
+      clearAuth,
+    };
   },
-});
+  {
+    persist: true,
+  }
+);

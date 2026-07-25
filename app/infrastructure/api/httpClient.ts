@@ -1,42 +1,60 @@
 import { $fetch, type FetchOptions } from 'ofetch';
-import { useAuthStore } from '~/stores/auth';
+import type { TokenProvider } from '~/domain/ports/TokenPorts';
 
-const fetcher = $fetch.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
-  onRequest({ options }) {
-    // Dapatkan instance auth store
-    const authStore = useAuthStore();
+/**
+ * Creates a configured HTTP client instance.
+ *
+ * This factory function accepts a TokenProvider port so the HTTP client
+ * does NOT depend on Pinia stores or any presentation-layer concern.
+ * This respects Clean Architecture dependency rules:
+ *   Domain ← Application ← Infrastructure ← Presentation
+ *
+ * @param tokenProvider - Port to retrieve the current auth token
+ * @param options - Additional configuration
+ */
+export function createHttpClient(
+  tokenProvider: TokenProvider,
+  options: { baseURL?: string; onUnauthorized?: () => void } = {}
+) {
+  const fetcher = $fetch.create({
+    baseURL: options.baseURL || '/api',
+    timeout: 30000, // 30 second timeout
 
-    // Sisipkan Bearer token ke authorization headers jika token aktif
-    if (authStore.token) {
-      options.headers = {
-        ...options.headers,
-        Authorization: `Bearer ${authStore.token}`,
-      } as any;
-    }
-  },
-  onResponseError({ response }) {
-    if (response.status === 401) {
-      // Skenario token mati / expired
-      const authStore = useAuthStore();
-      authStore.logout();
-      // Paksa navigasi ke halaman login
-      navigateTo('/auth/login');
-    }
-  },
-});
+    onRequest({ options: fetchOptions }) {
+      const token = tokenProvider.getToken();
+      if (token) {
+        fetchOptions.headers = {
+          ...fetchOptions.headers,
+          Authorization: `Bearer ${token}`,
+        } as Record<string, string>;
+      }
+    },
 
-export const httpClient = {
-  get<T>(url: string, options?: FetchOptions<'json'>) {
-    return fetcher<T>(url, { ...options, method: 'GET' });
-  },
-  post<T>(url: string, body?: any, options?: FetchOptions<'json'>) {
-    return fetcher<T>(url, { ...options, method: 'POST', body });
-  },
-  put<T>(url: string, body?: any, options?: FetchOptions<'json'>) {
-    return fetcher<T>(url, { ...options, method: 'PUT', body });
-  },
-  delete<T>(url: string, options?: FetchOptions<'json'>) {
-    return fetcher<T>(url, { ...options, method: 'DELETE' });
-  },
-};
+    onResponseError({ response }) {
+      if (response.status === 401 && options.onUnauthorized) {
+        options.onUnauthorized();
+      }
+    },
+  });
+
+  return {
+    get<T>(url: string, fetchOpts?: FetchOptions<'json'>) {
+      return fetcher<T>(url, { ...fetchOpts, method: 'GET' });
+    },
+    post<T>(url: string, body?: unknown, fetchOpts?: FetchOptions<'json'>) {
+      return fetcher<T>(url, { ...fetchOpts, method: 'POST', body });
+    },
+    put<T>(url: string, body?: unknown, fetchOpts?: FetchOptions<'json'>) {
+      return fetcher<T>(url, { ...fetchOpts, method: 'PUT', body });
+    },
+    patch<T>(url: string, body?: unknown, fetchOpts?: FetchOptions<'json'>) {
+      return fetcher<T>(url, { ...fetchOpts, method: 'PATCH', body });
+    },
+    delete<T>(url: string, fetchOpts?: FetchOptions<'json'>) {
+      return fetcher<T>(url, { ...fetchOpts, method: 'DELETE' });
+    },
+  };
+}
+
+/** Type for the HTTP client instance */
+export type HttpClient = ReturnType<typeof createHttpClient>;
