@@ -3,6 +3,7 @@
 ![alt text](image.png)
 ![alt text](image-1.png)
 ![alt text](image-2.png)
+
 A scalable, production-ready administration dashboard application built using **Nuxt 4** and **Vue 3**. This project strictly implements **Clean Architecture** principles to decouple business logic from the UI framework, enhancing code maintainability, testability, and long-term scalability.
 
 ---
@@ -10,7 +11,7 @@ A scalable, production-ready administration dashboard application built using **
 ## 🚀 Key Features
 
 - **Nuxt 4 Architecture**: Built using the latest Nuxt 4 "App Directory" structure for superior code organization and performance.
-- **Modern & Responsive Interface**: Elegant and responsive custom administration UI built on Bootstrap 5 and SCSS.
+- **Modern & Responsive Interface**: Elegant and responsive custom administration UI built on Bootstrap 5 and SCSS with Apple macOS Sonoma / Fluent Glassmorphism aesthetics.
 - **Robust State Management**: Globally integrated with **Pinia** & `pinia-plugin-persistedstate/nuxt` to handle user sessions and tokens automatically with hydration support.
 - **Enterprise-Grade Security**: Structured for JWT-based authentication flows, protected with route guard middleware and a Roles & Permissions governance scheme.
 - **Smart Form Handling**: Schema-driven form validation infrastructure powered by **VeeValidate** and **Zod**.
@@ -22,7 +23,7 @@ A scalable, production-ready administration dashboard application built using **
 
 - **Framework**: Nuxt 4 / Vue 3 / TypeScript
 - **State Management**: Pinia + pinia-plugin-persistedstate (Nuxt Module)
-- **Styling Architecture**: Bootstrap 5 + SCSS
+- **Styling Architecture**: Bootstrap 5 + SCSS + Custom Glassmorphism System
 - **Validation Engine**: Zod + VeeValidate
 - **HTTP Client Strategy**: Nuxt `$fetch` (Ofetch) with Repository Pattern
 - **Testing Infrastructure**: Vitest + Vue Test Utils
@@ -75,24 +76,24 @@ In Nuxt 4, the primary code directory is located inside the `app/` folder. Appli
 
 ## 🔌 Real API Integration & Migration Guide
 
-Framework ini didesain menggunakan **Hexagonal Architecture / Repository Pattern** sehingga migrasi dari Mock Data ke **Real Backend API** dapat dilakukan tanpa menyentuh layer Domain, Application, maupun Presentation (UI).
+Thanks to the **Hexagonal Architecture & Dependency Injection (DI)** pattern implemented in this repository, migrating from Mock Data to a **Real Backend API** requires **zero changes** to UI components, Nuxt pages, Pinia stores, or domain logic.
 
-### Menghubungkan ke Real Backend API
+### Connecting to a Real Backend API
 
-Cukup atur variabel lingkungan `NUXT_PUBLIC_API_BASE` pada file `.env`:
+Simply set the `NUXT_PUBLIC_API_BASE` environment variable in your `.env` file:
 
 ```env
-NUXT_PUBLIC_API_BASE=https://api.yourcompany.com/api
+NUXT_PUBLIC_API_BASE=https://api.yourcompany.com/v1
 ```
 
-Saat `NUXT_PUBLIC_API_BASE` diisi, **DI Container** (`app/plugins/auth.ts`) secara otomatis beralih dari `Mock*Repository` ke **`*ApiRepository`** (`AuthApiRepository`, `UserApiRepository`, `RoleApiRepository`).
+When `NUXT_PUBLIC_API_BASE` is set, the **DI Container** ([`app/plugins/auth.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/plugins/auth.ts)) automatically switches from `Mock*Repository` to **`*ApiRepository`** (`AuthApiRepository`, `UserApiRepository`, `RoleApiRepository`).
 
-### Mengapa Migrasi ke Real API Tanpa Hambatan (Zero-Friction)?
+### Why Is API Migration Zero-Friction?
 
-1. **Domain Layer Terproteksi**: Tipe entity (`AuthUser`, `UserItem`, `RoleItem`) dan interface (`UserRepository`, `RoleRepository`) tidak akan berubah sedikitpun saat backend diganti.
-2. **Infrastructure Mapper Boundary**: `UserMapper`, `RoleMapper`, dan `AuthMapper` mengisolasi perbedaan format backend (misal: `snake_case` backend ↔ `camelCase` frontend).
-3. **Centralized Endpoints**: Semua rute API dikelola di `app/infrastructure/api/endpoints.ts`.
-4. **Standardized Error Normalization**: `apiErrorHandler.ts` secara otomatis mengubah error HTTP (400, 401, 403, 404, 422, 500) menjadi pesan error yang aman dan ramah pengguna.
+1. **Protected Domain Layer**: Entity definitions (`UserItem`, `RoleItem`) and repository interfaces (`UserRepository`, `RoleRepository`) remain unchanged regardless of backend API modifications.
+2. **Infrastructure Data Mapper Boundary**: Data Mappers (`UserMapper`, `RoleMapper`, `AuthMapper`) isolate raw backend payload format differences (e.g., backend `snake_case` ↔ frontend `camelCase`).
+3. **Centralized Registry of Endpoints**: All API route definitions are managed centrally in [`app/infrastructure/api/endpoints.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/api/endpoints.ts).
+4. **Standardized Error Normalization & JWT Interceptor**: [`httpClient.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/api/httpClient.ts) automatically attaches `Authorization: Bearer <token>` headers and normalizes HTTP status errors (400, 401, 403, 404, 422, 500) into safe, user-friendly messages.
 
 ---
 
@@ -253,64 +254,6 @@ npm run test
 
 - **Husky & Lint-Staged**: Automatically runs ESLint and Prettier on staged files prior to committing.
 - **Commitlint**: Ensures commit messages adhere to [Conventional Commits](https://www.conventionalcommits.org/) standards.
-
----
-
-## 🔌 Real API Integration & Migration Guide
-
-Thanks to the **Clean Architecture & Dependency Injection (DI)** design implemented in this repository, migrating from Mock Data to a Real Production API backend requires **zero changes to UI components, Nuxt pages, or Pinia stores**.
-
-### 🛠️ Migration Steps
-
-#### 1. Environment Configuration (`.env`)
-
-Set `NUXT_PUBLIC_API_BASE` in your `.env` file to your backend API base URL:
-
-```env
-# .env
-NUXT_PUBLIC_API_BASE=https://api.yourdomain.com/v1
-```
-
-> 💡 **Automatic Repository Switch**:
-> The Dependency Injection plugin ([`app/plugins/auth.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/plugins/auth.ts)) automatically detects this environment variable and switches from Mock Repositories to API Repositories (`AuthApiRepository`, `UserApiRepository`, `RoleApiRepository`).
-
-#### 2. Configure API Endpoints (`app/infrastructure/api/endpoints.ts`)
-
-Map your backend REST API endpoints in [`app/infrastructure/api/endpoints.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/api/endpoints.ts):
-
-```typescript
-export const API_ENDPOINTS = {
-  AUTH: {
-    LOGIN: '/auth/login',
-    LOGOUT: '/auth/logout',
-    ME: '/auth/me',
-    REFRESH: '/auth/refresh',
-  },
-  USERS: {
-    BASE: '/users',
-    DETAIL: (id: number | string) => `/users/${id}`,
-  },
-  ROLES: {
-    BASE: '/roles',
-    PERMISSIONS: (id: number | string) => `/roles/${id}/permissions`,
-  },
-} as const;
-```
-
-#### 3. Map Data Payloads with Data Mappers (`app/infrastructure/mappers/`)
-
-Data Mappers act as boundaries between raw backend DTO JSON payloads and pure Domain Entities:
-
-- **User Mapper**: [`app/infrastructure/mappers/UserMapper.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/mappers/UserMapper.ts)
-- **Role Mapper**: [`app/infrastructure/mappers/RoleMapper.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/mappers/RoleMapper.ts)
-- **Auth Mapper**: [`app/infrastructure/mappers/AuthMapper.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/mappers/AuthMapper.ts)
-
-#### 4. Automatic JWT Token Handling
-
-The HTTP Client ([`app/infrastructure/api/httpClient.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/api/httpClient.ts)) automatically handles:
-
-- Authorization header injection (`Bearer <token>`).
-- 401 Unauthorized handling (automatic session invalidation & redirect to `/auth/login`).
 
 ---
 
