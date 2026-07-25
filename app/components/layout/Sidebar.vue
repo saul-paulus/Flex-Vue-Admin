@@ -129,6 +129,9 @@ const handleLogout = async () => {
 .active-sub {
   color: var(--accent) !important;
   font-weight: var(--fw-semibold);
+  background: rgba(10, 132, 255, 0.15) !important;
+  border-radius: var(--radius-sm);
+  padding-left: 8px !important;
 }
 
 .active-parent {

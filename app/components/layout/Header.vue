@@ -45,33 +45,34 @@ const handleSignOut = async () => {
   <header class="header glass d-flex align-items-center px-3 px-md-4">
     <div class="d-flex align-items-center justify-content-between w-100 h-100">
       <!-- Kiri: Toggle Sidebar & Kotak Pencarian -->
-      <div class="d-flex align-items-center gap-3">
-        <!-- Branding Logo -->
-        <NuxtLink
-          to="/"
-          class="text-decoration-none d-flex align-items-center fw-bolder fs-5 gap-2 me-md-2"
-          :class="isDarkMode ? 'text-white' : 'text-dark'"
-        >
-          <i class="bi bi-heptagon-half fs-4 text-accent" />
-          <span class="d-none d-md-block">flexVueAdmin</span>
-        </NuxtLink>
-        <!-- Sidebar Toggle -->
-        <button class="header-icon-btn header-icon-btn-teal" @click="emit('toggle-sidebar')">
-          <i class="bi bi-layout-sidebar fs-5" />
-        </button>
-        <div class="input-group d-none d-md-flex align-items-center search-box search-pill px-3 py-1 w-300 h-36">
-          <i class="bi bi-search me-2 text-muted" />
-          <input
-            type="text"
-            class="form-control border-0 bg-transparent shadow-none fs-sm"
+      <div class="d-flex align-items-center gap-3 flex-grow-1">
+        <!-- Sidebar Brand Area (Aligned to sidebar boundary) -->
+        <div class="sidebar-brand-area d-flex align-items-center justify-content-between">
+          <!-- Branding Logo -->
+          <NuxtLink
+            to="/"
+            class="text-decoration-none d-flex align-items-center fw-bolder fs-5 gap-2 me-2"
             :class="isDarkMode ? 'text-white' : 'text-dark'"
-            placeholder="Search users, invoices, tickets..."
-          />
-          <kbd
-            class="border ms-2 fw-medium px-2 rounded bg-base text-muted d-flex align-items-center justify-content-center fs-10 h-18"
           >
-            /
-          </kbd>
+            <i class="bi bi-heptagon-half fs-4 text-accent" />
+            <span class="d-none d-md-block">flexVueAdmin</span>
+          </NuxtLink>
+          <!-- Sidebar Toggle (Aligned with sidebar edge) -->
+          <button class="header-icon-btn header-icon-btn-teal" @click="emit('toggle-sidebar')">
+            <i class="bi bi-layout-sidebar fs-5" />
+          </button>
+        </div>
+        <!-- Search Box (Positioned cleanly in main content area) -->
+        <div class="header-search-container d-none d-md-flex align-items-center ms-md-3">
+          <div class="header-search-input-wrapper d-flex align-items-center px-3">
+            <i class="bi bi-search search-icon me-2" />
+            <input
+              type="text"
+              class="header-search-input border-0 bg-transparent shadow-none"
+              placeholder="Search users, invoices, tickets..."
+            />
+            <kbd class="shortcut-badge ms-2">/</kbd>
+          </div>
         </div>
       </div>
       <!-- Kanan: Menu Item Ekstra & Profil -->
@@ -221,5 +222,12 @@ const handleSignOut = async () => {
 
 .pointer-events-none {
   pointer-events: none;
+}
+
+@media (min-width: 992px) {
+  .sidebar-brand-area {
+    width: calc(var(--sidebar-width) - 2.5rem);
+    min-width: calc(var(--sidebar-width) - 2.5rem);
+  }
 }
 </style>
