@@ -1,6 +1,9 @@
 # niceAdmin - Dashboard Administrasi Enterprise Nuxt 4
 
 ![alt text](image.png)
+
+![alt text](image-1.png)
+
 Aplikasi dashboard administrasi tingkat enterprise yang scalable dan siap untuk produksi, dibangun menggunakan **Nuxt 4** dan **Vue 3**. Proyek ini menerapkan prinsip **Clean Architecture** secara ketat untuk memisahkan logika bisnis dari framework UI, sehingga meningkatkan pemeliharaan kode, mempermudah pengujian, dan menjamin skalabilitas jangka panjang.
 
 ---
@@ -228,3 +231,9 @@ npm run test
 
 - **Husky & Lint-Staged**: Menjalankan ESLint dan Prettier secara otomatis pada file staging sebelum commit.
 - **Commitlint**: Memastikan pesan commit mematuhi aturan [Conventional Commits](https://www.conventionalcommits.org/).
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
