@@ -89,14 +89,14 @@ const handleSignOut = async () => {
             <i :class="isDarkMode ? 'bi bi-sun-fill fs-6' : 'bi bi-moon-fill fs-6'" />
           </button>
           <!-- Chat Badge -->
-          <button class="header-icon-btn position-relative">
+          <button class="header-icon-btn position-relative" aria-label="Messages">
             <i class="bi bi-chat-left-text fs-6" />
-            <span class="badge-apple badge-apple-top bg-danger border border-white"> 5 </span>
+            <span class="badge-notification">5</span>
           </button>
           <!-- Notifikasi Badge -->
-          <button class="header-icon-btn position-relative">
+          <button class="header-icon-btn position-relative" aria-label="Notifications">
             <i class="bi bi-bell fs-6" />
-            <span class="badge-apple badge-apple-top bg-danger border border-white"> 4 </span>
+            <span class="badge-notification">4</span>
           </button>
         </div>
         <div class="vr mx-2 d-none d-sm-block h-24" />
@@ -112,7 +112,7 @@ const handleSignOut = async () => {
             <img
               :src="`https://ui-avatars.com/api/?name=${user?.username || 'User'}&background=0D8ABC&color=fff`"
               alt="User Profile"
-              class="rounded-circle shadow-sm w-36 h-36"
+              class="rounded-circle shadow-sm w-25 h-25"
             />
             <div class="d-none d-md-block text-start ms-2 lh-1 text-truncate max-w-120">
               <span class="d-block fw-bold fs-sm">
@@ -126,7 +126,7 @@ const handleSignOut = async () => {
             />
           </a>
           <ul
-            class="dropdown-menu dropdown-menu-end shadow-lg border mt-2 p-0 overflow-hidden transition-all d-block-important"
+            class="dropdown-menu dropdown-menu-end shadow-lg border mt-3 p-0 overflow-hidden transition-all d-block-important"
             :class="{
               show: isDropdownOpen,
               'visible opacity-1 transform-y-0 pointer-events-auto': isDropdownOpen,
@@ -138,7 +138,7 @@ const handleSignOut = async () => {
               <img
                 :src="`https://ui-avatars.com/api/?name=${user?.username || 'User'}&background=0D8ABC&color=fff`"
                 alt="User"
-                class="rounded-circle border border-2 border-white shadow-sm w-36 h-36"
+                class="rounded-circle border border-2 border-white shadow-sm w-25 h-25"
               />
               <div class="lh-1">
                 <span class="d-block fw-bold text-primary fs-sm mb-1">
