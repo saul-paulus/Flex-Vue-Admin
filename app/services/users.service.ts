@@ -20,6 +20,40 @@ export interface RoleFilterOption {
   value: string;
 }
 
+export interface UserActivityTimeline {
+  title: string;
+  description: string;
+  time: string;
+  indicator_color?: string;
+}
+
+export interface UserStats {
+  logins: number;
+  tasks_closed: number;
+  projects: number;
+  teams: number;
+}
+
+export interface UserHealth {
+  email_verification: boolean;
+  two_factor: boolean;
+  risk_score: string;
+}
+
+export interface UserSession {
+  device: string;
+  location: string;
+  is_current: boolean;
+  last_active: string;
+}
+
+export interface UserTeam {
+  name: string;
+  members_count: number;
+  icon: string;
+  color_class: string;
+}
+
 export interface UserItem {
   id: number;
   uuid: string;
@@ -46,6 +80,13 @@ export interface UserItem {
   permissions: string[];
   is_online: boolean;
   action: string[];
+  location?: string;
+  manager?: string;
+  stats?: UserStats;
+  health?: UserHealth;
+  timeline?: UserActivityTimeline[];
+  sessions?: UserSession[];
+  teams_list?: UserTeam[];
 }
 
 export interface UserPagination {

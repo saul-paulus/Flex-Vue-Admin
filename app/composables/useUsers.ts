@@ -77,6 +77,20 @@ export function useUsers() {
   };
 
   /**
+   * Get single user profile by ID, UUID, or employee_id
+   */
+  const getUserById = async (id: number | string): Promise<UserItem | undefined> => {
+    if (!isLoaded.value || masterUsers.value.length === 0) {
+      await getUsers();
+    }
+    const numId = Number(id);
+    const found = masterUsers.value.find(
+      (u) => u.id === numId || u.uuid === String(id) || u.employee_id === String(id)
+    );
+    return found || masterUsers.value[0];
+  };
+
+  /**
    * Get dynamic summary data
    */
   const getSummary = (): UserSummary => {
@@ -267,6 +281,7 @@ export function useUsers() {
 
     // Methods
     getUsers,
+    getUserById,
     getSummary,
     searchUsers,
     filterUsers,

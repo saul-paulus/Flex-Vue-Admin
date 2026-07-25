@@ -1,17 +1,105 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { useUsers } from '../../composables/useUsers';
+import type { UserItem } from '../../services/users.service';
 
-const user = ref({
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  avatar: 'https://ui-avatars.com/api/?name=John+Doe&background=0D8ABC&color=fff',
-  id: '#U24-001',
-  role: 'Admin',
-  department: 'Engineering',
-  phone: '+1 (555) 123-4567',
-  location: 'New York, USA',
-  manager: 'Chris Thompson',
-  joined: 'Jan 15, 2024',
+const route = useRoute();
+const { getUserById, isLoading } = useUsers();
+
+const user = ref<UserItem | null>(null);
+
+onMounted(async () => {
+  const userId = (route.query.id as string) || '1';
+  const found = await getUserById(userId);
+  if (found) {
+    user.value = found;
+  }
+});
+
+const userLocation = computed(() => {
+  if (!user.value) return 'New York, USA';
+  return user.value.location || `${user.value.branch}, Indonesia`;
+});
+
+const userManager = computed(() => {
+  if (!user.value) return 'Chris Thompson';
+  return user.value.manager || 'Chris Thompson';
+});
+
+const userStats = computed(() => {
+  if (!user.value?.stats) {
+    return { logins: 156, tasks_closed: 42, projects: 18, teams: 7 };
+  }
+  return user.value.stats;
+});
+
+const userHealth = computed(() => {
+  if (!user.value?.health) {
+    return { email_verification: true, two_factor: true, risk_score: 'Low' };
+  }
+  return user.value.health;
+});
+
+const userTimeline = computed(() => {
+  if (user.value?.timeline && user.value.timeline.length > 0) {
+    return user.value.timeline;
+  }
+  return [
+    {
+      title: 'Logged In',
+      description: `Chrome on Windows - ${userLocation.value}`,
+      time: user.value?.last_activity || 'Just now',
+      indicator_color: 'bg-success',
+    },
+    {
+      title: 'Updated profile information',
+      description: 'Changed phone number and location',
+      time: '2 hours ago',
+      indicator_color: 'bg-primary',
+    },
+    {
+      title: 'Enabled Two-Factor Authentication',
+      description: 'Using authenticator app',
+      time: 'Yesterday at 3:45 PM',
+      indicator_color: 'bg-warning',
+    },
+    {
+      title: `Joined ${user.value?.department || 'Engineering'} team`,
+      description: `Added by ${userManager.value}`,
+      time: '3 days ago',
+      indicator_color: 'bg-primary',
+    },
+    {
+      title: 'Completed 5 tasks in Project Alpha',
+      description: 'Sprint v2 milestone reached',
+      time: '5 days ago',
+      indicator_color: 'bg-success',
+    },
+  ];
+});
+
+const userTeams = computed(() => {
+  if (user.value?.teams_list && user.value.teams_list.length > 0) {
+    return user.value.teams_list;
+  }
+  return [
+    {
+      name: user.value?.department || 'Engineering',
+      members_count: 12,
+      icon: 'bi-code-slash',
+      color_class: 'bg-primary-subtle text-primary',
+    },
+    { name: 'Product', members_count: 5, icon: 'bi-box', color_class: 'bg-success-subtle text-success' },
+    { name: 'Design', members_count: 8, icon: 'bi-palette', color_class: 'bg-info-subtle text-info' },
+  ];
+});
+
+const userPermissions = computed(() => {
+  if (user.value?.permissions && user.value.permissions.length > 0) {
+    return user.value.permissions;
+  }
+  return ['Dashboard', 'Users', 'Roles', 'Settings', 'Reports'];
 });
 </script>
 
@@ -30,7 +118,7 @@ const user = ref({
               <NuxtLink to="/users" class="text-decoration-none text-muted">Users</NuxtLink>
             </li>
             <li class="breadcrumb-item active text-dark fw-medium" aria-current="page">
-              {{ user.name }}
+              {{ user?.full_name || 'Loading...' }}
             </li>
           </ol>
         </nav>
@@ -47,8 +135,13 @@ const user = ref({
       </div>
     </div>
 
+    <div v-if="isLoading" class="text-center py-5 text-muted">
+      <div class="spinner-border spinner-border-sm me-2 text-primary" role="status" />
+      Loading user profile...
+    </div>
+
     <!-- Main Layout -->
-    <div class="row g-4">
+    <div v-else-if="user" class="row g-4">
       <!-- Left Column -->
       <div class="col-12 col-xl-8 d-flex flex-column gap-4">
         <!-- Profile Card -->
@@ -66,25 +159,34 @@ const user = ref({
                     alt="Avatar"
                   />
                   <span
-                    class="position-absolute bottom-0 end-0 p-1 bg-success border border-2 border-white rounded-circle"
+                    class="position-absolute bottom-0 end-0 p-1 border border-2 border-white rounded-circle"
+                    :class="
+                      user.status === 'Active'
+                        ? 'bg-success'
+                        : user.status === 'Pending'
+                          ? 'bg-warning'
+                          : 'bg-secondary'
+                    "
                     style="transform: translate(-10%, -10%); width: 16px; height: 16px"
                   />
                 </div>
                 <div>
                   <h4 class="fw-bolder mb-1 text-primary">
-                    {{ user.name }}
+                    {{ user.full_name }}
                   </h4>
                   <p class="text-muted mb-2 fs-sm">
                     {{ user.email }}
                   </p>
                   <div class="d-flex flex-wrap gap-2">
-                    <span class="badge bg-elevated text-primary border px-2 py-1 fw-medium"
-                      ><i class="bi bi-shield-check text-muted me-1" /> {{ user.role }}</span
-                    >
-                    <span class="badge bg-elevated text-secondary border px-2 py-1 fw-medium">{{ user.id }}</span>
-                    <span class="badge bg-elevated text-secondary border px-2 py-1 fw-medium">{{
-                      user.department
-                    }}</span>
+                    <span class="badge bg-elevated text-primary border px-2 py-1 fw-medium">
+                      <i class="bi bi-shield-check text-muted me-1" /> {{ user.role }}
+                    </span>
+                    <span class="badge bg-elevated text-secondary border px-2 py-1 fw-medium">
+                      #{{ user.employee_id }}
+                    </span>
+                    <span class="badge bg-elevated text-secondary border px-2 py-1 fw-medium">
+                      {{ user.department }}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -102,7 +204,7 @@ const user = ref({
                 <div class="p-3 border rounded-3 bg-elevated d-flex justify-content-between align-items-start h-100">
                   <div>
                     <div class="text-tertiary text-uppercase fw-bold mb-1 letter-spacing-1 fs-10">LOGINS</div>
-                    <div class="fw-bolder fs-xl text-primary">156</div>
+                    <div class="fw-bolder fs-xl text-primary">{{ userStats.logins }}</div>
                   </div>
                   <div
                     class="bg-info-subtle text-info rounded p-1 d-flex align-items-center justify-content-center"
@@ -116,7 +218,7 @@ const user = ref({
                 <div class="p-3 border rounded-3 bg-elevated d-flex justify-content-between align-items-start h-100">
                   <div>
                     <div class="text-tertiary text-uppercase fw-bold mb-1 letter-spacing-1 fs-10">TASKS CLOSED</div>
-                    <div class="fw-bolder fs-xl text-primary">42</div>
+                    <div class="fw-bolder fs-xl text-primary">{{ userStats.tasks_closed }}</div>
                   </div>
                   <div
                     class="bg-success-subtle text-success rounded p-1 d-flex align-items-center justify-content-center"
@@ -130,7 +232,7 @@ const user = ref({
                 <div class="p-3 border rounded-3 bg-elevated d-flex justify-content-between align-items-start h-100">
                   <div>
                     <div class="text-tertiary text-uppercase fw-bold mb-1 letter-spacing-1 fs-10">PROJECTS</div>
-                    <div class="fw-bolder fs-xl text-primary">18</div>
+                    <div class="fw-bolder fs-xl text-primary">{{ userStats.projects }}</div>
                   </div>
                   <div
                     class="bg-primary-subtle text-primary rounded p-1 d-flex align-items-center justify-content-center"
@@ -144,7 +246,7 @@ const user = ref({
                 <div class="p-3 border rounded-3 bg-elevated d-flex justify-content-between align-items-start h-100">
                   <div>
                     <div class="text-tertiary text-uppercase fw-bold mb-1 letter-spacing-1 fs-10">TEAMS</div>
-                    <div class="fw-bolder fs-xl text-primary">7</div>
+                    <div class="fw-bolder fs-xl text-primary">{{ userStats.teams }}</div>
                   </div>
                   <div
                     class="bg-warning-subtle text-warning rounded p-1 d-flex align-items-center justify-content-center"
@@ -164,15 +266,15 @@ const user = ref({
               </div>
               <div class="col-12 col-md-6 d-flex justify-content-between border-bottom pb-2">
                 <span class="text-muted fs-sm">Location</span>
-                <span class="fw-medium text-primary fs-sm">{{ user.location }}</span>
+                <span class="fw-medium text-primary fs-sm">{{ userLocation }}</span>
               </div>
               <div class="col-12 col-md-6 d-flex justify-content-between pt-1">
                 <span class="text-muted fs-sm">Manager</span>
-                <span class="fw-medium text-primary fs-sm">{{ user.manager }}</span>
+                <span class="fw-medium text-primary fs-sm">{{ userManager }}</span>
               </div>
               <div class="col-12 col-md-6 d-flex justify-content-between pt-1">
                 <span class="text-muted fs-sm">Joined</span>
-                <span class="fw-medium text-primary fs-sm">{{ user.joined }}</span>
+                <span class="fw-medium text-primary fs-sm">{{ user.joined_at }}</span>
               </div>
             </div>
           </div>
@@ -185,63 +287,25 @@ const user = ref({
           </div>
           <div class="card-body p-4">
             <div class="timeline position-relative ms-2 pe-2 pb-2">
-              <!-- Item 1 -->
-              <div class="timeline-item position-relative pb-4 ps-4">
-                <div
-                  class="timeline-indicator position-absolute bg-success rounded-circle border border-2 border-white shadow-sm"
-                  style="width: 12px; height: 12px; left: -6px; top: 4px"
-                />
-                <div class="timeline-line position-absolute bg-light h-100" style="width: 2px; left: -1px; top: 16px" />
-                <h6 class="fw-bold mb-1 fs-md text-primary">Logged In</h6>
-                <p class="text-muted mb-1 fs-sm">Chrome on Windows - New York, USA</p>
-                <div class="text-muted fs-xs">Just now</div>
-              </div>
-
-              <!-- Item 2 -->
-              <div class="timeline-item position-relative pb-4 ps-4">
+              <div
+                v-for="(item, index) in userTimeline"
+                :key="index"
+                class="timeline-item position-relative ps-4"
+                :class="{ 'pb-4': index < userTimeline.length - 1 }"
+              >
                 <div
                   class="timeline-indicator position-absolute rounded-circle border border-2 border-white shadow-sm"
-                  style="width: 12px; height: 12px; left: -6px; top: 4px; background-color: var(--apple-blue)"
-                />
-                <div class="timeline-line position-absolute bg-light h-100" style="width: 2px; left: -1px; top: 16px" />
-                <h6 class="fw-bold mb-1 fs-md text-primary">Updated profile information</h6>
-                <p class="text-muted mb-1 fs-sm">Changed phone number and location</p>
-                <div class="text-muted fs-xs">2 hours ago</div>
-              </div>
-
-              <!-- Item 3 -->
-              <div class="timeline-item position-relative pb-4 ps-4">
-                <div
-                  class="timeline-indicator position-absolute bg-warning rounded-circle border border-2 border-white shadow-sm"
+                  :class="item.indicator_color || 'bg-primary'"
                   style="width: 12px; height: 12px; left: -6px; top: 4px"
                 />
-                <div class="timeline-line position-absolute bg-light h-100" style="width: 2px; left: -1px; top: 16px" />
-                <h6 class="fw-bold mb-1 fs-md text-primary">Enabled Two-Factor Authentication</h6>
-                <p class="text-muted mb-1 fs-sm">Using authenticator app</p>
-                <div class="text-muted fs-xs">Yesterday at 3:45 PM</div>
-              </div>
-
-              <!-- Item 4 -->
-              <div class="timeline-item position-relative pb-4 ps-4">
                 <div
-                  class="timeline-indicator position-absolute bg-primary rounded-circle border border-2 border-white shadow-sm"
-                  style="width: 12px; height: 12px; left: -6px; top: 4px"
+                  v-if="index < userTimeline.length - 1"
+                  class="timeline-line position-absolute bg-light h-100"
+                  style="width: 2px; left: -1px; top: 16px"
                 />
-                <div class="timeline-line position-absolute bg-light h-100" style="width: 2px; left: -1px; top: 16px" />
-                <h6 class="fw-bold mb-1 fs-md text-primary">Joined Engineering team</h6>
-                <p class="text-muted mb-1 fs-sm">Added by Chris Thompson</p>
-                <div class="text-muted fs-xs">3 days ago</div>
-              </div>
-
-              <!-- Item 5 -->
-              <div class="timeline-item position-relative ps-4">
-                <div
-                  class="timeline-indicator position-absolute bg-success rounded-circle border border-2 border-white shadow-sm"
-                  style="width: 12px; height: 12px; left: -6px; top: 4px"
-                />
-                <h6 class="fw-bold mb-1 fs-md text-primary">Completed 5 tasks in Project Alpha</h6>
-                <p class="text-muted mb-1 fs-sm">Sprint v2 milestone reached</p>
-                <div class="text-muted fs-xs">5 days ago</div>
+                <h6 class="fw-bold mb-1 fs-md text-primary">{{ item.title }}</h6>
+                <p class="text-muted mb-1 fs-sm">{{ item.description }}</p>
+                <div class="text-muted fs-xs">{{ item.time }}</div>
               </div>
             </div>
           </div>
@@ -258,65 +322,63 @@ const user = ref({
           <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <span class="text-muted fs-sm">Status</span>
-              <span class="fw-medium text-primary fs-sm">Active</span>
+              <span
+                class="fw-medium fs-sm"
+                :class="
+                  user.status === 'Active'
+                    ? 'text-success'
+                    : user.status === 'Pending'
+                      ? 'text-warning'
+                      : 'text-secondary'
+                "
+              >
+                {{ user.status }}
+              </span>
             </div>
             <div class="d-flex justify-content-between align-items-center mb-3">
               <span class="text-muted fs-sm">Email Verification</span>
-              <span class="fw-medium text-success d-flex align-items-center gap-1 fs-sm">
-                <i class="bi bi-check-circle-fill" /> Verified
+              <span
+                class="fw-medium d-flex align-items-center gap-1 fs-sm"
+                :class="userHealth.email_verification ? 'text-success' : 'text-danger'"
+              >
+                <i class="bi bi-check-circle-fill" /> {{ userHealth.email_verification ? 'Verified' : 'Unverified' }}
               </span>
             </div>
             <div class="d-flex justify-content-between align-items-center mb-3">
               <span class="text-muted fs-sm">2FA</span>
-              <span class="fw-medium text-success d-flex align-items-center gap-1 fs-sm">
-                <i class="bi bi-shield-check" /> Enabled
+              <span
+                class="fw-medium d-flex align-items-center gap-1 fs-sm"
+                :class="userHealth.two_factor ? 'text-success' : 'text-muted'"
+              >
+                <i class="bi bi-shield-check" /> {{ userHealth.two_factor ? 'Enabled' : 'Disabled' }}
               </span>
             </div>
             <div class="d-flex justify-content-between align-items-center mb-3">
               <span class="text-muted fs-sm">Last Login</span>
-              <span class="fw-medium text-primary fs-sm">Just now</span>
+              <span class="fw-medium text-primary fs-sm">{{ user.last_activity }}</span>
             </div>
             <div class="d-flex justify-content-between align-items-center mb-4">
               <span class="text-muted fs-sm">Risk Score</span>
-              <span class="fw-medium text-primary fs-sm">Low</span>
+              <span class="fw-medium text-primary fs-sm">{{ userHealth.risk_score }}</span>
             </div>
 
             <!-- Team Memberships -->
             <div class="d-flex flex-column gap-2">
-              <div class="p-2 border rounded d-flex align-items-center gap-3">
+              <div
+                v-for="(team, index) in userTeams"
+                :key="index"
+                class="p-2 border rounded d-flex align-items-center gap-3"
+              >
                 <div
-                  class="bg-primary-subtle text-primary rounded p-1 d-flex align-items-center justify-content-center"
+                  class="rounded p-1 d-flex align-items-center justify-content-center"
+                  :class="team.color_class"
                   style="width: 32px; height: 32px"
                 >
-                  <i class="bi bi-code-slash" />
+                  <i class="bi" :class="team.icon" />
                 </div>
                 <div class="flex-grow-1">
-                  <div class="fw-bold text-primary fs-sm">Engineering</div>
-                  <div class="text-tertiary fs-xs">12 members</div>
-                </div>
-              </div>
-              <div class="p-2 border rounded d-flex align-items-center gap-3">
-                <div
-                  class="bg-success-subtle text-success rounded p-1 d-flex align-items-center justify-content-center"
-                  style="width: 32px; height: 32px"
-                >
-                  <i class="bi bi-box" />
-                </div>
-                <div class="flex-grow-1">
-                  <div class="fw-bold text-primary fs-sm">Product</div>
-                  <div class="text-tertiary fs-xs">5 members</div>
-                </div>
-              </div>
-              <div class="p-2 border rounded d-flex align-items-center gap-3">
-                <div
-                  class="bg-info-subtle text-info rounded p-1 d-flex align-items-center justify-content-center"
-                  style="width: 32px; height: 32px"
-                >
-                  <i class="bi bi-palette" />
-                </div>
-                <div class="flex-grow-1">
-                  <div class="fw-bold text-primary fs-sm">Design</div>
-                  <div class="text-tertiary fs-xs">8 members</div>
+                  <div class="fw-bold text-primary fs-sm">{{ team.name }}</div>
+                  <div class="text-tertiary fs-xs">{{ team.members_count }} members</div>
                 </div>
               </div>
             </div>
@@ -334,26 +396,20 @@ const user = ref({
             >
               <i class="bi bi-info-circle mt-1" />
               <div>
-                Admin role with full system scope. Managed via
+                {{ user.role }} role with {{ user.role === 'Admin' ? 'full system' : 'scoped' }} access. Managed via
                 <a href="#" class="text-primary fw-medium">Roles &amp; Permissions</a>.
               </div>
             </div>
 
             <ul class="list-unstyled mb-0 fs-sm">
-              <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                <span class="text-primary">Dashboard</span> <i class="bi bi-check2 text-success" />
-              </li>
-              <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                <span class="text-primary">Users</span> <i class="bi bi-check2 text-success" />
-              </li>
-              <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                <span class="text-primary">Roles</span> <i class="bi bi-check2 text-success" />
-              </li>
-              <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                <span class="text-primary">Settings</span> <i class="bi bi-check2 text-success" />
-              </li>
-              <li class="d-flex justify-content-between align-items-center py-2">
-                <span class="text-primary">Reports</span> <i class="bi bi-check2 text-success" />
+              <li
+                v-for="(perm, index) in userPermissions"
+                :key="index"
+                class="d-flex justify-content-between align-items-center py-2"
+                :class="{ 'border-bottom': index < userPermissions.length - 1 }"
+              >
+                <span class="text-primary">{{ perm }}</span>
+                <i class="bi bi-check2 text-success" />
               </li>
             </ul>
           </div>
@@ -377,7 +433,7 @@ const user = ref({
                   <div class="fw-bold text-primary fs-sm">Chrome on Windows</div>
                   <span class="badge bg-success-subtle text-success rounded-pill fw-medium fs-xs">Current</span>
                 </div>
-                <div class="text-tertiary fs-xs">New York • Active now</div>
+                <div class="text-tertiary fs-xs">{{ userLocation }} • Active now</div>
               </div>
             </div>
           </div>

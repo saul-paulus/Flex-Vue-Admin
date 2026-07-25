@@ -394,9 +394,13 @@ const selectRoleFilter = (roleValue: string) => {
               </td>
               <td class="text-end pe-4 py-3">
                 <div class="d-flex align-items-center justify-content-end gap-2 text-muted">
-                  <button class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary" title="View Detail">
+                  <NuxtLink
+                    :to="`/users/view?id=${user.id}`"
+                    class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary"
+                    title="View Detail"
+                  >
                     <i class="bi bi-eye" />
-                  </button>
+                  </NuxtLink>
                   <button class="btn btn-sm btn-link text-muted p-1 border-0 text-hover-primary" title="Edit User">
                     <i class="bi bi-pencil" />
                   </button>
