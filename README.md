@@ -1,101 +1,101 @@
-# niceAdmin - Dashboard Administrasi Enterprise Nuxt 4
+# niceAdmin - Enterprise Nuxt 4 Administration Dashboard
 
 ![alt text](image.png)
 
 ![alt text](image-1.png)
 
-Aplikasi dashboard administrasi tingkat enterprise yang scalable dan siap untuk produksi, dibangun menggunakan **Nuxt 4** dan **Vue 3**. Proyek ini menerapkan prinsip **Clean Architecture** secara ketat untuk memisahkan logika bisnis dari framework UI, sehingga meningkatkan pemeliharaan kode, mempermudah pengujian, dan menjamin skalabilitas jangka panjang.
+A scalable, production-ready enterprise administration dashboard application built using **Nuxt 4** and **Vue 3**. This project strictly implements **Clean Architecture** principles to decouple business logic from the UI framework, enhancing code maintainability, testability, and long-term scalability.
 
 ---
 
-## 🚀 Fitur Utama
+## 🚀 Key Features
 
-- **Arsitektur Nuxt 4**: Menggunakan struktur "App Directory" Nuxt 4 terbaru untuk organisasi kode dan performa yang lebih baik.
-- **Antarmuka Modern & Responsif**: Tampilan administrasi kustom yang elegan dan responsif berbasis Bootstrap 5 dan SCSS.
-- **Manajemen State yang Tangguh**: Terintegrasi secara global dengan **Pinia** & `pinia-plugin-persistedstate/nuxt` untuk mengelola sesi pengguna dan token secara otomatis dengan dukungan hidrasi.
-- **Keamanan Tingkat Enterprise**: Terstruktur untuk alur autentikasi berbasis JWT, dilindungi dengan middleware route guard dan skema tata kelola Peran & Hak Akses (Roles & Permissions).
-- **Penanganan Form Cerdas**: Infrastruktur validasi berbasis skema yang ditenagai oleh **VeeValidate** dan **Zod**.
-- **Siap untuk Dev-Ops & DX**: Penegakan kualitas kode secara otomatis menggunakan ESLint, Prettier, Husky, dan Commitlint (Conventional Commits).
+- **Nuxt 4 Architecture**: Built using the latest Nuxt 4 "App Directory" structure for superior code organization and performance.
+- **Modern & Responsive Interface**: Elegant and responsive custom administration UI built on Bootstrap 5 and SCSS.
+- **Robust State Management**: Globally integrated with **Pinia** & `pinia-plugin-persistedstate/nuxt` to handle user sessions and tokens automatically with hydration support.
+- **Enterprise-Grade Security**: Structured for JWT-based authentication flows, protected with route guard middleware and a Roles & Permissions governance scheme.
+- **Smart Form Handling**: Schema-driven form validation infrastructure powered by **VeeValidate** and **Zod**.
+- **Dev-Ops & DX Ready**: Automated code quality enforcement using ESLint, Prettier, Husky, and Commitlint (Conventional Commits).
 
 ---
 
-## 🛠️ Stack Teknologi
+## 🛠️ Tech Stack
 
 - **Framework**: Nuxt 4 / Vue 3 / TypeScript
-- **State Management**: Pinia + pinia-plugin-persistedstate (Modul Nuxt)
-- **Arsitektur Styling**: Bootstrap 5 + SCSS
-- **Engine Validasi**: Zod + VeeValidate
-- **Strategi HTTP Client**: Nuxt `$fetch` (Ofetch) dengan pola Repository Pattern
-- **Infrastruktur Pengujian**: Vitest + Vue Test Utils
-- **Ikon**: Bootstrap Icons
-- **Analisis Kode Statis**: Modul Nuxt ESLint, Prettier, Husky
+- **State Management**: Pinia + pinia-plugin-persistedstate (Nuxt Module)
+- **Styling Architecture**: Bootstrap 5 + SCSS
+- **Validation Engine**: Zod + VeeValidate
+- **HTTP Client Strategy**: Nuxt `$fetch` (Ofetch) with Repository Pattern
+- **Testing Infrastructure**: Vitest + Vue Test Utils
+- **Icons**: Bootstrap Icons
+- **Static Code Analysis**: Nuxt ESLint Module, Prettier, Husky
 
 ---
 
-## 📐 Arsitektur Clean & Struktur Proyek (Nuxt 4)
+## 📐 Clean Architecture & Project Structure (Nuxt 4)
 
-Dalam Nuxt 4, direktori kode utama dipindahkan ke dalam folder `app/`. Kode aplikasi dibagi secara terisolasi ke dalam beberapa lapisan:
+In Nuxt 4, the primary code directory is located inside the `app/` folder. Application code is isolated into distinct layers:
 
 ```text
-├── app/                        # 🖥️ Direktori Utama Aplikasi (Source Nuxt 4)
-│   ├── domain/                 # 🧠 Core Bisnis (Logika murni, tanpa dependensi framework)
-│   │   ├── entities/           # Antarmuka (interfaces) dan model dasar
-│   │   └── services/           # Aturan alur kerja spesifik domain
+├── app/                        # 🖥️ Main Application Directory (Nuxt 4 Source)
+│   ├── domain/                 # 🧠 Core Business Logic (Pure logic, framework-agnostic)
+│   │   ├── entities/           # Interfaces and domain base models
+│   │   └── services/           # Domain-specific workflow rules
 │   │
-│   ├── application/            # ⚙️ Application Use Cases (Orkestrator identitas / shared)
+│   ├── application/            # ⚙️ Application Use Cases (Identity orchestrator / shared)
 │   │
-│   ├── infrastructure/         # 🔌 Lapisan Implementasi Eksternal
-│   │   ├── api/                # Abstraksi jaringan HTTP client
-│   │   └── storage/            # Adaptor penyimpanan (contoh: tokenStorage)
+│   ├── infrastructure/         # 🔌 External Implementation Layer
+│   │   ├── api/                # Network abstraction & HTTP client
+│   │   └── storage/            # Storage adapters (e.g., tokenStorage)
 │   │
-│   ├── stores/                 # 🗂️ Global State Store Reaktif (Pinia)
+│   ├── stores/                 # 🗂️ Reactive Global State Store (Pinia)
 │   │
-│   ├── pages/                  # Sistem routing berbasis file
-│   ├── layouts/                # Wrapper tata letak komponen (Default, Auth)
-│   ├── components/             # Komponen UI yang dapat digunakan kembali
-│   ├── composables/            # Logika Native Vue Composition API
-│   ├── middleware/             # Guard interseptor tingkat route
-│   ├── plugins/                # Inisialisasi subsistem (contoh: injeksi authRepository)
-│   └── shared/                 # Utilitas yang digunakan bersama antar lapisan
+│   ├── pages/                  # File-based routing system
+│   ├── layouts/                # Component layout wrappers (Default, Auth)
+│   ├── components/             # Reusable UI components
+│   ├── composables/            # Native Vue Composition API logic
+│   ├── middleware/             # Route-level interceptor guards
+│   ├── plugins/                # Subsystem initialization (e.g., authRepository injection)
+│   └── shared/                 # Shared utilities across layers
 │
 ├── server/                     # 🖥️ Nitro Backend (Serverless API & Middleware)
-├── assets/                     # 🎨 Aset statis yang dikompilasi (Gambar, SCSS override)
-├── public/                     # 🌐 File statis yang disajikan langsung di root
-├── tests/                      # 🧪 Suite pengujian (Unit & Integrasi)
-└── nuxt.config.ts              # ⚙️ Konfigurasi framework Nuxt
+├── assets/                     # 🎨 Compiled static assets (Images, SCSS overrides)
+├── public/                     # 🌐 Static files served directly at root
+├── tests/                      # 🧪 Testing Suite (Unit & Integration)
+└── nuxt.config.ts              # ⚙️ Nuxt framework configuration
 ```
 
-### Aturan Lapisan Arsitektur:
+### Architectural Layer Rules:
 
-1. **Lapisan Domain**: Inti utama aplikasi. Memiliki stabilitas tertinggi tanpa ketergantungan pada framework UI atau API peramban.
-2. **Lapisan Aplikasi**: Mengkoordinasikan interaksi antara maksud pengguna dan skema statis Domain.
-3. **Lapisan Infrastruktur**: Menangani dunia luar (panggilan API, manipulasi penyimpanan browser).
-4. **Lapisan Aplikasi/Presentasi**: Menangani rendering DOM dan mengonsumsi logika dari store Pinia.
+1. **Domain Layer**: Core of the application. Has the highest stability with zero dependencies on UI frameworks or browser APIs.
+2. **Application Layer**: Coordinates interactions between user intent and static Domain schemas.
+3. **Infrastructure Layer**: Handles external communications (API calls, browser storage manipulation).
+4. **Application/Presentation Layer**: Handles DOM rendering and consumes logic from Pinia stores.
 
 ---
 
-## ⚙️ Cara Memulai
+## ⚙️ Getting Started
 
-### Prasyarat
+### Prerequisites
 
-- Node.js (direkomendasikan v18.x atau lebih baru)
-- Manajer Paket: `npm`
+- Node.js (v18.x or later recommended)
+- Package Manager: `npm`
 
-### 1. Instalasi Dependensi
+### 1. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 2. Menjalankan Lingkungan Pengembangan (Development)
+### 2. Run Development Server
 
 ```bash
 npm run dev
 ```
 
-Aplikasi akan berjalan di `http://localhost:3000/`.
+The application will be accessible at `http://localhost:3000/`.
 
-### 3. Tahapan Build Produksi
+### 3. Production Build
 
 ```bash
 npm run build
@@ -104,52 +104,52 @@ npm run preview
 
 ---
 
-## 🔑 Panduan Cara Login & Autentikasi Mock
+## 🔑 Login Guide & Mock Authentication
 
-Untuk keperluan uji coba (_testing_) tanpa harus menghubungkan ke database secara langsung, aplikasi telah dilengkapi dengan **Mock API (Nitro Server Endpoints)** dan **Local Fallback Data**.
+For testing purposes without requiring a direct database connection, the application comes equipped with **Mock API (Nitro Server Endpoints)** and **Local Fallback Data**.
 
-### Kredensial Login Demo
+### Demo Login Credentials
 
-- **URL Halaman Login**: `http://localhost:3000/auth/login`
-- **Id Personal**: `1234567890`
+- **Login Page URL**: `http://localhost:3000/auth/login`
+- **Personal ID**: `1234567890`
 - **Password**: `password`
 
 ---
 
-### 📝 Langkah-demi-Langkah Cara Login:
+### 📝 Step-by-Step Login Walkthrough:
 
-1. **Jalankan Aplikasi**:
-   Buka terminal lalu jalankan `npm run dev`.
+1. **Run the Application**:
+   Open a terminal and execute `npm run dev`.
 
-2. **Buka Halaman Login**:
-   Akses `http://localhost:3000/auth/login` di peramban Anda. Jika Anda mengakses `http://localhost:3000/` saat belum login, middleware akan secara otomatis mengarahkan Anda ke halaman login.
+2. **Open the Login Page**:
+   Navigate to `http://localhost:3000/auth/login` in your browser. If you attempt to access `http://localhost:3000/` while unauthenticated, the middleware will automatically redirect you to the login page.
 
-3. **Masukkan Kredensial**:
-   - Di kolom **Id Personal**, ketik: `1234567890`
-   - Di kolom **Password**, ketik: `password`
+3. **Enter Credentials**:
+   - In the **Personal ID** field, type: `1234567890`
+   - In the **Password** field, type: `password`
 
-4. **Klik Tombol Sign In**:
-   - Aplikasi akan melakukan request ke Mock API `POST /api/auth/login`.
-   - Token akses (`access_token`) akan disimpan ke dalam state Pinia dan browser cookie secara otomatis.
-   - Aplikasi kemudian memanggil `GET /api/v1/auth/me` untuk mendapatkan data pengguna (`Test User`).
+4. **Click the Sign In Button**:
+   - The application will send a request to the Mock API endpoint `POST /api/auth/login`.
+   - The access token (`access_token`) will automatically be saved to Pinia state and browser cookies.
+   - The application then calls `GET /api/v1/auth/me` to retrieve user data (`Test User`).
 
-5. **Pengalihan Halaman & Proteksi Route Guard**:
-   - Setelah login berhasil, Anda akan otomatis diarahkan ke halaman **Dashboard** (`http://localhost:3000/dashboard`).
-   - **PENTING**: Selama token autentikasi masih tersimpan (belum logout), pengguna **TIDAK BISA** membuka kembali halaman login (`http://localhost:3000/auth/login`). Jika pengguna mencoba mengetikkan URL `/auth/login` secara manual di peramban, middleware akan secara otomatis menolak dan mengarahkannya kembali ke halaman Dashboard.
+5. **Page Redirection & Route Guard Protection**:
+   - Upon successful login, you will automatically be redirected to the **Dashboard** page (`http://localhost:3000/dashboard`).
+   - **IMPORTANT**: As long as the authentication token is stored (until logout), users **CANNOT** navigate back to the login page (`http://localhost:3000/auth/login`). If a user attempts to manually type `/auth/login` in the browser URL bar, the middleware will automatically reject access and redirect them back to the Dashboard.
 
-6. **Memeriksa Data Pengguna**:
-   Nama pengguna (`Test User`) dan ID Personal (`1234567890`) akan tampil pada **Header** (kanan atas) dan **Sidebar** (kiri bawah).
+6. **Verify User Data**:
+   The user's name (`Test User`) and Personal ID (`1234567890`) will be displayed in the **Header** (top right) and **Sidebar** (bottom left).
 
-7. **Cara Logout & Penghapusan Token**:
-   - Untuk dapat membuka kembali halaman login atau mengganti akun, pengguna **HARUS** melakukan logout untuk menghapus token.
-   - Logout dapat dilakukan dengan mengeklik profil di kanan atas Header lalu pilih **Sign Out**, mengeklik ikon Logout pada Sidebar, atau membuka alamat `http://localhost:3000/auth/logout`.
-   - Proses logout akan memanggil Endpoint `POST /api/auth/logout`, mengosongkan state Pinia & browser cookie, lalu mengarahkan kembali ke `/auth/login`.
+7. **Logout & Token Invalidation**:
+   - To return to the login page or switch accounts, the user **MUST** log out to clear the stored token.
+   - Logout can be performed by clicking the user profile in the top-right Header and selecting **Sign Out**, clicking the Logout icon in the Sidebar, or navigating directly to `http://localhost:3000/auth/logout`.
+   - The logout process invokes the `POST /api/auth/logout` endpoint, clears the Pinia state and browser cookies, and redirects back to `/auth/login`.
 
 ---
 
-### 📡 Endpoints Mock API (Data JSON Demo)
+### 📡 Mock API Endpoints (Demo JSON Data)
 
-#### 1. Endpoint Login (`POST /api/auth/login`)
+#### 1. Login Endpoint (`POST /api/auth/login`)
 
 - **Request Body**:
   ```json
@@ -163,7 +163,7 @@ Untuk keperluan uji coba (_testing_) tanpa harus menghubungkan ke database secar
   {
     "success": true,
     "responseCode": 200,
-    "message": "User berhasil login",
+    "message": "User login successful",
     "data": {
       "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
       "token_type": "Bearer",
@@ -174,7 +174,7 @@ Untuk keperluan uji coba (_testing_) tanpa harus menghubungkan ke database secar
   }
   ```
 
-#### 2. Endpoint Ambil Data User Login (`GET /api/v1/auth/me`)
+#### 2. Get Current Authenticated User Endpoint (`GET /api/v1/auth/me`)
 
 - **Header**: `Authorization: Bearer <access_token>`
 - **Response (HTTP 200 OK)**:
@@ -182,7 +182,7 @@ Untuk keperluan uji coba (_testing_) tanpa harus menghubungkan ke database secar
   {
     "success": true,
     "responseCode": 200,
-    "message": "User berhasil diambil",
+    "message": "User fetched successfully",
     "data": {
       "id": 9,
       "username": "Test User",
@@ -200,7 +200,7 @@ Untuk keperluan uji coba (_testing_) tanpa harus menghubungkan ke database secar
   }
   ```
 
-#### 3. Endpoint Logout (`POST /api/auth/logout`)
+#### 3. Logout Endpoint (`POST /api/auth/logout`)
 
 - **Header**: `Authorization: Bearer <access_token>`
 - **Response (HTTP 200 OK)**:
@@ -208,7 +208,7 @@ Untuk keperluan uji coba (_testing_) tanpa harus menghubungkan ke database secar
   {
     "success": true,
     "responseCode": 200,
-    "message": "User berhasil logout",
+    "message": "User logged out successfully",
     "data": null,
     "meta": null,
     "links": null
@@ -217,9 +217,9 @@ Untuk keperluan uji coba (_testing_) tanpa harus menghubungkan ke database secar
 
 ---
 
-## 🧪 Pengujian Unit (Unit Testing)
+## 🧪 Unit Testing
 
-Jalankan perintah berikut untuk mengeksekusi suite pengujian:
+Run the following command to execute the test suite:
 
 ```bash
 npm run test
@@ -227,10 +227,10 @@ npm run test
 
 ---
 
-## 🔒 Penegakan Kualitas Kode Otomatis
+## 🔒 Automated Code Quality Enforcement
 
-- **Husky & Lint-Staged**: Menjalankan ESLint dan Prettier secara otomatis pada file staging sebelum commit.
-- **Commitlint**: Memastikan pesan commit mematuhi aturan [Conventional Commits](https://www.conventionalcommits.org/).
+- **Husky & Lint-Staged**: Automatically runs ESLint and Prettier on staged files prior to committing.
+- **Commitlint**: Ensures commit messages adhere to [Conventional Commits](https://www.conventionalcommits.org/) standards.
 
 ---
 
