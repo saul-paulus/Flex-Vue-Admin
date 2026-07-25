@@ -54,7 +54,6 @@ const handleLogout = async () => {
             <span class="badge rounded-pill bg-primary text-white fs-10"> MAIN </span>
           </NuxtLink>
         </li>
-
         <li class="nav-item px-3 mb-1 mt-2">
           <a
             href="#"
@@ -105,33 +104,8 @@ const handleLogout = async () => {
             </li>
           </ul>
         </li>
-
         <li class="px-3 mt-4 mb-2 text-uppercase text-tertiary fw-bold nav-section-title">Productivity Apps</li>
       </ul>
-    </div>
-
-    <!-- User Footer on Sidebar -->
-    <div class="sidebar-footer p-3 m-3 rounded border bg-grouped">
-      <div class="d-flex align-items-center">
-        <img
-          :src="`https://ui-avatars.com/api/?name=${user?.username || 'User'}&background=0D8ABC&color=fff`"
-          alt="User"
-          class="rounded-circle me-3 w-32 h-32"
-        />
-        <div class="w-100 d-flex justify-content-between align-items-center text-truncate">
-          <div class="text-truncate">
-            <h6 class="mb-0 fw-bold fs-sm text-truncate text-primary">
-              {{ user?.username || 'Guest' }}
-            </h6>
-            <div class="text-tertiary text-uppercase text-truncate fs-10">
-              {{ user?.id_personal || 'No ID' }}
-            </div>
-          </div>
-          <button class="btn btn-sm btn-link text-secondary p-0 border-0" @click="handleLogout">
-            <i class="bi bi-box-arrow-right" />
-          </button>
-        </div>
-      </div>
     </div>
   </aside>
 </template>
