@@ -1,6 +1,5 @@
 import { computed } from 'vue';
-import { RolesService } from '../services/roles.service';
-import type { RoleItem, PermissionGroupItem } from '../services/roles.service';
+import type { RoleItem, PermissionGroupItem } from '~/domain/entities/Role';
 
 export function useRoles() {
   const masterRoles = useState<RoleItem[]>('roles:master', () => []);
@@ -11,7 +10,7 @@ export function useRoles() {
   const isSaving = useState<boolean>('roles:isSaving', () => false);
 
   /**
-   * Fetch roles and permission groups
+   * Fetch roles and permission groups via GetRolesUseCase
    */
   const getRoles = async () => {
     if (isLoaded.value && masterRoles.value.length > 0) {
@@ -19,10 +18,11 @@ export function useRoles() {
     }
     isLoading.value = true;
     try {
-      const res = await RolesService.fetchRoles();
-      if (res && res.success && res.data) {
-        masterRoles.value = res.data.roles || [];
-        permissionGroups.value = res.data.permission_groups || [];
+      const nuxtApp = useNuxtApp();
+      const res = await nuxtApp.$getRolesUseCase.execute();
+      if (res.isOk() && res.value) {
+        masterRoles.value = res.value.roles || [];
+        permissionGroups.value = res.value.permission_groups || [];
         if (masterRoles.value.length > 0 && !activeRoleId.value) {
           activeRoleId.value = masterRoles.value[0]?.id ?? 1;
         }
@@ -93,13 +93,20 @@ export function useRoles() {
   };
 
   /**
-   * Save changes to role permissions
+   * Save changes to role permissions via SaveRolePermissionsUseCase
    */
   const saveRolePermissions = async () => {
     isSaving.value = true;
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    isSaving.value = false;
-    return true;
+    try {
+      const nuxtApp = useNuxtApp();
+      const res = await nuxtApp.$saveRolePermissionsUseCase.execute(activeRole.value);
+      return res.isOk();
+    } catch (err) {
+      console.error('Failed to save role permissions:', err);
+      return false;
+    } finally {
+      isSaving.value = false;
+    }
   };
 
   return {

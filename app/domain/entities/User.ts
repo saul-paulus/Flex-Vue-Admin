@@ -99,3 +99,15 @@ export interface UserPagination {
   total: number;
   last_page: number;
 }
+
+export interface UserResponseData {
+  summary: UserSummary;
+  tabs: TabItem[];
+  filters: {
+    roles: RoleFilterOption[];
+    departments?: { label: string; value: string }[];
+  };
+  sortable: string[];
+  pagination: UserPagination;
+  users: UserItem[];
+}

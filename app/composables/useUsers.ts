@@ -1,5 +1,4 @@
 import { computed } from 'vue';
-import { UsersService } from '../services/users.service';
 import type { UserItem, UserSummary, TabItem, RoleFilterOption, UserPagination } from '~/domain/entities/User';
 
 export function useUsers() {
@@ -42,7 +41,7 @@ export function useUsers() {
   const isLoaded = useState('users:isLoaded', () => false);
 
   /**
-   * Fetches data from service
+   * Fetches data via GetUsersUseCase
    */
   const getUsers = async () => {
     if (isLoaded.value && masterUsers.value.length > 0) {
@@ -50,21 +49,22 @@ export function useUsers() {
     }
     isLoading.value = true;
     try {
-      const res = await UsersService.fetchUsers();
-      if (res && res.success && res.data) {
-        masterUsers.value = res.data.users || [];
-        if (res.data.summary) {
-          summary.value = { ...res.data.summary };
+      const nuxtApp = useNuxtApp();
+      const res = await nuxtApp.$getUsersUseCase.execute();
+      if (res.isOk() && res.value) {
+        masterUsers.value = res.value.users || [];
+        if (res.value.summary) {
+          summary.value = { ...res.value.summary };
         }
-        if (res.data.tabs) {
-          tabs.value = [...res.data.tabs];
+        if (res.value.tabs) {
+          tabs.value = [...res.value.tabs];
         }
-        if (res.data.filters?.roles) {
-          roleFilters.value = [...res.data.filters.roles];
+        if (res.value.filters?.roles) {
+          roleFilters.value = [...res.value.filters.roles];
         }
-        if (res.data.pagination) {
-          currentPage.value = res.data.pagination.page || 1;
-          perPage.value = res.data.pagination.per_page || 10;
+        if (res.value.pagination) {
+          currentPage.value = res.value.pagination.page || 1;
+          perPage.value = res.value.pagination.per_page || 10;
         }
         isLoaded.value = true;
       }
@@ -77,9 +77,14 @@ export function useUsers() {
   };
 
   /**
-   * Get single user profile by ID, UUID, or employee_id
+   * Get single user profile by ID via GetUserByIdUseCase
    */
   const getUserById = async (id: number | string): Promise<UserItem | undefined> => {
+    const nuxtApp = useNuxtApp();
+    const res = await nuxtApp.$getUserByIdUseCase.execute(id);
+    if (res.isOk()) {
+      return res.value;
+    }
     if (!isLoaded.value || masterUsers.value.length === 0) {
       await getUsers();
     }

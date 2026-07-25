@@ -1,36 +1,41 @@
 import { createHttpClient } from '~/infrastructure/api/httpClient';
 import { AuthApiRepository } from '~/infrastructure/api/AuthApiRepository';
 import { MockAuthRepository } from '~/infrastructure/__mocks__/MockAuthRepository';
+import { UserApiRepository } from '~/infrastructure/api/UserApiRepository';
+import { MockUserRepository } from '~/infrastructure/__mocks__/MockUserRepository';
+import { RoleApiRepository } from '~/infrastructure/api/RoleApiRepository';
+import { MockRoleRepository } from '~/infrastructure/__mocks__/MockRoleRepository';
 import { cookieTokenStorage } from '~/infrastructure/storage/tokenStorage';
+
 import { LoginUseCase } from '~/application/auth/LoginUseCase';
 import { LogoutUseCase } from '~/application/auth/LogoutUseCase';
 import { GetCurrentUserUseCase } from '~/application/auth/GetCurrentUserUseCase';
+import { GetUsersUseCase } from '~/application/users/GetUsersUseCase';
+import { GetUserByIdUseCase } from '~/application/users/GetUserByIdUseCase';
+import { GetRolesUseCase } from '~/application/roles/GetRolesUseCase';
+import { SaveRolePermissionsUseCase } from '~/application/roles/SaveRolePermissionsUseCase';
+
 import type { TokenProvider } from '~/domain/ports/TokenPorts';
 import type { AuthRepository } from '~/domain/repositories/AuthRepository';
+import type { UserRepository } from '~/domain/repositories/UserRepository';
+import type { RoleRepository } from '~/domain/repositories/RoleRepository';
 
 /**
- * Auth Plugin — Dependency Injection wiring point.
+ * Application DI Plugin — Dependency Injection Composition Root.
  *
- * This plugin is the SINGLE place where all auth dependencies are assembled.
- * It creates concrete implementations and injects them into the Nuxt app context.
- *
- * Dependency graph:
- *   TokenProvider (reads from store/storage)
- *     └→ HttpClient (uses token for auth headers)
- *         └→ AuthApiRepository (uses httpClient for API calls)
- *             └→ Use Cases (LoginUseCase, LogoutUseCase, GetCurrentUserUseCase)
- *                 └→ Provided to components via useNuxtApp()
+ * Assembles all Domain Repositories and Application Use Cases
+ * for Auth, Users, and Roles subsystems.
  */
 export default defineNuxtPlugin(() => {
   const runtimeConfig = useRuntimeConfig();
   const authStore = useAuthStore();
 
-  // ── Token Provider: reads token from the store ──
+  // ── Token Provider ──
   const tokenProvider: TokenProvider = {
     getToken: () => authStore.token,
   };
 
-  // ── HTTP Client: configured with token provider ──
+  // ── HTTP Client ──
   const httpClient = createHttpClient(tokenProvider, {
     baseURL: (runtimeConfig.public.apiBase as string) || '/api',
     onUnauthorized: () => {
@@ -40,25 +45,41 @@ export default defineNuxtPlugin(() => {
     },
   });
 
-  // ── Repository: choose between real API and mock based on environment ──
+  // ── Environment Flag ──
   const useMock = import.meta.dev && !runtimeConfig.public.apiBase;
+
+  // ── Repositories ──
   const authRepository: AuthRepository = useMock ? new MockAuthRepository() : new AuthApiRepository(httpClient);
+  const userRepository: UserRepository = useMock ? new MockUserRepository() : new UserApiRepository(httpClient);
+  const roleRepository: RoleRepository = useMock ? new MockRoleRepository() : new RoleApiRepository(httpClient);
 
   if (useMock) {
-    console.info('[Auth Plugin] Using MockAuthRepository (development mode, no API configured)');
+    console.info('[DI Plugin] Using Mock Repositories (development mode, no API configured)');
   }
 
-  // ── Use Cases: assembled with their dependencies ──
+  // ── Use Cases ──
   const loginUseCase = new LoginUseCase(authRepository, cookieTokenStorage);
   const logoutUseCase = new LogoutUseCase(authRepository, cookieTokenStorage);
   const getCurrentUserUseCase = new GetCurrentUserUseCase(authRepository);
 
+  const getUsersUseCase = new GetUsersUseCase(userRepository);
+  const getUserByIdUseCase = new GetUserByIdUseCase(userRepository);
+
+  const getRolesUseCase = new GetRolesUseCase(roleRepository);
+  const saveRolePermissionsUseCase = new SaveRolePermissionsUseCase(roleRepository);
+
   return {
     provide: {
       authRepository,
+      userRepository,
+      roleRepository,
       loginUseCase,
       logoutUseCase,
       getCurrentUserUseCase,
+      getUsersUseCase,
+      getUserByIdUseCase,
+      getRolesUseCase,
+      saveRolePermissionsUseCase,
       tokenStorage: cookieTokenStorage,
     },
   };
