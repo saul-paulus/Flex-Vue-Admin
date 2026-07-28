@@ -3,9 +3,9 @@ import { LoginUseCase } from '~/application/auth/LoginUseCase';
 import { LogoutUseCase } from '~/application/auth/LogoutUseCase';
 import { GetCurrentUserUseCase } from '~/application/auth/GetCurrentUserUseCase';
 import { Result } from '~/domain/core/Result';
-import type { AuthRepository } from '~/domain/repositories/AuthRepository';
-import type { AuthToken, AuthUser } from '~/domain/entities/Auth';
-import type { TokenStoragePort } from '~/domain/ports/TokenPorts';
+import type { AuthRepository } from '~/domain/auth/repositories/AuthRepository';
+import type { AuthToken, AuthUser } from '~/domain/auth/entities/AuthSession';
+import type { TokenStoragePort } from '~/domain/auth/ports/TokenPorts';
 
 // ── Mock Factories ──
 
@@ -34,6 +34,7 @@ const MOCK_TOKEN: AuthToken = {
 const MOCK_USER: AuthUser = {
   id: 9,
   username: 'Test User',
+  identifier: '1234567890',
   personalId: '1234567890',
   authorityLevel: 1,
   isActive: true,
@@ -75,7 +76,7 @@ describe('LoginUseCase', () => {
     expect(result.value.accessToken).toBe('test-access-token');
     expect(mockStorage.save).toHaveBeenCalledWith('test-access-token');
     expect(mockRepo.login).toHaveBeenCalledWith({
-      personalId: '1234567890',
+      identifier: '1234567890',
       password: 'password',
     });
   });

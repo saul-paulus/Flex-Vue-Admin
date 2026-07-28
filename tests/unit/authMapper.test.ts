@@ -40,6 +40,7 @@ describe('AuthMapper', () => {
 
       expect(result.id).toBe(9);
       expect(result.username).toBe('Test User');
+      expect(result.identifier).toBe('1234567890');
       expect(result.personalId).toBe('1234567890');
       expect(result.authorityLevel).toBe(1);
       expect(result.isActive).toBe(true);

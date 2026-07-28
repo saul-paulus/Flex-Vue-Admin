@@ -28,6 +28,7 @@ export interface AuthUser {
   readonly id: number;
   readonly username: string;
   readonly identifier: string;
+  readonly personalId?: string;
   readonly verifiedAt?: string;
   readonly authorityLevel: number;
   readonly isActive: boolean;

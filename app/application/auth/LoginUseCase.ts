@@ -14,7 +14,8 @@ import { Result } from '~/domain/core/Result';
 import { createAppError } from '~/domain/core/AppError';
 
 export interface LoginCommand {
-  readonly identifier: string;
+  readonly identifier?: string;
+  readonly personalId?: string;
   readonly password: string;
 }
 
@@ -25,16 +26,18 @@ export class LoginUseCase {
   ) {}
 
   async execute(command: LoginCommand): Promise<Result<AuthToken, AppError>> {
-    if (!command.identifier.trim()) {
-      return Result.fail(createAppError(422, 'Identifier is required'));
+    const identifier = (command.identifier ?? command.personalId ?? '').trim();
+
+    if (!identifier) {
+      return Result.fail(createAppError(422, 'Personal ID is required'));
     }
 
-    if (!command.password.trim()) {
+    if (!command.password || !command.password.trim()) {
       return Result.fail(createAppError(422, 'Password is required'));
     }
 
     const loginResult = await this.authRepository.login({
-      identifier: command.identifier,
+      identifier,
       password: command.password,
     });
 

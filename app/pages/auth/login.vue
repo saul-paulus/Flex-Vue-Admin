@@ -32,6 +32,7 @@ const handleSubmitLogin = async (event: Event) => {
 
   try {
     const loginResult = await $loginUseCase.execute({
+      identifier: payloadCredential.id_personal,
       personalId: payloadCredential.id_personal,
       password: payloadCredential.password,
     });
@@ -187,12 +188,8 @@ const handleSubmitLogin = async (event: Event) => {
               </div>
               <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="form-check mb-0">
-                  <input id="rememberMe" v-model="rememberMe" class="form-check-input" type="checkbox" required />
+                  <input id="rememberMe" v-model="rememberMe" class="form-check-input" type="checkbox" />
                   <label class="form-check-label fs-xs text-secondary pt-1" for="rememberMe">Remember me</label>
-                  <div class="invalid-feedback fs-xs">
-                    <i class="bi bi-exclamation-circle me-1"></i>
-                    <span>Remember me required</span>
-                  </div>
                 </div>
                 <a href="#" class="text-decoration-none fs-xs fw-medium text-accent">Use SSO</a>
               </div>

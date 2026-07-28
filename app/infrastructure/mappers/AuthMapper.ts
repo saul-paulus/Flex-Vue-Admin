@@ -63,6 +63,7 @@ export const AuthMapper = {
       id: apiData.id || 0,
       username: apiData.username || apiData.name || apiData.full_name || apiData.fullName || '',
       identifier,
+      personalId: identifier,
       verifiedAt,
       authorityLevel,
       isActive,
