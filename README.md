@@ -40,7 +40,8 @@ In Nuxt 4, the primary code directory is located inside the `app/` folder. Appli
 ├── app/                        # 🖥️ Main Application Directory (Nuxt 4 Source)
 │   ├── domain/                 # 🧠 Core Business Logic (Pure logic, framework-agnostic)
 │   │   ├── entities/           # Interfaces and domain base models
-│   │   └── services/           # Domain-specific workflow rules
+│   │   ├── ports/              # Repository & Adapter contracts
+│   │   └── repositories/       # Domain repository interfaces
 │   │
 │   ├── application/            # ⚙️ Application Use Cases (Identity orchestrator / shared)
 │   │
