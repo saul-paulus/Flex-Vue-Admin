@@ -106,24 +106,69 @@ Backend API
 
 ## 🔌 Real API Integration & Migration Guide
 
-Thanks to the **Hexagonal Architecture & Dependency Injection (DI)** pattern implemented in this repository, migrating from Mock Data to a **Real Backend API** requires **zero changes** to UI components, Nuxt pages, Pinia stores, or domain logic.
+Thanks to the **Hexagonal Architecture & Dependency Injection (DI)** pattern implemented in this repository, switching from Mock Data to a **Real Backend API** requires **zero changes** to UI components, Nuxt pages, Pinia stores, or domain logic.
 
-### Connecting to a Real Backend API
+---
 
-Simply set the `NUXT_PUBLIC_API_BASE` environment variable in your `.env` file:
+### 📝 Step-by-Step Guide to Connect Real API:
+
+#### 1. Set Environment Variable (`.env`)
+
+Create or edit your `.env` file at the project root and add your backend API URL:
 
 ```env
-NUXT_PUBLIC_API_BASE=https://api.yourcompany.com/v1
+# Local / Staging / Production API Base URL
+NUXT_PUBLIC_API_BASE=https://api.yourdomain.com/v1
 ```
 
-When `NUXT_PUBLIC_API_BASE` is set, the **DI Container** ([`app/plugins/auth.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/plugins/auth.ts)) automatically switches from `Mock*Repository` to **`*ApiRepository`** (`AuthApiRepository`, `UserApiRepository`, `RoleApiRepository`).
+> **How it works**: The Dependency Injection plugin ([`app/plugins/auth.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/plugins/auth.ts)) automatically checks `NUXT_PUBLIC_API_BASE`.
+>
+> - If `NUXT_PUBLIC_API_BASE` is set ➔ Uses **Real Repositories** (`AuthApiRepository`, `UserApiRepository`, `RoleApiRepository`).
+> - If `NUXT_PUBLIC_API_BASE` is empty in development ➔ Falls back to **Mock Repositories**.
 
-### Why Is API Migration Zero-Friction?
+---
 
-1. **Protected Domain Layer**: Entity definitions (`UserItem`, `RoleItem`) and repository interfaces (`UserRepository`, `RoleRepository`) remain unchanged regardless of backend API modifications.
-2. **Infrastructure Data Mapper Boundary**: Data Mappers (`UserMapper`, `RoleMapper`, `AuthMapper`) isolate raw backend payload format differences (e.g., backend `snake_case` ↔ frontend `camelCase`).
-3. **Centralized Registry of Endpoints**: All API route definitions are managed centrally in [`app/infrastructure/api/endpoints.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/api/endpoints.ts).
-4. **Standardized Error Normalization & JWT Interceptor**: [`httpClient.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/api/httpClient.ts) automatically attaches `Authorization: Bearer <token>` headers and normalizes HTTP status errors (400, 401, 403, 404, 422, 500) into safe, user-friendly messages.
+#### 2. Configure API Endpoints ([`app/infrastructure/api/endpoints.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/api/endpoints.ts))
+
+Adjust the endpoint URL paths to match your backend REST API structure:
+
+```ts
+export const API_ENDPOINTS = {
+  AUTH: {
+    LOGIN: '/auth/login',
+    ME: '/auth/me',
+    LOGOUT: '/auth/logout',
+  },
+  USERS: {
+    LIST: '/users',
+    DETAIL: (id: number | string) => `/users/${id}`,
+  },
+  ROLES: {
+    LIST: '/roles',
+    UPDATE_PERMISSIONS: (id: number | string) => `/roles/${id}/permissions`,
+  },
+};
+```
+
+---
+
+#### 3. Adjust Response Data Mappers (Optional)
+
+If your backend API returns different JSON key names (e.g., `user_id` instead of `id_personal` or `snake_case` keys), adjust the Data Mapper for that entity:
+
+- 👤 Auth Mapping: [`app/infrastructure/mappers/AuthMapper.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/mappers/AuthMapper.ts)
+- 👥 User Mapping: [`app/infrastructure/mappers/UserMapper.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/mappers/UserMapper.ts)
+- 🛡️ Role Mapping: [`app/infrastructure/mappers/RoleMapper.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/mappers/RoleMapper.ts)
+
+> **Key Benefit**: Because Data Mappers translate raw API payloads into clean domain entities, **UI pages, Pinia stores, and composables remain 100% untouched**.
+
+---
+
+#### 4. Automatic JWT Token Interception & Error Handling ([`app/infrastructure/api/httpClient.ts`](file:///srv/http/start-kit-V1/Flex-Vue-Admin.v2/app/infrastructure/api/httpClient.ts))
+
+- **Authorization Header**: Automatically attaches `Authorization: Bearer <token>` header to all outgoing HTTP requests once logged in.
+- **Unauthorized (401)**: Automatically clears user session/cookies and redirects browser to `/auth/login`.
+- **Error Normalization**: HTTP error status codes (400, 401, 403, 404, 422, 500) are converted into user-friendly `AppError` objects.
 
 ---
 
