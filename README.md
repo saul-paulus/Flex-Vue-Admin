@@ -65,12 +65,41 @@ In Nuxt 4, the primary code directory is located inside the `app/` folder. Appli
 └── nuxt.config.ts              # ⚙️ Nuxt framework configuration
 ```
 
+### 🔄 Target Architecture Data & Execution Flow
+
+The application follows a unidirectional, decoupled data flow according to Clean Architecture principles:
+
+```text
+Pages
+  │
+  ▼
+Composable
+  │
+  ▼
+Application (Use Case)
+  │
+  ▼
+Repository Interface
+  │
+  ▼
+Infrastructure Repository
+  │
+  ▼
+HTTP Client
+  │
+  ▼
+Backend API
+```
+
 ### Architectural Layer Rules:
 
-1. **Domain Layer**: Core of the application. Has the highest stability with zero dependencies on UI frameworks or browser APIs.
-2. **Application Layer**: Coordinates interactions between user intent and static Domain schemas.
-3. **Infrastructure Layer**: Handles external communications (API calls, browser storage manipulation).
-4. **Application/Presentation Layer**: Handles DOM rendering and consumes logic from Pinia stores.
+1. **Pages / Presentation**: Vue components and Nuxt page templates handle UI rendering and user interactions.
+2. **Composable**: Native Vue Composition API functions manage local reactive state and invoke application use cases.
+3. **Application (Use Case)**: Framework-agnostic application logic encapsulating business workflows and rules.
+4. **Repository Interface (Domain)**: Abstraction contract defining required data operations without depending on external infrastructure.
+5. **Infrastructure Repository**: Concrete implementation of the repository interface, mapping external API payloads into domain entities.
+6. **HTTP Client**: Low-level network wrapper (`httpClient.ts`) providing request/response interception, token attachment, and error handling.
+7. **Backend API**: External RESTful server endpoints or Nitro mock servers.
 
 ---
 
@@ -134,8 +163,20 @@ For testing purposes without requiring a direct database connection, the applica
 ### Demo Login Credentials
 
 - **Login Page URL**: `http://localhost:3000/auth/login`
-- **Personal ID**: `1234567890`
+- **Personal ID / Identifier**: `1234567890`
 - **Password**: `password`
+
+---
+
+### ⚙️ Authentication Flow Architecture & Design Notes
+
+1. **Dual Parameter Compatibility (`LoginCommand`)**:
+   - `LoginUseCase` accepts both `identifier` and `personalId` properties (`LoginCommand`).
+   - The application layer automatically resolves `const identifier = (command.identifier ?? command.personalId ?? '').trim()`, protecting against field mismatch errors across legacy and new UI components.
+2. **Form Validation & Non-blocking Remember Me**:
+   - The "Remember me" checkbox is completely optional and non-blocking during login form validation.
+3. **Domain Layer Entity Mapping**:
+   - `AuthUser` domain entity exposes both `identifier` and `personalId` (mapped automatically via `AuthMapper.toAuthUser()`), providing clean integration with Pinia auth store getters (`authStore.personalId`).
 
 ---
 
@@ -150,11 +191,12 @@ For testing purposes without requiring a direct database connection, the applica
 3. **Enter Credentials**:
    - In the **Personal ID** field, type: `1234567890`
    - In the **Password** field, type: `password`
+   - _(Optional)_ Check or uncheck **Remember me**.
 
 4. **Click the Sign In Button**:
    - The application will send a request to the Mock API endpoint `POST /api/auth/login`.
-   - The access token (`access_token`) will automatically be saved to Pinia state and browser cookies.
-   - The application then calls `GET /api/v1/auth/me` to retrieve user data (`Test User`).
+   - The access token (`access_token`) will automatically be saved to Pinia state and browser cookies via `cookieTokenStorage`.
+   - The application then calls `GET /api/v1/auth/me` to retrieve user profile data (`Test User`).
 
 5. **Page Redirection & Route Guard Protection**:
    - Upon successful login, you will automatically be redirected to the **Dashboard** page (`http://localhost:3000/dashboard`).
