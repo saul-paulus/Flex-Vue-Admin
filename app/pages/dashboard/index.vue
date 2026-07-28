@@ -1,10 +1,29 @@
 <script setup lang="ts">
-// Halaman otomatis di-wrap NuxtLayout
+import { onMounted } from 'vue';
+import { useDashboard } from '~/composables/useDashboard';
+
+const { stats, isLoading, getDashboard } = useDashboard();
+
+onMounted(async () => {
+  await getDashboard();
+});
+
+const getTrendIcon = (direction?: 'up' | 'down' | 'neutral') => {
+  if (direction === 'up') return 'bi-arrow-up-right';
+  if (direction === 'down') return 'bi-arrow-down-right';
+  return 'bi-dash';
+};
+
+const getTrendClass = (direction?: 'up' | 'down' | 'neutral') => {
+  if (direction === 'up') return 'text-success';
+  if (direction === 'down') return 'text-danger';
+  return 'text-secondary';
+};
 </script>
 
 <template>
   <div class="container-fluid py-2">
-    <!-- Judul Header Halaman -->
+    <!-- Header -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
       <div>
         <h4 class="mb-1 fw-bold text-primary">Growth Command Center</h4>
@@ -24,94 +43,36 @@
       </div>
     </div>
 
-    <!-- Kumpulan Kartu Statistik -->
-    <div class="row g-4 mb-4">
-      <!-- Net Revenue -->
-      <div class="col-12 col-md-6 col-xl-3">
-        <div class="card shadow-sm h-100 rounded-md">
-          <div class="card-body p-3 p-md-4 position-relative">
-            <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
-              NET REVENUE
-            </div>
-            <h3 class="fw-bolder mb-1 text-primary">$48,295</h3>
-            <span class="small text-success fw-bold d-flex align-items-center gap-1">
-              <i class="bi bi-arrow-up-right" /> +12.8% this month
-            </span>
-            <div class="position-absolute top-0 end-0 p-3 pt-4">
-              <div
-                class="bg-success-subtle text-success rounded d-flex align-items-center justify-content-center"
-                style="width: 36px; height: 36px"
-              >
-                <i class="bi bi-graph-up-arrow fs-5" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- Stat Cards Loading State -->
+    <div v-if="isLoading" class="text-center py-5 text-muted">
+      <div class="spinner-border spinner-border-sm me-2 text-primary" role="status" />
+      Loading statistics...
+    </div>
 
-      <!-- Active Users -->
-      <div class="col-12 col-md-6 col-xl-3">
+    <!-- Dynamic Stat Cards -->
+    <div v-else class="row g-4 mb-4">
+      <div v-for="stat in stats" :key="stat.id" class="col-12 col-md-6 col-xl-3">
         <div class="card shadow-sm h-100 rounded-md">
           <div class="card-body p-3 p-md-4 position-relative">
             <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
-              ACTIVE USERS
+              {{ stat.label }}
             </div>
-            <h3 class="fw-bolder mb-1 text-primary">5,432</h3>
-            <span class="small text-success fw-bold d-flex align-items-center gap-1">
-              <i class="bi bi-arrow-up-right" /> +8.4% this week
+            <h3 class="fw-bolder mb-1 text-primary">{{ stat.value }}</h3>
+            <span
+              v-if="stat.trend"
+              class="small fw-bold d-flex align-items-center gap-1"
+              :class="getTrendClass(stat.trend.direction)"
+            >
+              <i class="bi" :class="getTrendIcon(stat.trend.direction)" />
+              {{ stat.trend.value }} {{ stat.trend.label || '' }}
             </span>
-            <div class="position-absolute top-0 end-0 p-3 pt-4">
+            <div v-if="stat.icon" class="position-absolute top-0 end-0 p-3 pt-4">
               <div
-                class="bg-primary-subtle text-primary rounded d-flex align-items-center justify-content-center"
+                class="rounded d-flex align-items-center justify-content-center"
+                :class="`bg-${stat.colorVariant || 'primary'}-subtle text-${stat.colorVariant || 'primary'}`"
                 style="width: 36px; height: 36px"
               >
-                <i class="bi bi-people-fill fs-5" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Orders -->
-      <div class="col-12 col-md-6 col-xl-3">
-        <div class="card shadow-sm h-100 rounded-md">
-          <div class="card-body p-3 p-md-4 position-relative">
-            <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
-              ORDERS
-            </div>
-            <h3 class="fw-bolder mb-1 text-primary">1,248</h3>
-            <span class="small text-danger fw-bold d-flex align-items-center gap-1">
-              <i class="bi bi-arrow-down-right" /> -3.1% this week
-            </span>
-            <div class="position-absolute top-0 end-0 p-3 pt-4">
-              <div
-                class="bg-warning-subtle text-warning rounded d-flex align-items-center justify-content-center"
-                style="width: 36px; height: 36px"
-              >
-                <i class="bi bi-bag-fill fs-5" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Conversion -->
-      <div class="col-12 col-md-6 col-xl-3">
-        <div class="card shadow-sm h-100 rounded-md">
-          <div class="card-body p-3 p-md-4 position-relative">
-            <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
-              CONVERSION
-            </div>
-            <h3 class="fw-bolder mb-1 text-primary">3.24%</h3>
-            <span class="small text-success fw-bold d-flex align-items-center gap-1">
-              <i class="bi bi-arrow-up-right" /> +1.2% vs last period
-            </span>
-            <div class="position-absolute top-0 end-0 p-3 pt-4">
-              <div
-                class="bg-danger-subtle text-danger rounded d-flex align-items-center justify-content-center"
-                style="width: 36px; height: 36px"
-              >
-                <i class="bi bi-bullseye fs-5" />
+                <i class="bi fs-5" :class="stat.icon" />
               </div>
             </div>
           </div>
@@ -128,7 +89,7 @@
           </div>
           <div class="card-body d-flex flex-column align-items-center justify-content-center text-secondary">
             <i class="bi bi-bar-chart-fill display-1 text-tertiary" />
-            <p class="mt-3 fs-sm">Chart Placeholder (Gunakan Chart.js atau ApexCharts nantinya)</p>
+            <p class="mt-3 fs-sm">Chart Component (Driven by DashboardRepository)</p>
           </div>
         </div>
       </div>
@@ -140,7 +101,7 @@
           </div>
           <div class="card-body d-flex flex-column align-items-center justify-content-center text-secondary">
             <i class="bi bi-pie-chart-fill display-1 text-tertiary" />
-            <p class="mt-3 fs-sm">Donut Chart Placeholder</p>
+            <p class="mt-3 fs-sm">Donut Chart Component</p>
           </div>
         </div>
       </div>

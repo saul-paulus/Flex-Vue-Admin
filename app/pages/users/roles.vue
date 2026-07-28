@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted, computed, ref } from 'vue';
-import { useRoles } from '../../composables/useRoles';
-import { useUsers } from '../../composables/useUsers';
-import type { RoleMatrixItem } from '../../services/roles.service';
+import { useRoles } from '~/composables/useRoles';
+import { useUsers } from '~/composables/useUsers';
+import type { RoleMatrixItem } from '~/domain/role/entities/Role';
 
 const {
   roles,
@@ -35,14 +35,14 @@ const handleSave = async () => {
 
 // Users matching the currently active role
 const usersInActiveRole = computed(() => {
-  if (!rawUsers.value || rawUsers.value.length === 0) return [];
+  if (!rawUsers.value || rawUsers.value.length === 0 || !activeRole.value) return [];
   const activeRoleName = activeRole.value.name.toLowerCase();
   return rawUsers.value.filter((u) => u.role.toLowerCase() === activeRoleName);
 });
 
 // Matrix helper to get permission record safely
 const getMatrixItem = (itemName: string): RoleMatrixItem => {
-  if (activeRole.value.matrix && activeRole.value.matrix[itemName]) {
+  if (activeRole.value?.matrix && activeRole.value.matrix[itemName]) {
     return activeRole.value.matrix[itemName];
   }
   return { view: true, create: true, edit: true, delete: true, all: true };
@@ -112,7 +112,7 @@ const getMatrixItem = (itemName: string): RoleMatrixItem => {
                   <div class="fw-bold fs-md" :class="activeRoleId === role.id ? 'text-teal' : 'text-dark'">
                     {{ role.name }}
                   </div>
-                  <div class="text-tertiary fs-sm">{{ role.users_count }} users</div>
+                  <div class="text-tertiary fs-sm">{{ role.usersCount }} users</div>
                 </div>
               </div>
             </div>
@@ -124,7 +124,7 @@ const getMatrixItem = (itemName: string): RoleMatrixItem => {
           <div class="card-header border-bottom p-4 pb-3">
             <h6 class="mb-0 fw-bold text-primary">Role Details</h6>
           </div>
-          <div class="card-body p-4 d-flex flex-column gap-4">
+          <div v-if="activeRole" class="card-body p-4 d-flex flex-column gap-4">
             <div>
               <div class="text-tertiary text-uppercase fw-bold letter-spacing-1 mb-1 fs-10">NAME</div>
               <div class="fw-medium text-primary fs-md">
@@ -140,13 +140,13 @@ const getMatrixItem = (itemName: string): RoleMatrixItem => {
             <div>
               <div class="text-tertiary text-uppercase fw-bold letter-spacing-1 mb-1 fs-10">CREATED</div>
               <div class="text-primary fs-md">
-                {{ activeRole.created_at }}
+                {{ activeRole.createdAt }}
               </div>
             </div>
             <div>
               <div class="text-tertiary text-uppercase fw-bold letter-spacing-1 mb-1 fs-10">LAST MODIFIED</div>
               <div class="text-primary fs-md">
-                {{ activeRole.updated_at }}
+                {{ activeRole.updatedAt }}
               </div>
             </div>
           </div>
@@ -161,18 +161,21 @@ const getMatrixItem = (itemName: string): RoleMatrixItem => {
             <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
               <div>
                 <h6 class="mb-1 fw-bold text-primary">Permissions Matrix</h6>
-                <div class="text-tertiary fs-xs">Configure access for {{ activeRole.name }} role</div>
+                <p class="text-secondary mb-0 small">
+                  Configure detailed capabilities for {{ activeRole?.name || 'selected role' }}.
+                </p>
               </div>
-              <button
-                class="btn bg-teal rounded text-white shadow-sm fw-medium px-3 d-flex align-items-center gap-2"
-                :disabled="isSaving"
-                @click="handleSave"
-              >
-                <i v-if="isSaving" class="spinner-border spinner-border-sm" role="status" />
-                <i v-else-if="saveSuccess" class="bi bi-check-lg text-white" />
-                <i v-else class="bi bi-check2" />
-                <span>{{ isSaving ? 'Saving...' : saveSuccess ? 'Saved!' : 'Save Changes' }}</span>
-              </button>
+              <div>
+                <button
+                  class="btn btn-sm btn-teal text-white shadow-sm fw-medium px-3 d-flex align-items-center gap-2"
+                  :disabled="isSaving || !activeRole"
+                  @click="handleSave"
+                >
+                  <span v-if="isSaving" class="spinner-border spinner-border-sm me-1" />
+                  <i v-else class="bi bi-check-lg" />
+                  {{ saveSuccess ? 'Saved!' : 'Save Permissions' }}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -226,7 +229,6 @@ const getMatrixItem = (itemName: string): RoleMatrixItem => {
                         class="bi bi-check-circle-fill text-teal fs-xl cursor-pointer"
                         @click="togglePermission(itemName, 'view')"
                       />
-                      <span v-else-if="getMatrixItem(itemName).v_dash" class="text-muted fw-bold">-</span>
                       <i
                         v-else
                         class="bi bi-circle text-muted cursor-pointer"
@@ -241,7 +243,6 @@ const getMatrixItem = (itemName: string): RoleMatrixItem => {
                         class="bi bi-check-circle-fill text-teal fs-xl cursor-pointer"
                         @click="togglePermission(itemName, 'create')"
                       />
-                      <span v-else-if="getMatrixItem(itemName).c_dash" class="text-muted fw-bold">-</span>
                       <i
                         v-else
                         class="bi bi-circle text-muted cursor-pointer"
@@ -256,7 +257,6 @@ const getMatrixItem = (itemName: string): RoleMatrixItem => {
                         class="bi bi-check-circle-fill text-teal fs-xl cursor-pointer"
                         @click="togglePermission(itemName, 'edit')"
                       />
-                      <span v-else-if="getMatrixItem(itemName).e_dash" class="text-muted fw-bold">-</span>
                       <i
                         v-else
                         class="bi bi-circle text-muted cursor-pointer"
@@ -271,7 +271,6 @@ const getMatrixItem = (itemName: string): RoleMatrixItem => {
                         class="bi bi-check-circle-fill text-teal fs-xl cursor-pointer"
                         @click="togglePermission(itemName, 'delete')"
                       />
-                      <span v-else-if="getMatrixItem(itemName).d_dash" class="text-muted fw-bold">-</span>
                       <i
                         v-else
                         class="bi bi-circle text-muted cursor-pointer"
@@ -286,7 +285,6 @@ const getMatrixItem = (itemName: string): RoleMatrixItem => {
                         class="bi bi-check-circle-fill text-teal fs-xl cursor-pointer"
                         @click="togglePermission(itemName, 'all')"
                       />
-                      <span v-else-if="getMatrixItem(itemName).a_dash" class="text-muted fw-bold">-</span>
                       <i
                         v-else
                         class="bi bi-circle text-muted cursor-pointer"
@@ -304,8 +302,8 @@ const getMatrixItem = (itemName: string): RoleMatrixItem => {
         <!-- Users with this Role Card -->
         <div class="card shadow-sm rounded-md">
           <div class="card-header border-bottom p-4 pb-3 d-flex justify-content-between align-items-center">
-            <h6 class="mb-0 fw-bold text-primary">Users with {{ activeRole.name }} Role</h6>
-            <span class="text-tertiary fs-sm">{{ usersInActiveRole.length || activeRole.users_count }} users</span>
+            <h6 class="mb-0 fw-bold text-primary">Users with {{ activeRole?.name }} Role</h6>
+            <span class="text-tertiary fs-sm">{{ usersInActiveRole.length || activeRole?.usersCount || 0 }} users</span>
           </div>
           <div class="card-body p-4">
             <div v-if="usersInActiveRole.length > 0" class="d-flex flex-wrap gap-3">
@@ -318,7 +316,7 @@ const getMatrixItem = (itemName: string): RoleMatrixItem => {
                 <img :src="u.avatar" width="32" height="32" class="rounded-circle" alt="Avatar" />
                 <div class="overflow-hidden">
                   <div class="fw-bold fs-xs text-primary text-truncate" style="max-width: 120px">
-                    {{ u.full_name }}
+                    {{ u.fullName }}
                   </div>
                   <div class="text-muted fs-xs text-truncate" style="max-width: 120px">
                     {{ u.email }}
@@ -327,7 +325,7 @@ const getMatrixItem = (itemName: string): RoleMatrixItem => {
               </div>
             </div>
             <div v-else class="text-center text-tertiary fs-md py-2">
-              No users currently assigned to {{ activeRole.name }} role.
+              No users currently assigned to {{ activeRole?.name || 'this' }} role.
             </div>
           </div>
         </div>

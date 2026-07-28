@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, computed, ref } from 'vue';
-import { useUsers } from '../../composables/useUsers';
+import { useUsers } from '~/composables/useUsers';
 
 const {
   users,
@@ -12,9 +12,9 @@ const {
   sortField,
   sortDirection,
   pagination,
+  summary,
   isLoading,
   getUsers,
-  getSummary,
   searchUsers,
   filterUsers,
   sortUsers,
@@ -24,8 +24,6 @@ const {
 onMounted(async () => {
   await getUsers();
 });
-
-const currentSummary = computed(() => getSummary());
 
 const getRoleBadgeClasses = (role: string) => {
   if (role === 'Admin') return 'bg-danger-subtle text-danger';
@@ -42,8 +40,8 @@ const getStatusIconClass = (status: string) => {
 
 // Compute visible pagination items (pages array with ellipsis)
 const visiblePages = computed(() => {
-  const current = pagination.value.page;
-  const last = pagination.value.last_page;
+  const current = pagination.value.currentPage;
+  const last = pagination.value.lastPage;
   const delta = 1;
   const range: (number | string)[] = [];
 
@@ -97,8 +95,8 @@ const selectRoleFilter = (roleValue: string) => {
             <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
               TOTAL USERS
             </div>
-            <h3 class="fw-bolder mb-1 text-primary">{{ currentSummary.total_users }}</h3>
-            <span class="small text-secondary">{{ currentSummary.growth || '+18 this month' }}</span>
+            <h3 class="fw-bolder mb-1 text-primary">{{ summary.totalUsers }}</h3>
+            <span class="small text-secondary">{{ summary.growth || '+18 this month' }}</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
               <div
                 class="bg-primary-subtle text-primary rounded d-flex align-items-center justify-content-center"
@@ -118,8 +116,8 @@ const selectRoleFilter = (roleValue: string) => {
             <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
               ACTIVE
             </div>
-            <h3 class="fw-bolder mb-1 text-primary">{{ currentSummary.active }}</h3>
-            <span class="small text-secondary">{{ currentSummary.engagement || '75% engagement' }}</span>
+            <h3 class="fw-bolder mb-1 text-primary">{{ summary.active }}</h3>
+            <span class="small text-secondary">{{ summary.engagement || '75% engagement' }}</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
               <div
                 class="bg-success-subtle text-success rounded d-flex align-items-center justify-content-center"
@@ -139,8 +137,8 @@ const selectRoleFilter = (roleValue: string) => {
             <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
               PENDING
             </div>
-            <h3 class="fw-bolder mb-1 text-primary">{{ currentSummary.pending }}</h3>
-            <span class="small text-secondary">{{ currentSummary.onboarding || 'Needs onboarding' }}</span>
+            <h3 class="fw-bolder mb-1 text-primary">{{ summary.pending }}</h3>
+            <span class="small text-secondary">{{ summary.onboarding || 'Needs onboarding' }}</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
               <div
                 class="bg-warning-subtle text-warning rounded d-flex align-items-center justify-content-center"
@@ -160,8 +158,8 @@ const selectRoleFilter = (roleValue: string) => {
             <div class="small mb-1 text-uppercase fw-bold letter-spacing-1 text-tertiary" style="font-size: 0.7rem">
               INACTIVE
             </div>
-            <h3 class="fw-bolder mb-1 text-primary">{{ currentSummary.inactive }}</h3>
-            <span class="small text-secondary">{{ currentSummary.follow_up || 'Follow up required' }}</span>
+            <h3 class="fw-bolder mb-1 text-primary">{{ summary.inactive }}</h3>
+            <span class="small text-secondary">{{ summary.followUp || 'Follow up required' }}</span>
             <div class="position-absolute top-0 end-0 p-3 pt-4">
               <div
                 class="bg-danger-subtle text-danger rounded d-flex align-items-center justify-content-center"
@@ -304,15 +302,15 @@ const selectRoleFilter = (roleValue: string) => {
                 scope="col"
                 class="py-3 border-0 fw-bold cursor-pointer user-select-none"
                 style="background-color: var(--zebra)"
-                @click="sortUsers('last_activity')"
+                @click="sortUsers('lastActive')"
               >
                 LAST ACTIVE
                 <i
                   class="bi ms-1"
                   :class="{
-                    'bi-arrow-up': sortField === 'last_activity' && sortDirection === 'asc',
-                    'bi-arrow-down': sortField === 'last_activity' && sortDirection === 'desc',
-                    'bi-arrow-down-up opacity-50': sortField !== 'last_activity',
+                    'bi-arrow-up': sortField === 'lastActive' && sortDirection === 'asc',
+                    'bi-arrow-down': sortField === 'lastActive' && sortDirection === 'desc',
+                    'bi-arrow-down-up opacity-50': sortField !== 'lastActive',
                   }"
                 />
               </th>
@@ -320,15 +318,15 @@ const selectRoleFilter = (roleValue: string) => {
                 scope="col"
                 class="py-3 border-0 fw-bold cursor-pointer user-select-none"
                 style="background-color: var(--zebra)"
-                @click="sortUsers('joined_at')"
+                @click="sortUsers('joined')"
               >
                 JOINED
                 <i
                   class="bi ms-1"
                   :class="{
-                    'bi-arrow-up': sortField === 'joined_at' && sortDirection === 'asc',
-                    'bi-arrow-down': sortField === 'joined_at' && sortDirection === 'desc',
-                    'bi-arrow-down-up opacity-50': sortField !== 'joined_at',
+                    'bi-arrow-up': sortField === 'joined' && sortDirection === 'asc',
+                    'bi-arrow-down': sortField === 'joined' && sortDirection === 'desc',
+                    'bi-arrow-down-up opacity-50': sortField !== 'joined',
                   }"
                 />
               </th>
@@ -356,7 +354,7 @@ const selectRoleFilter = (roleValue: string) => {
                   <img :src="user.avatar" class="rounded-circle shadow-sm" width="40" height="40" alt="Avatar" />
                   <div>
                     <div class="fw-bolder" style="font-size: 0.9rem; color: var(--title-color)">
-                      {{ user.full_name }}
+                      {{ user.fullName }}
                     </div>
                     <div style="font-size: 0.8rem; color: var(--secondary-color-text)">
                       {{ user.email }}
@@ -387,10 +385,10 @@ const selectRoleFilter = (roleValue: string) => {
                 </div>
               </td>
               <td class="py-3" style="font-size: 0.85rem; color: var(--secondary-color-text)">
-                {{ user.last_activity }}
+                {{ user.lastActivity }}
               </td>
               <td class="py-3" style="font-size: 0.85rem; color: var(--secondary-color-text)">
-                {{ user.joined_at }}
+                {{ user.joinedAt }}
               </td>
               <td class="text-end pe-4 py-3">
                 <div class="d-flex align-items-center justify-content-end gap-2 text-muted">
@@ -421,18 +419,18 @@ const selectRoleFilter = (roleValue: string) => {
       >
         <div class="fs-70" style="color: var(--secondary-color-text)">
           Showing
-          {{ pagination.total > 0 ? (pagination.page - 1) * pagination.per_page + 1 : 0 }}-{{
-            Math.min(pagination.page * pagination.per_page, pagination.total)
+          {{ pagination.total > 0 ? (pagination.currentPage - 1) * pagination.perPage + 1 : 0 }}-{{
+            Math.min(pagination.currentPage * pagination.perPage, pagination.total)
           }}
           of {{ pagination.total }} users
         </div>
         <nav aria-label="Page navigation">
           <ul class="pagination pagination-sm mb-0 gap-1">
-            <li class="page-item" :class="{ disabled: pagination.page <= 1 }">
+            <li class="page-item" :class="{ disabled: pagination.currentPage <= 1 }">
               <a
                 class="page-link border-0 text-muted bg-transparent"
                 href="#"
-                @click.prevent="setPage(pagination.page - 1)"
+                @click.prevent="setPage(pagination.currentPage - 1)"
               >
                 <i class="bi bi-chevron-left" />
               </a>
@@ -442,11 +440,11 @@ const selectRoleFilter = (roleValue: string) => {
               <li v-if="p === '...'" class="page-item">
                 <span class="page-link border-0 rounded text-muted bg-transparent px-1">...</span>
               </li>
-              <li v-else class="page-item" :class="{ active: p === pagination.page }">
+              <li v-else class="page-item" :class="{ active: p === pagination.currentPage }">
                 <a
                   class="page-link border-0 rounded text-hover-dark"
-                  :class="p === pagination.page ? 'text-white shadow-sm' : 'text-muted bg-transparent'"
-                  :style="p === pagination.page ? { backgroundColor: 'var(--accent)' } : {}"
+                  :class="p === pagination.currentPage ? 'text-white shadow-sm' : 'text-muted bg-transparent'"
+                  :style="p === pagination.currentPage ? { backgroundColor: 'var(--accent)' } : {}"
                   href="#"
                   @click.prevent="setPage(Number(p))"
                 >
@@ -455,11 +453,11 @@ const selectRoleFilter = (roleValue: string) => {
               </li>
             </template>
 
-            <li class="page-item" :class="{ disabled: pagination.page >= pagination.last_page }">
+            <li class="page-item" :class="{ disabled: pagination.currentPage >= pagination.lastPage }">
               <a
                 class="page-link border-0 text-muted bg-transparent"
                 href="#"
-                @click.prevent="setPage(pagination.page + 1)"
+                @click.prevent="setPage(pagination.currentPage + 1)"
               >
                 <i class="bi bi-chevron-right" />
               </a>

@@ -5,6 +5,8 @@ import { UserApiRepository } from '~/infrastructure/api/UserApiRepository';
 import { MockUserRepository } from '~/infrastructure/__mocks__/MockUserRepository';
 import { RoleApiRepository } from '~/infrastructure/api/RoleApiRepository';
 import { MockRoleRepository } from '~/infrastructure/__mocks__/MockRoleRepository';
+import { MockDashboardRepository } from '~/infrastructure/__mocks__/MockDashboardRepository';
+import { StaticMenuRepository } from '~/infrastructure/__mocks__/StaticMenuRepository';
 import { cookieTokenStorage } from '~/infrastructure/storage/tokenStorage';
 
 import { LoginUseCase } from '~/application/auth/LoginUseCase';
@@ -14,17 +16,21 @@ import { GetUsersUseCase } from '~/application/users/GetUsersUseCase';
 import { GetUserByIdUseCase } from '~/application/users/GetUserByIdUseCase';
 import { GetRolesUseCase } from '~/application/roles/GetRolesUseCase';
 import { SaveRolePermissionsUseCase } from '~/application/roles/SaveRolePermissionsUseCase';
+import { GetDashboardStatsUseCase } from '~/application/dashboard/GetDashboardStatsUseCase';
+import { GetMenuUseCase } from '~/application/menu/GetMenuUseCase';
 
-import type { TokenProvider } from '~/domain/ports/TokenPorts';
-import type { AuthRepository } from '~/domain/repositories/AuthRepository';
-import type { UserRepository } from '~/domain/repositories/UserRepository';
-import type { RoleRepository } from '~/domain/repositories/RoleRepository';
+import type { TokenProvider } from '~/domain/auth/ports/TokenPorts';
+import type { AuthRepository } from '~/domain/auth/repositories/AuthRepository';
+import type { UserRepository } from '~/domain/user/repositories/UserRepository';
+import type { RoleRepository } from '~/domain/role/repositories/RoleRepository';
+import type { DashboardRepository } from '~/domain/dashboard/repositories/DashboardRepository';
+import type { MenuRepository } from '~/domain/menu/repositories/MenuRepository';
 
 /**
  * Application DI Plugin — Dependency Injection Composition Root.
  *
  * Assembles all Domain Repositories and Application Use Cases
- * for Auth, Users, and Roles subsystems.
+ * for Auth, Users, Roles, Dashboard, and Menu subsystems.
  */
 export default defineNuxtPlugin(() => {
   const runtimeConfig = useRuntimeConfig();
@@ -52,6 +58,8 @@ export default defineNuxtPlugin(() => {
   const authRepository: AuthRepository = useMock ? new MockAuthRepository() : new AuthApiRepository(httpClient);
   const userRepository: UserRepository = useMock ? new MockUserRepository() : new UserApiRepository(httpClient);
   const roleRepository: RoleRepository = useMock ? new MockRoleRepository() : new RoleApiRepository(httpClient);
+  const dashboardRepository: DashboardRepository = new MockDashboardRepository();
+  const menuRepository: MenuRepository = new StaticMenuRepository();
 
   if (useMock) {
     console.info('[DI Plugin] Using Mock Repositories (development mode, no API configured)');
@@ -68,11 +76,16 @@ export default defineNuxtPlugin(() => {
   const getRolesUseCase = new GetRolesUseCase(roleRepository);
   const saveRolePermissionsUseCase = new SaveRolePermissionsUseCase(roleRepository);
 
+  const getDashboardStatsUseCase = new GetDashboardStatsUseCase(dashboardRepository);
+  const getMenuUseCase = new GetMenuUseCase(menuRepository);
+
   return {
     provide: {
       authRepository,
       userRepository,
       roleRepository,
+      dashboardRepository,
+      menuRepository,
       loginUseCase,
       logoutUseCase,
       getCurrentUserUseCase,
@@ -80,6 +93,8 @@ export default defineNuxtPlugin(() => {
       getUserByIdUseCase,
       getRolesUseCase,
       saveRolePermissionsUseCase,
+      getDashboardStatsUseCase,
+      getMenuUseCase,
       tokenStorage: cookieTokenStorage,
     },
   };

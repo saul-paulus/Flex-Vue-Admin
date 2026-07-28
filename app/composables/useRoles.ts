@@ -1,16 +1,20 @@
+/**
+ * useRoles Composable — UI state management for roles & permissions.
+ */
 import { computed } from 'vue';
-import type { RoleItem, PermissionGroupItem } from '~/domain/entities/Role';
+import type { RoleModel } from '~/domain/role/models/RoleModel';
+import type { PermissionGroup, RoleMatrixItem } from '~/domain/role/entities/Role';
 
 export function useRoles() {
-  const masterRoles = useState<RoleItem[]>('roles:master', () => []);
-  const permissionGroups = useState<PermissionGroupItem[]>('roles:groups', () => []);
-  const activeRoleId = useState<number>('roles:activeId', () => 1);
+  const masterRoles = useState<RoleModel[]>('roles:master', () => []);
+  const permissionGroups = useState<PermissionGroup[]>('roles:groups', () => []);
+  const activeRoleId = useState<number>('roles:activeId', () => 0);
   const isLoading = useState<boolean>('roles:isLoading', () => false);
   const isLoaded = useState<boolean>('roles:isLoaded', () => false);
   const isSaving = useState<boolean>('roles:isSaving', () => false);
 
   /**
-   * Fetch roles and permission groups via GetRolesUseCase
+   * Fetch roles via GetRolesUseCase.
    */
   const getRoles = async () => {
     if (isLoaded.value && masterRoles.value.length > 0) {
@@ -21,10 +25,10 @@ export function useRoles() {
       const nuxtApp = useNuxtApp();
       const res = await nuxtApp.$getRolesUseCase.execute();
       if (res.isOk() && res.value) {
-        masterRoles.value = res.value.roles || [];
-        permissionGroups.value = res.value.permission_groups || [];
+        masterRoles.value = [...res.value.roles];
+        permissionGroups.value = [...res.value.permissionGroups];
         if (masterRoles.value.length > 0 && !activeRoleId.value) {
-          activeRoleId.value = masterRoles.value[0]?.id ?? 1;
+          activeRoleId.value = masterRoles.value[0]?.id ?? 0;
         }
         isLoaded.value = true;
       }
@@ -37,47 +41,36 @@ export function useRoles() {
   };
 
   /**
-   * Active selected role object
+   * Active role — returns the selected role or first available.
+   * No hardcoded fallback data — returns empty state instead.
    */
-  const activeRole = computed<RoleItem>(() => {
-    const found = masterRoles.value.find((r) => r.id === activeRoleId.value);
-    return (
-      found ||
-      masterRoles.value[0] || {
-        id: 1,
-        name: 'Administrator',
-        users_count: 8,
-        icon: 'shield-lock-fill',
-        color: 'danger',
-        description: 'Full system access',
-        created_at: 'January 1, 2024',
-        updated_at: 'May 15, 2024',
-        matrix: {},
-      }
-    );
+  const activeRole = computed<RoleModel | null>(() => {
+    if (masterRoles.value.length === 0) return null;
+    return masterRoles.value.find((r) => r.id === activeRoleId.value) || masterRoles.value[0] || null;
   });
 
-  /**
-   * Select a role by ID
-   */
   const selectRole = (id: number) => {
     activeRoleId.value = id;
   };
 
   /**
-   * Toggle or update a matrix permission for active role
+   * Toggle a permission in the active role's matrix.
    */
   const togglePermission = (itemKey: string, action: 'view' | 'create' | 'edit' | 'delete' | 'all') => {
-    if (!activeRole.value.matrix[itemKey]) {
-      activeRole.value.matrix[itemKey] = {
-        view: false,
-        create: false,
-        edit: false,
-        delete: false,
-        all: false,
-      };
+    if (!activeRole.value) return;
+
+    // Since RoleModel is readonly, we need to mutate via the array
+    const roleIndex = masterRoles.value.findIndex((r) => r.id === activeRoleId.value);
+    if (roleIndex === -1) return;
+
+    const role = masterRoles.value[roleIndex];
+    const matrix = { ...role.matrix };
+
+    if (!matrix[itemKey]) {
+      matrix[itemKey] = { view: false, create: false, edit: false, delete: false, all: false };
     }
-    const current = activeRole.value.matrix[itemKey];
+
+    const current = { ...matrix[itemKey] };
 
     if (action === 'all') {
       const newVal = !current.all;
@@ -90,16 +83,24 @@ export function useRoles() {
       current[action] = !current[action];
       current.all = current.view && current.create && current.edit && current.delete;
     }
+
+    matrix[itemKey] = current;
+    masterRoles.value[roleIndex] = { ...role, matrix };
   };
 
   /**
-   * Save changes to role permissions via SaveRolePermissionsUseCase
+   * Save permissions via SaveRolePermissionsUseCase.
    */
   const saveRolePermissions = async () => {
+    if (!activeRole.value) return false;
+
     isSaving.value = true;
     try {
       const nuxtApp = useNuxtApp();
-      const res = await nuxtApp.$saveRolePermissionsUseCase.execute(activeRole.value);
+      const res = await nuxtApp.$saveRolePermissionsUseCase.execute(
+        activeRole.value.id,
+        activeRole.value.matrix as Record<string, RoleMatrixItem>
+      );
       return res.isOk();
     } catch (err) {
       console.error('Failed to save role permissions:', err);

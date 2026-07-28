@@ -1,11 +1,15 @@
-import type { UserRepository } from '~/domain/repositories/UserRepository';
-import type { UserResponseData } from '~/domain/entities/User';
+/**
+ * GetUsersUseCase — Fetches the user list with pagination/filter support.
+ */
+import type { UserRepository, UserListResult } from '~/domain/user/repositories/UserRepository';
+import type { PaginationParams } from '~/domain/core/PaginationModel';
+import type { AppError } from '~/domain/core/AppError';
 import type { Result } from '~/domain/core/Result';
 
 export class GetUsersUseCase {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async execute(): Promise<Result<UserResponseData, string>> {
-    return this.userRepository.getUsers();
+  async execute(params?: PaginationParams): Promise<Result<UserListResult, AppError>> {
+    return this.userRepository.getUsers(params);
   }
 }

@@ -1,16 +1,3 @@
-import type { AuthRepository } from '~/domain/repositories/AuthRepository';
-import type { AuthToken } from '~/domain/entities/Auth';
-import type { TokenStoragePort } from '~/domain/ports/TokenPorts';
-import { Result } from '~/domain/core/Result';
-
-/**
- * LoginCommand — Input DTO for the login use case.
- */
-export interface LoginCommand {
-  readonly personalId: string;
-  readonly password: string;
-}
-
 /**
  * LoginUseCase — Orchestrates the login flow.
  *
@@ -18,33 +5,39 @@ export interface LoginCommand {
  * 1. Validate input (basic validation)
  * 2. Delegate authentication to repository
  * 3. Persist token on success
- *
- * This use case does NOT manage reactive state (that's the store's job).
- * It handles the pure business orchestration logic.
  */
+import type { AuthRepository } from '~/domain/auth/repositories/AuthRepository';
+import type { AuthToken } from '~/domain/auth/entities/AuthSession';
+import type { TokenStoragePort } from '~/domain/auth/ports/TokenPorts';
+import type { AppError } from '~/domain/core/AppError';
+import { Result } from '~/domain/core/Result';
+import { createAppError } from '~/domain/core/AppError';
+
+export interface LoginCommand {
+  readonly identifier: string;
+  readonly password: string;
+}
+
 export class LoginUseCase {
   constructor(
     private readonly authRepository: AuthRepository,
     private readonly tokenStorage: TokenStoragePort
   ) {}
 
-  async execute(command: LoginCommand): Promise<Result<AuthToken, string>> {
-    // 1. Basic input validation
-    if (!command.personalId.trim()) {
-      return Result.fail('Personal ID is required');
+  async execute(command: LoginCommand): Promise<Result<AuthToken, AppError>> {
+    if (!command.identifier.trim()) {
+      return Result.fail(createAppError(422, 'Identifier is required'));
     }
 
     if (!command.password.trim()) {
-      return Result.fail('Password is required');
+      return Result.fail(createAppError(422, 'Password is required'));
     }
 
-    // 2. Authenticate via repository
     const loginResult = await this.authRepository.login({
-      personalId: command.personalId,
+      identifier: command.identifier,
       password: command.password,
     });
 
-    // 3. Persist token on success
     if (loginResult.isOk()) {
       this.tokenStorage.save(loginResult.value.accessToken);
     }

@@ -1,73 +1,217 @@
-import type { UserItem, UserResponseData, UserSummary, UserPagination } from '~/domain/entities/User';
+/**
+ * UserMapper — Converts raw API payloads to domain User models.
+ *
+ * NO `any` types — uses typed DTOs throughout.
+ * Handles both snake_case and camelCase backend conventions.
+ */
+import type { UserModel, UserSummaryModel, FilterOption, TabItem } from '~/domain/user/models/UserModel';
+import type { UserStats, UserHealth, UserActivityTimeline, UserSession, UserTeam } from '~/domain/user/entities/User';
+import type { UserResponseDTO, UserSummaryDTO, UserListResponseDTO, PaginationDTO } from '~/domain/user/dto/UserDTO';
+import type { PaginationMeta } from '~/domain/core/PaginationModel';
 
 /**
- * UserMapper — Data boundary transformer between raw API payloads and Domain User entities.
+ * Helper: compute a CSS badge class based on role name.
  */
+function roleBadgeClass(role: string): string {
+  const map: Record<string, string> = {
+    admin: 'bg-danger-subtle text-danger',
+    manager: 'bg-warning-subtle text-warning',
+    supervisor: 'bg-info-subtle text-info',
+  };
+  return map[role.toLowerCase()] || 'bg-primary-subtle text-primary';
+}
+
+/**
+ * Helper: compute a CSS status color class.
+ */
+function statusColorClass(status: string): string {
+  const map: Record<string, string> = {
+    active: 'text-success',
+    pending: 'text-warning',
+    inactive: 'text-secondary',
+    disabled: 'text-danger',
+  };
+  return map[status.toLowerCase()] || 'text-secondary';
+}
+
 export const UserMapper = {
-  toDomainUser(raw: any): UserItem {
+  /**
+   * Map raw user DTO to domain UserModel.
+   */
+  toModel(raw: UserResponseDTO): UserModel {
+    const stats = raw.stats ? UserMapper.toStats(raw.stats) : undefined;
+    const health = raw.health ? UserMapper.toHealth(raw.health) : undefined;
+    const timeline = raw.timeline ? raw.timeline.map(UserMapper.toTimeline) : undefined;
+    const sessions = raw.sessions ? raw.sessions.map(UserMapper.toSession) : undefined;
+    const teamsList =
+      raw.teams_list || raw.teamsList ? (raw.teams_list || raw.teamsList || []).map(UserMapper.toTeam) : undefined;
+
+    const role = String(raw.role || raw.role_name || 'User');
+    const status = String(raw.status || 'Active');
+
     return {
       id: Number(raw.id || 0),
       uuid: String(raw.uuid || ''),
-      employee_id: String(raw.employee_id || raw.employeeId || ''),
-      full_name: String(raw.full_name || raw.fullName || raw.name || ''),
-      first_name: String(raw.first_name || raw.firstName || ''),
-      last_name: String(raw.last_name || raw.lastName || ''),
-      email: String(raw.email || ''),
+      employeeId: String(raw.employee_id || raw.employeeId || ''),
+      fullName: String(raw.full_name || raw.fullName || raw.name || ''),
+      firstName: String(raw.first_name || raw.firstName || ''),
+      lastName: String(raw.last_name || raw.lastName || ''),
+      email: String(raw.email || raw.email_address || ''),
       phone: String(raw.phone || ''),
-      avatar: String(raw.avatar || ''),
+      avatar: String(raw.avatar || raw.avatar_url || ''),
       gender: String(raw.gender || 'male'),
-      role: raw.role || 'User',
+      role,
       department: String(raw.department || ''),
       branch: String(raw.branch || ''),
       position: String(raw.position || ''),
-      status: raw.status || 'Active',
-      joined_at: String(raw.joined_at || raw.joinedAt || ''),
-      last_login: raw.last_login || raw.lastLogin || null,
-      last_activity: String(raw.last_activity || raw.lastActivity || ''),
-      created_at: String(raw.created_at || raw.createdAt || ''),
-      updated_at: String(raw.updated_at || raw.updatedAt || ''),
-      role_color: String(raw.role_color || raw.roleColor || 'primary'),
-      status_color: String(raw.status_color || raw.statusColor || 'success'),
+      status,
+      joinedAt: String(raw.joined_at || raw.joinedAt || ''),
+      lastLogin: raw.last_login || raw.lastLogin || null,
+      lastActivity: String(raw.last_activity || raw.lastActivity || ''),
+      createdAt: String(raw.created_at || raw.createdAt || ''),
+      updatedAt: String(raw.updated_at || raw.updatedAt || ''),
       permissions: Array.isArray(raw.permissions) ? raw.permissions : [],
-      is_online: Boolean(raw.is_online ?? raw.isOnline ?? false),
-      action: Array.isArray(raw.action) ? raw.action : ['view', 'edit'],
+      isOnline: Boolean(raw.is_online ?? raw.isOnline ?? false),
       location: raw.location,
       manager: raw.manager,
-      stats: raw.stats,
-      health: raw.health,
-      timeline: raw.timeline,
-      sessions: raw.sessions,
-      teams_list: raw.teams_list || raw.teamsList,
+      // UI-specific model fields
+      roleBadgeClass: roleBadgeClass(role),
+      statusColorClass: statusColorClass(status),
+      actions: Array.isArray(raw.action) ? raw.action : Array.isArray(raw.actions) ? raw.actions : ['view', 'edit'],
+      stats,
+      health,
+      timeline,
+      sessions,
+      teamsList,
     };
   },
 
-  toDomainResponseData(raw: any): UserResponseData {
-    const users = Array.isArray(raw.users) ? raw.users.map(this.toDomainUser) : [];
-    const summary: UserSummary = {
-      total_users: Number(raw.summary?.total_users ?? raw.summary?.totalUsers ?? users.length),
-      active: Number(raw.summary?.active ?? users.filter((u) => u.status === 'Active').length),
-      pending: Number(raw.summary?.pending ?? users.filter((u) => u.status === 'Pending').length),
-      inactive: Number(raw.summary?.inactive ?? users.filter((u) => u.status === 'Inactive').length),
-      growth: raw.summary?.growth || '+0 this month',
-      engagement: raw.summary?.engagement || '100% engagement',
-      onboarding: raw.summary?.onboarding || 'All set',
-      follow_up: raw.summary?.follow_up || 'None',
+  toStats(raw: Record<string, unknown>): UserStats {
+    return {
+      logins: Number(raw.logins ?? 0),
+      tasksClosed: Number(raw.tasks_closed ?? raw.tasksClosed ?? 0),
+      projects: Number(raw.projects ?? 0),
+      teams: Number(raw.teams ?? 0),
     };
+  },
 
-    const pagination: UserPagination = {
-      page: Number(raw.pagination?.page ?? raw.meta?.current_page ?? 1),
-      per_page: Number(raw.pagination?.per_page ?? raw.meta?.per_page ?? 10),
-      total: Number(raw.pagination?.total ?? raw.meta?.total ?? users.length),
-      last_page: Number(raw.pagination?.last_page ?? raw.meta?.last_page ?? 1),
+  toHealth(raw: Record<string, unknown>): UserHealth {
+    return {
+      emailVerification: Boolean(raw.email_verification ?? raw.emailVerification ?? false),
+      twoFactor: Boolean(raw.two_factor ?? raw.twoFactor ?? false),
+      riskScore: String(raw.risk_score ?? raw.riskScore ?? 'Unknown'),
     };
+  },
+
+  toTimeline(raw: Record<string, unknown>): UserActivityTimeline {
+    return {
+      title: String(raw.title ?? ''),
+      description: String(raw.description ?? ''),
+      time: String(raw.time ?? ''),
+      indicatorColor: (raw.indicator_color as string | undefined) ?? (raw.indicatorColor as string | undefined),
+    };
+  },
+
+  toSession(raw: Record<string, unknown>): UserSession {
+    return {
+      device: String(raw.device ?? ''),
+      location: String(raw.location ?? ''),
+      isCurrent: Boolean(raw.is_current ?? raw.isCurrent ?? false),
+      lastActive: String(raw.last_active ?? raw.lastActive ?? ''),
+    };
+  },
+
+  toTeam(raw: Record<string, unknown>): UserTeam {
+    return {
+      name: String(raw.name ?? ''),
+      membersCount: Number(raw.members_count ?? raw.membersCount ?? 0),
+      icon: String(raw.icon ?? ''),
+      colorClass: String(raw.color_class ?? raw.colorClass ?? ''),
+    };
+  },
+
+  /**
+   * Map raw summary DTO to domain UserSummaryModel.
+   */
+  toSummary(raw: UserSummaryDTO | undefined, users: UserModel[]): UserSummaryModel {
+    return {
+      totalUsers: Number(raw?.total_users ?? raw?.totalUsers ?? raw?.total ?? users.length),
+      active: Number(raw?.active ?? users.filter((u) => u.status.toLowerCase() === 'active').length),
+      pending: Number(raw?.pending ?? users.filter((u) => u.status.toLowerCase() === 'pending').length),
+      inactive: Number(raw?.inactive ?? users.filter((u) => u.status.toLowerCase() === 'inactive').length),
+      growth: raw?.growth,
+      engagement: raw?.engagement,
+      onboarding: raw?.onboarding,
+      followUp: raw?.follow_up ?? raw?.followUp,
+    };
+  },
+
+  /**
+   * Map raw pagination DTO to domain PaginationMeta.
+   * Supports Laravel, Spring Boot, NestJS, Express, DRF conventions.
+   */
+  toPagination(raw: PaginationDTO | undefined, fallbackTotal: number): PaginationMeta {
+    if (!raw) {
+      return {
+        currentPage: 1,
+        perPage: 10,
+        total: fallbackTotal,
+        lastPage: Math.max(1, Math.ceil(fallbackTotal / 10)),
+      };
+    }
+
+    const currentPage = Number(raw.page ?? raw.currentPage ?? raw.pageNumber ?? 1);
+    const perPage = Number(raw.per_page ?? raw.limit ?? raw.pageSize ?? 10);
+    const total = Number(raw.total ?? raw.totalItems ?? raw.totalElements ?? raw.count ?? fallbackTotal);
+    const lastPage = Number(raw.last_page ?? raw.pages ?? raw.totalPages ?? Math.max(1, Math.ceil(total / perPage)));
+
+    return { currentPage, perPage, total, lastPage };
+  },
+
+  /**
+   * Map complete user list response DTO to structured result.
+   */
+  toListResult(raw: UserListResponseDTO) {
+    const rawUsers = raw.users || raw.data || raw.items || raw.results || [];
+    const users = rawUsers.map(UserMapper.toModel);
+    const summary = UserMapper.toSummary(raw.summary, users);
+
+    const tabs: TabItem[] = Array.isArray(raw.tabs)
+      ? raw.tabs.map((t) => ({
+          key: String(t.key ?? ''),
+          label: String(t.label ?? ''),
+          count: Number(t.count ?? 0),
+        }))
+      : [];
+
+    const roleFilters: FilterOption[] = Array.isArray(raw.filters?.roles)
+      ? raw.filters!.roles.map((r) => ({
+          label: String(r.label ?? ''),
+          value: String(r.value ?? ''),
+        }))
+      : [];
+
+    const departmentFilters: FilterOption[] | undefined = raw.filters?.departments
+      ? raw.filters.departments.map((d) => ({
+          label: String(d.label ?? ''),
+          value: String(d.value ?? ''),
+        }))
+      : undefined;
+
+    const paginationRaw = raw.pagination || raw.meta;
+    const pagination = UserMapper.toPagination(paginationRaw as PaginationDTO | undefined, users.length);
+    const sortable = Array.isArray(raw.sortable) ? raw.sortable : ['id', 'fullName', 'email'];
 
     return {
-      summary,
-      tabs: Array.isArray(raw.tabs) ? raw.tabs : [],
-      filters: raw.filters || { roles: [] },
-      sortable: Array.isArray(raw.sortable) ? raw.sortable : ['id', 'full_name', 'email'],
-      pagination,
       users,
+      summary,
+      tabs,
+      filters: {
+        roles: roleFilters,
+        departments: departmentFilters,
+      },
+      sortable,
+      pagination,
     };
   },
 };

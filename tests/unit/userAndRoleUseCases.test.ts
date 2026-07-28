@@ -4,10 +4,11 @@ import { GetUserByIdUseCase } from '~/application/users/GetUserByIdUseCase';
 import { GetRolesUseCase } from '~/application/roles/GetRolesUseCase';
 import { SaveRolePermissionsUseCase } from '~/application/roles/SaveRolePermissionsUseCase';
 import { Result } from '~/domain/core/Result';
-import type { UserRepository } from '~/domain/repositories/UserRepository';
-import type { RoleRepository } from '~/domain/repositories/RoleRepository';
-import type { UserItem, UserResponseData } from '~/domain/entities/User';
-import type { RolesData, RoleItem } from '~/domain/entities/Role';
+import { createAppError } from '~/domain/core/AppError';
+import type { UserRepository, UserListResult } from '~/domain/user/repositories/UserRepository';
+import type { RoleRepository, RolesListResult } from '~/domain/role/repositories/RoleRepository';
+import type { UserModel } from '~/domain/user/models/UserModel';
+import type { RoleModel } from '~/domain/role/models/RoleModel';
 
 function createMockUserRepository(): UserRepository {
   return {
@@ -23,13 +24,13 @@ function createMockRoleRepository(): RoleRepository {
   };
 }
 
-const mockUser: UserItem = {
+const mockUser: UserModel = {
   id: 1,
   uuid: 'u-1',
-  employee_id: 'emp-1',
-  full_name: 'Jane Doe',
-  first_name: 'Jane',
-  last_name: 'Doe',
+  employeeId: 'emp-1',
+  fullName: 'Jane Doe',
+  firstName: 'Jane',
+  lastName: 'Doe',
   email: 'jane@example.com',
   phone: '12345',
   avatar: '',
@@ -39,42 +40,42 @@ const mockUser: UserItem = {
   branch: 'Main',
   position: 'Lead',
   status: 'Active',
-  joined_at: '2024-01-01',
-  last_login: null,
-  last_activity: '2024-01-02',
-  created_at: '2024-01-01',
-  updated_at: '2024-01-01',
-  role_color: 'primary',
-  status_color: 'success',
+  joinedAt: '2024-01-01',
+  lastLogin: null,
+  lastActivity: '2024-01-02',
+  createdAt: '2024-01-01',
+  updatedAt: '2024-01-01',
   permissions: [],
-  is_online: true,
-  action: [],
+  isOnline: true,
+  roleBadgeClass: 'bg-danger-subtle text-danger',
+  statusColorClass: 'text-success',
+  actions: ['view', 'edit'],
 };
 
-const mockUserData: UserResponseData = {
-  summary: { total_users: 1, active: 1, pending: 0, inactive: 0 },
+const mockUserResult: UserListResult = {
+  users: [mockUser],
+  summary: { totalUsers: 1, active: 1, pending: 0, inactive: 0 },
   tabs: [{ key: 'all', label: 'All', count: 1 }],
   filters: { roles: [{ label: 'Admin', value: 'Admin' }] },
   sortable: ['id', 'name'],
-  pagination: { page: 1, per_page: 10, total: 1, last_page: 1 },
-  users: [mockUser],
+  pagination: { currentPage: 1, perPage: 10, total: 1, lastPage: 1 },
 };
 
-const mockRolesData: RolesData = {
-  roles: [
-    {
-      id: 1,
-      name: 'Admin',
-      users_count: 5,
-      icon: 'shield',
-      color: 'danger',
-      description: 'Full access',
-      created_at: '2024-01-01',
-      updated_at: '2024-01-01',
-      matrix: {},
-    },
-  ],
-  permission_groups: [],
+const mockRole: RoleModel = {
+  id: 1,
+  name: 'Admin',
+  usersCount: 5,
+  icon: 'shield',
+  color: 'danger',
+  description: 'Full access',
+  createdAt: '2024-01-01',
+  updatedAt: '2024-01-01',
+  matrix: {},
+};
+
+const mockRolesResult: RolesListResult = {
+  roles: [mockRole],
+  permissionGroups: [],
 };
 
 describe('User & Role Use Cases', () => {
@@ -87,8 +88,8 @@ describe('User & Role Use Cases', () => {
   });
 
   describe('GetUsersUseCase', () => {
-    it('should return user response data on success', async () => {
-      vi.mocked(mockUserRepo.getUsers).mockResolvedValueOnce(Result.ok(mockUserData));
+    it('should return user list result on success', async () => {
+      vi.mocked(mockUserRepo.getUsers).mockResolvedValueOnce(Result.ok(mockUserResult));
       const useCase = new GetUsersUseCase(mockUserRepo);
 
       const result = await useCase.execute();
@@ -99,13 +100,14 @@ describe('User & Role Use Cases', () => {
     });
 
     it('should return fail on error', async () => {
-      vi.mocked(mockUserRepo.getUsers).mockResolvedValueOnce(Result.fail('Network error'));
+      const err = createAppError(500, 'Network error');
+      vi.mocked(mockUserRepo.getUsers).mockResolvedValueOnce(Result.fail(err));
       const useCase = new GetUsersUseCase(mockUserRepo);
 
       const result = await useCase.execute();
 
       expect(result.isFail()).toBe(true);
-      expect(result.error).toBe('Network error');
+      expect(result.error.message).toBe('Network error');
     });
   });
 
@@ -117,14 +119,14 @@ describe('User & Role Use Cases', () => {
       const result = await useCase.execute(1);
 
       expect(result.isOk()).toBe(true);
-      expect(result.value.full_name).toBe('Jane Doe');
+      expect(result.value.fullName).toBe('Jane Doe');
       expect(mockUserRepo.getUserById).toHaveBeenCalledWith(1);
     });
   });
 
   describe('GetRolesUseCase', () => {
     it('should return roles data on success', async () => {
-      vi.mocked(mockRoleRepo.getRoles).mockResolvedValueOnce(Result.ok(mockRolesData));
+      vi.mocked(mockRoleRepo.getRoles).mockResolvedValueOnce(Result.ok(mockRolesResult));
       const useCase = new GetRolesUseCase(mockRoleRepo);
 
       const result = await useCase.execute();
@@ -140,11 +142,11 @@ describe('User & Role Use Cases', () => {
       vi.mocked(mockRoleRepo.saveRolePermissions).mockResolvedValueOnce(Result.ok(true));
       const useCase = new SaveRolePermissionsUseCase(mockRoleRepo);
 
-      const result = await useCase.execute(mockRolesData.roles[0]);
+      const result = await useCase.execute(mockRole.id, mockRole.matrix);
 
       expect(result.isOk()).toBe(true);
       expect(result.value).toBe(true);
-      expect(mockRoleRepo.saveRolePermissions).toHaveBeenCalledWith(mockRolesData.roles[0]);
+      expect(mockRoleRepo.saveRolePermissions).toHaveBeenCalledWith(mockRole.id, mockRole.matrix);
     });
   });
 });

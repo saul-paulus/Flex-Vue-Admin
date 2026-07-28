@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { useUsers } from '../../composables/useUsers';
-import type { UserItem } from '../../services/users.service';
+import { useUsers } from '~/composables/useUsers';
+import type { UserModel } from '~/domain/user/models/UserModel';
 
 const route = useRoute();
 const { getUserById, isLoading } = useUsers();
 
-const user = ref<UserItem | null>(null);
+const user = ref<UserModel | null>(null);
 
 onMounted(async () => {
   const userId = (route.query.id as string) || '1';
@@ -18,88 +18,33 @@ onMounted(async () => {
 });
 
 const userLocation = computed(() => {
-  if (!user.value) return 'New York, USA';
-  return user.value.location || `${user.value.branch}, Indonesia`;
+  if (!user.value) return '-';
+  return user.value.location || (user.value.branch ? `${user.value.branch}, Indonesia` : '-');
 });
 
 const userManager = computed(() => {
-  if (!user.value) return 'Chris Thompson';
-  return user.value.manager || 'Chris Thompson';
+  if (!user.value) return '-';
+  return user.value.manager || '-';
 });
 
 const userStats = computed(() => {
-  if (!user.value?.stats) {
-    return { logins: 156, tasks_closed: 42, projects: 18, teams: 7 };
-  }
-  return user.value.stats;
+  return user.value?.stats || { logins: 0, tasksClosed: 0, projects: 0, teams: 0 };
 });
 
 const userHealth = computed(() => {
-  if (!user.value?.health) {
-    return { email_verification: true, two_factor: true, risk_score: 'Low' };
-  }
-  return user.value.health;
+  return user.value?.health || { emailVerification: false, twoFactor: false, riskScore: 'Low' };
 });
 
 const userTimeline = computed(() => {
-  if (user.value?.timeline && user.value.timeline.length > 0) {
-    return user.value.timeline;
-  }
-  return [
-    {
-      title: 'Logged In',
-      description: `Chrome on Windows - ${userLocation.value}`,
-      time: user.value?.last_activity || 'Just now',
-      indicator_color: 'bg-success',
-    },
-    {
-      title: 'Updated profile information',
-      description: 'Changed phone number and location',
-      time: '2 hours ago',
-      indicator_color: 'bg-primary',
-    },
-    {
-      title: 'Enabled Two-Factor Authentication',
-      description: 'Using authenticator app',
-      time: 'Yesterday at 3:45 PM',
-      indicator_color: 'bg-warning',
-    },
-    {
-      title: `Joined ${user.value?.department || 'Engineering'} team`,
-      description: `Added by ${userManager.value}`,
-      time: '3 days ago',
-      indicator_color: 'bg-primary',
-    },
-    {
-      title: 'Completed 5 tasks in Project Alpha',
-      description: 'Sprint v2 milestone reached',
-      time: '5 days ago',
-      indicator_color: 'bg-success',
-    },
-  ];
+  return user.value?.timeline || [];
 });
 
 const userTeams = computed(() => {
-  if (user.value?.teams_list && user.value.teams_list.length > 0) {
-    return user.value.teams_list;
-  }
-  return [
-    {
-      name: user.value?.department || 'Engineering',
-      members_count: 12,
-      icon: 'bi-code-slash',
-      color_class: 'bg-primary-subtle text-primary',
-    },
-    { name: 'Product', members_count: 5, icon: 'bi-box', color_class: 'bg-success-subtle text-success' },
-    { name: 'Design', members_count: 8, icon: 'bi-palette', color_class: 'bg-info-subtle text-info' },
-  ];
+  return user.value?.teamsList || [];
 });
 
 const userPermissions = computed(() => {
-  if (user.value?.permissions && user.value.permissions.length > 0) {
-    return user.value.permissions;
-  }
-  return ['Dashboard', 'Users', 'Roles', 'Settings', 'Reports'];
+  return user.value?.permissions || [];
 });
 </script>
 
@@ -118,7 +63,7 @@ const userPermissions = computed(() => {
               <NuxtLink to="/users" class="text-decoration-none text-muted">Users</NuxtLink>
             </li>
             <li class="breadcrumb-item active text-dark fw-medium" aria-current="page">
-              {{ user?.full_name || 'Loading...' }}
+              {{ user?.fullName || 'Loading...' }}
             </li>
           </ol>
         </nav>
@@ -172,7 +117,7 @@ const userPermissions = computed(() => {
                 </div>
                 <div>
                   <h4 class="fw-bolder mb-1 text-primary">
-                    {{ user.full_name }}
+                    {{ user.fullName }}
                   </h4>
                   <p class="text-muted mb-2 fs-sm">
                     {{ user.email }}
@@ -182,7 +127,7 @@ const userPermissions = computed(() => {
                       <i class="bi bi-shield-check text-muted me-1" /> {{ user.role }}
                     </span>
                     <span class="badge bg-elevated text-secondary border px-2 py-1 fw-medium">
-                      #{{ user.employee_id }}
+                      #{{ user.employeeId }}
                     </span>
                     <span class="badge bg-elevated text-secondary border px-2 py-1 fw-medium">
                       {{ user.department }}
@@ -218,7 +163,7 @@ const userPermissions = computed(() => {
                 <div class="p-3 border rounded-3 bg-elevated d-flex justify-content-between align-items-start h-100">
                   <div>
                     <div class="text-tertiary text-uppercase fw-bold mb-1 letter-spacing-1 fs-10">TASKS CLOSED</div>
-                    <div class="fw-bolder fs-xl text-primary">{{ userStats.tasks_closed }}</div>
+                    <div class="fw-bolder fs-xl text-primary">{{ userStats.tasksClosed }}</div>
                   </div>
                   <div
                     class="bg-success-subtle text-success rounded p-1 d-flex align-items-center justify-content-center"
