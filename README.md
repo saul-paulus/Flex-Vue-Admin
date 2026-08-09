@@ -334,6 +334,56 @@ For testing purposes without requiring a direct database connection, the applica
 
 ---
 
+## 🔍 Detailed Module Flows (Reverse Engineering)
+
+Based on the actual source code structure, the following flows demonstrate how data moves from the Backend API to the Frontend UI for each main module.
+
+### 1. Authentication Flow (Login/Logout)
+
+1. **Page/Component (`app/pages/auth/login.vue`)**: Receives user input (identifier, password) and calls `login()` from `useAuth`.
+2. **Composable (`app/composables/useAuth.ts`)**: Calls `nuxtApp.$loginUseCase.execute()` and manages UI loading state.
+3. **Use Case (`application/auth/LoginUseCase.ts`)**: Orchestrates the login by calling `authRepository.login()` and saving the resulting token via `tokenStorage`.
+4. **Repository (`infrastructure/api/AuthApiRepository.ts`)**: Sends the POST request via `httpClient` and maps the response using `AuthMapper`.
+5. **API Client (`infrastructure/api/httpClient.ts`)**: Executes the HTTP request.
+6. **Backend Endpoints**: `POST /auth/login` and `GET /v1/auth/me`.
+
+### 2. Dashboard Flow
+
+1. **Page (`app/pages/dashboard/index.vue`)**: Calls `getDashboardStats()` from `useDashboard` on mount.
+2. **Composable (`app/composables/useDashboard.ts`)**: Calls `nuxtApp.$getDashboardStatsUseCase.execute()`.
+3. **Use Case (`application/dashboard/GetDashboardStatsUseCase.ts`)**: Calls `dashboardRepository.getStats()`.
+4. **Repository (`infrastructure/__mocks__/MockDashboardRepository.ts`)**: Currently uses mocked data for dashboard statistics.
+
+### 3. Users Flow (List & Detail)
+
+1. **Page (`app/pages/users/index.vue`)**: Renders data from reactive state `users` and `summary`. Calls `getUsers()` from the composable on mount. Provides interactive UI for `filterUsers()`, `searchUsers()`, `sortUsers()`, `setPage()`.
+2. **Composable (`app/composables/useUsers.ts`)**: Manages state via `useState`. `getUsers()` calls `nuxtApp.$getUsersUseCase.execute()`. Handles client-side UI logic like sorting, filtering, searching, and pagination.
+3. **Use Case (`application/users/GetUsersUseCase.ts`)**: Forwards the request to `userRepository.getUsers(params)`.
+4. **Repository (`infrastructure/api/repositories/UserApiRepository.ts`)**: Builds query string parameters. Executes GET request via `httpClient`. Maps raw response via `UserMapper.toListResult()`.
+5. **API Client (`infrastructure/api/httpClient.ts`)**: Injected via `app/plugins/auth.ts`, handles Authorization header and `$fetch`.
+6. **Backend Endpoint**: `GET /v1/users` (from `API_ENDPOINTS.USERS.BASE`).
+7. **Mapper (`infrastructure/mappers/UserMapper.ts`)**: Converts raw API data into `UserModel` and `UserSummaryModel`.
+8. **Entities (`domain/users/models/UserModel.ts`)**: Defines the contract consumed by UI.
+
+### 4. Roles & Permissions Flow
+
+1. **Page (`app/pages/users/roles.vue`)**: Loads `getRoles()` and `getUsers()`. Displays roles and permission matrix. Triggers `togglePermission()` and `saveRolePermissions()`.
+2. **Composable (`app/composables/useRoles.ts`)**: Manages `masterRoles` and `permissionGroups`. `getRoles()` calls `nuxtApp.$getRolesUseCase.execute()`. `saveRolePermissions()` calls `nuxtApp.$saveRolePermissionsUseCase.execute()`.
+3. **Use Case (`application/roles/GetRolesUseCase.ts` & `SaveRolePermissionsUseCase.ts`)**: Forwards requests to `roleRepository`.
+4. **Repository (`infrastructure/api/repositories/RoleApiRepository.ts`)**: Fetches via `httpClient.get` and saves via `httpClient.put`.
+5. **API Client**: Handles HTTP requests.
+6. **Backend Endpoint**: GET `/v1/roles` and PUT `/v1/roles/{id}/permissions`.
+7. **Mapper (`infrastructure/mappers/RoleMapper.ts`)**: Transforms raw booleans into matrix format and groups permissions.
+
+### 5. Menu Navigation Flow
+
+1. **Component (`app/components/layout/Sidebar.vue`)**: Renders the sidebar accordion. Calls `getMenu()` from `useMenu`. Tracks active routes.
+2. **Composable (`app/composables/useMenu.ts`)**: Calls `nuxtApp.$getMenuUseCase.execute()`.
+3. **Use Case (`application/menus/GetMenuUseCase.ts`)**: Forwards to `menuRepository.getMenu(permissions, role)`.
+4. **Repository (`infrastructure/__mocks__/StaticMenuRepository.ts`)**: Dynamically imports static `menu.json` and filters items based on user roles/permissions.
+
+---
+
 ## 🧪 Unit Testing
 
 Run the following command to execute the test suite:
