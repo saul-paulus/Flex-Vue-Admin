@@ -3,6 +3,14 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "moduleResolution": "node",
-    "strict": true
+    "strict": true,
+    "paths": {
+      "~/domain/*": ["./domain/*"],
+      "~/application/*": ["./application/*"],
+      "~/infrastructure/*": ["./infrastructure/*"],
+      "@domain/*": ["./domain/*"],
+      "@application/*": ["./application/*"],
+      "@infrastructure/*": ["./infrastructure/*"]
+    }
   }
 }

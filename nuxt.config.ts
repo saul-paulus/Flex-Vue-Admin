@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: ['@nuxt/eslint', '@pinia/nuxt', '@nuxt/test-utils/module', 'pinia-plugin-persistedstate/nuxt'],
@@ -29,6 +31,14 @@ export default defineNuxtConfig({
       apiBase: process.env.NUXT_PUBLIC_API_BASE || '',
     },
   },
+  alias: {
+    '~/domain': fileURLToPath(new URL('./domain', import.meta.url)),
+    '~/application': fileURLToPath(new URL('./application', import.meta.url)),
+    '~/infrastructure': fileURLToPath(new URL('./infrastructure', import.meta.url)),
+    '@domain': fileURLToPath(new URL('./domain', import.meta.url)),
+    '@application': fileURLToPath(new URL('./application', import.meta.url)),
+    '@infrastructure': fileURLToPath(new URL('./infrastructure', import.meta.url)),
+  },
 
   sourcemap: {
     server: false,
@@ -37,6 +47,19 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
 
   vite: {
+    resolve: {
+      alias: [
+        { find: /^~\/domain\/(.*)/, replacement: fileURLToPath(new URL('./domain/$1', import.meta.url)) },
+        { find: /^~\/application\/(.*)/, replacement: fileURLToPath(new URL('./application/$1', import.meta.url)) },
+        {
+          find: /^~\/infrastructure\/(.*)/,
+          replacement: fileURLToPath(new URL('./infrastructure/$1', import.meta.url)),
+        },
+        { find: /^@domain\/(.*)/, replacement: fileURLToPath(new URL('./domain/$1', import.meta.url)) },
+        { find: /^@application\/(.*)/, replacement: fileURLToPath(new URL('./application/$1', import.meta.url)) },
+        { find: /^@infrastructure\/(.*)/, replacement: fileURLToPath(new URL('./infrastructure/$1', import.meta.url)) },
+      ],
+    },
     build: {
       modulePreload: {
         polyfill: false,

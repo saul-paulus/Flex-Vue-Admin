@@ -34,30 +34,36 @@ A scalable, production-ready administration dashboard application built using **
 
 ## 📐 Clean Architecture & Project Structure (Nuxt 4)
 
-In Nuxt 4, the primary code directory is located inside the `app/` folder. Application code is isolated into distinct layers:
+Business logic (`domain`, `application`, `infrastructure`) is cleanly extracted out of `app/` to the project root, keeping the Nuxt 4 web framework layer completely isolated from pure business rules:
 
 ```text
-├── app/                        # 🖥️ Main Application Directory (Nuxt 4 Source)
-│   ├── domain/                 # 🧠 Core Business Logic (Pure logic, framework-agnostic)
-│   │   ├── entities/           # Interfaces and domain base models
-│   │   ├── ports/              # Repository & Adapter contracts
-│   │   └── repositories/       # Domain repository interfaces
-│   │
-│   ├── application/            # ⚙️ Application Use Cases (Identity orchestrator / shared)
-│   │
-│   ├── infrastructure/         # 🔌 External Implementation Layer
-│   │   ├── api/                # Network abstraction & HTTP client
-│   │   └── storage/            # Storage adapters (e.g., tokenStorage)
-│   │
+├── domain/                     # 🧠 Core Business Domain (Pure logic, framework-agnostic)
+│   ├── entities/               # Domain entities and models
+│   ├── ports/                  # Repository & adapter contracts
+│   ├── repositories/           # Domain repository interfaces
+│   └── core/                   # AppError, Result, PaginationModel
+│
+├── application/                # ⚙️ Application Use Cases (Identity orchestrator & flow logic)
+│   ├── auth/                   # Login, Logout, GetCurrentUser use cases
+│   ├── users/                  # User management use cases
+│   └── roles/                  # Role & permission use cases
+│
+├── infrastructure/             # 🔌 Infrastructure Layer
+│   ├── api/                    # HTTP client, endpoints & API error normalizer
+│   ├── mappers/                # DTO to Domain model mappers
+│   ├── storage/                # Cookie token storage adapter
+│   └── __mocks__/              # Development & testing repository mocks
+│
+├── app/                        # 🖥️ Presentation Web Layer (Nuxt 4 Source)
 │   ├── stores/                 # 🗂️ Reactive Global State Store (Pinia)
-│   │
 │   ├── pages/                  # File-based routing system
 │   ├── layouts/                # Component layout wrappers (Default, Auth)
 │   ├── components/             # Reusable UI components
 │   ├── composables/            # Native Vue Composition API logic
 │   ├── middleware/             # Route-level interceptor guards
-│   ├── plugins/                # Subsystem initialization (e.g., authRepository injection)
-│   └── shared/                 # Shared utilities across layers
+│   ├── plugins/                # Subsystem initialization & Dependency Injection
+│   ├── app.vue                 # Nuxt Root Component
+│   └── error.vue               # Nuxt Error Page
 │
 ├── server/                     # 🖥️ Nitro Backend (Serverless API & Middleware)
 ├── assets/                     # 🎨 Compiled static assets (Images, SCSS overrides)
