@@ -20,6 +20,14 @@ export interface RoleEntity {
   readonly matrix: Readonly<Record<string, RoleMatrixItem>>;
 }
 
+/**
+ * UI/Domain facing representation of a role with presentation attributes.
+ */
+export interface RoleModel extends RoleEntity {
+  readonly icon: string;
+  readonly color: string;
+}
+
 export interface PermissionGroup {
   readonly category: string;
   readonly icon: string;

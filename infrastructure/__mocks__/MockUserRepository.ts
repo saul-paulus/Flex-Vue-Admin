@@ -16,7 +16,7 @@ export class MockUserRepository implements UserRepository {
       const mockData = fallbackModule.default as unknown as { success: boolean; data: Record<string, unknown> };
       if (mockData?.data) {
         const result = UserMapper.toListResult(
-          mockData.data as import('~/domain/user/dto/UserDTO').UserListResponseDTO
+          mockData.data as import('~/infrastructure/api/dto/UserDTO').UserListResponseDTO
         );
         return Result.ok(result);
       }

@@ -1,13 +1,4 @@
 /**
- * Token Ports — Domain abstractions for token management.
+ * Token Ports Facade — Re-exports token ports from subfolder.
  */
-
-export interface TokenProvider {
-  getToken(): string | null;
-}
-
-export interface TokenStoragePort {
-  get(): string | null;
-  save(token: string): void;
-  clear(): void;
-}
+export * from './ports/TokenStoragePort';

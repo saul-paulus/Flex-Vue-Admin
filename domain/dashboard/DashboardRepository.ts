@@ -1,10 +1,4 @@
 /**
- * Dashboard Repository Interface — Domain contract for dashboard data.
+ * Dashboard Repository Facade — Re-exports repository contract from subfolder.
  */
-import type { DashboardData } from './entities/DashboardStat';
-import type { Result } from '@domain/shared/value-objects/Result';
-import type { AppError } from '@domain/shared/exceptions/AppError';
-
-export interface DashboardRepository {
-  getDashboard(): Promise<Result<DashboardData, AppError>>;
-}
+export * from './repositories/DashboardRepository';

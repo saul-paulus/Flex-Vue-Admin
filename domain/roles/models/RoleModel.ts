@@ -1,9 +1,4 @@
 /**
- * RoleModel — UI-facing representation of a role.
+ * RoleModel Facade — Re-exports RoleModel from domain/roles/entities/Role.
  */
-import type { RoleEntity } from './entities/Role';
-
-export interface RoleModel extends RoleEntity {
-  readonly icon: string;
-  readonly color: string;
-}
+export type { RoleModel } from '../entities/Role';

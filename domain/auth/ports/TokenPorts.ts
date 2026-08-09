@@ -1,1 +1,1 @@
-export * from '../TokenPorts';
+export * from './TokenStoragePort';
