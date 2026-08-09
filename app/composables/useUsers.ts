@@ -1,30 +1,15 @@
 /**
- * useUsers Composable — UI state management for user lists.
- *
- * Handles ONLY:
- * - UI state (search, filter, sort, pagination)
- * - Reactive data binding
- * - Delegating data fetching to use cases
- *
- * Does NOT handle:
- * - Business logic (that's in use cases)
- * - API calls (that's in repositories)
+ * useUsers Composable — UI state management for user lists using static data.
  */
 import { computed } from 'vue';
-import type { UserModel, UserSummaryModel, FilterOption, TabItem } from '@domain/users/models/UserModel';
+import type { UserModel, UserSummaryModel, FilterOption, TabItem } from '@domain/users/entities/User';
 import type { PaginationMeta } from '@domain/shared/types/PaginationModel';
+import { STATIC_USERS, STATIC_USER_SUMMARY, STATIC_USER_FILTERS } from '~/data/staticUsers';
 
 export function useUsers() {
-  const masterUsers = useState<UserModel[]>('users:master', () => []);
-  const summary = useState<UserSummaryModel>('users:summary', () => ({
-    totalUsers: 0,
-    active: 0,
-    pending: 0,
-    inactive: 0,
-  }));
-
-  const tabs = useState<TabItem[]>('users:tabs', () => []);
-  const roleFilters = useState<FilterOption[]>('users:roleFilters', () => []);
+  const masterUsers = useState<UserModel[]>('users:master', () => [...STATIC_USERS]);
+  const summary = useState<UserSummaryModel>('users:summary', () => ({ ...STATIC_USER_SUMMARY }));
+  const roleFilters = useState<FilterOption[]>('users:roleFilters', () => [...STATIC_USER_FILTERS.roles]);
 
   const searchQuery = useState('users:searchQuery', () => '');
   const activeTab = useState('users:activeTab', () => 'all');
@@ -35,54 +20,12 @@ export function useUsers() {
   const currentPage = useState('users:currentPage', () => 1);
   const perPage = useState('users:perPage', () => 10);
   const isLoading = useState('users:isLoading', () => false);
-  const isLoaded = useState('users:isLoaded', () => false);
 
-  /**
-   * Fetch users via GetUsersUseCase.
-   */
   const getUsers = async () => {
-    if (isLoaded.value && masterUsers.value.length > 0) {
-      return masterUsers.value;
-    }
-    isLoading.value = true;
-    try {
-      const nuxtApp = useNuxtApp();
-      const res = await nuxtApp.$getUsersUseCase.execute();
-      if (res.isOk() && res.value) {
-        masterUsers.value = [...res.value.users];
-        summary.value = { ...res.value.summary };
-        if (res.value.tabs.length > 0) {
-          tabs.value = [...res.value.tabs];
-        }
-        if (res.value.filters.roles.length > 0) {
-          roleFilters.value = [...res.value.filters.roles];
-        }
-        if (res.value.pagination) {
-          currentPage.value = res.value.pagination.currentPage;
-          perPage.value = res.value.pagination.perPage;
-        }
-        isLoaded.value = true;
-      }
-    } catch (err) {
-      console.error('Failed to fetch users:', err);
-    } finally {
-      isLoading.value = false;
-    }
     return masterUsers.value;
   };
 
-  /**
-   * Fetch single user by ID.
-   */
   const getUserById = async (id: number | string): Promise<UserModel | undefined> => {
-    const nuxtApp = useNuxtApp();
-    const res = await nuxtApp.$getUserByIdUseCase.execute(id);
-    if (res.isOk()) {
-      return res.value;
-    }
-    if (!isLoaded.value || masterUsers.value.length === 0) {
-      await getUsers();
-    }
     const numId = Number(id);
     return (
       masterUsers.value.find((u) => u.id === numId || u.uuid === String(id) || u.employeeId === String(id)) ||
@@ -90,26 +33,19 @@ export function useUsers() {
     );
   };
 
-  /**
-   * Compute summary from loaded data.
-   */
   const currentSummary = computed<UserSummaryModel>(() => {
     const total = masterUsers.value.length;
-    if (total === 0) return summary.value;
-
     return {
       totalUsers: total || summary.value.totalUsers,
-      active: masterUsers.value.filter((u) => u.status.toLowerCase() === 'active').length || summary.value.active,
-      pending: masterUsers.value.filter((u) => u.status.toLowerCase() === 'pending').length || summary.value.pending,
-      inactive: masterUsers.value.filter((u) => u.status.toLowerCase() === 'inactive').length || summary.value.inactive,
+      active: masterUsers.value.filter((u) => u.status.toLowerCase() === 'active').length,
+      pending: masterUsers.value.filter((u) => u.status.toLowerCase() === 'pending').length,
+      inactive: masterUsers.value.filter((u) => u.status.toLowerCase() === 'inactive').length,
       growth: summary.value.growth,
       engagement: summary.value.engagement,
       onboarding: summary.value.onboarding,
       followUp: summary.value.followUp,
     };
   });
-
-  // ── UI State Handlers ──
 
   const searchUsers = (query: string) => {
     searchQuery.value = query;
@@ -131,9 +67,6 @@ export function useUsers() {
     }
   };
 
-  /**
-   * Filtered + sorted list (client-side).
-   */
   const filteredUsers = computed(() => {
     let result = [...masterUsers.value];
 
@@ -163,7 +96,6 @@ export function useUsers() {
         let valA: unknown = (a as Record<string, unknown>)[field];
         let valB: unknown = (b as Record<string, unknown>)[field];
 
-        // Field name aliases for camelCase domain model
         if (field === 'name') {
           valA = a.fullName;
           valB = b.fullName;

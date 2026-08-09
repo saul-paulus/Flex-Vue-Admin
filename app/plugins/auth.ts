@@ -1,36 +1,19 @@
 import { createHttpClient } from '~/infrastructure/api/httpClient';
-import { AuthApiRepository } from '~/infrastructure/api/AuthApiRepository';
-import { MockAuthRepository } from '~/infrastructure/__mocks__/MockAuthRepository';
-import { UserApiRepository } from '~/infrastructure/api/UserApiRepository';
-import { MockUserRepository } from '~/infrastructure/__mocks__/MockUserRepository';
-import { RoleApiRepository } from '~/infrastructure/api/RoleApiRepository';
-import { MockRoleRepository } from '~/infrastructure/__mocks__/MockRoleRepository';
-import { MockDashboardRepository } from '~/infrastructure/__mocks__/MockDashboardRepository';
-import { StaticMenuRepository } from '~/infrastructure/__mocks__/StaticMenuRepository';
+import { AuthApiRepository } from '~/infrastructure/api/repositories/AuthApiRepository';
 import { cookieTokenStorage } from '~/infrastructure/storage/tokenStorage';
 
 import { LoginUseCase } from '~/application/auth/LoginUseCase';
 import { LogoutUseCase } from '~/application/auth/LogoutUseCase';
 import { GetCurrentUserUseCase } from '~/application/auth/GetCurrentUserUseCase';
-import { GetUsersUseCase } from '~/application/users/GetUsersUseCase';
-import { GetUserByIdUseCase } from '~/application/users/GetUserByIdUseCase';
-import { GetRolesUseCase } from '~/application/roles/GetRolesUseCase';
-import { SaveRolePermissionsUseCase } from '~/application/roles/SaveRolePermissionsUseCase';
-import { GetDashboardStatsUseCase } from '~/application/dashboard/GetDashboardStatsUseCase';
-import { GetMenuUseCase } from '~/application/menus/GetMenuUseCase';
 
 import type { TokenProvider } from '@domain/auth/TokenPorts';
 import type { AuthRepository } from '@domain/auth/AuthRepository';
-import type { UserRepository } from '@domain/users/UserRepository';
-import type { RoleRepository } from '@domain/roles/RoleRepository';
-import type { DashboardRepository } from '@domain/dashboard/DashboardRepository';
-import type { MenuRepository } from '@domain/menus/MenuRepository';
 
 /**
  * Application DI Plugin — Dependency Injection Composition Root.
  *
- * Assembles all Domain Repositories and Application Use Cases
- * for Auth, Users, Roles, Dashboard, and Menu subsystems.
+ * Assembles Auth Domain Repository and Login Application Use Cases.
+ * Other subsystems (Dashboard, Menu, Roles, Users) use static data directly in UI.
  */
 export default defineNuxtPlugin(() => {
   const runtimeConfig = useRuntimeConfig();
@@ -51,50 +34,20 @@ export default defineNuxtPlugin(() => {
     },
   });
 
-  // ── Environment Flag ──
-  const useMock = import.meta.dev && !runtimeConfig.public.apiBase;
+  // ── Auth Repository ──
+  const authRepository: AuthRepository = new AuthApiRepository(httpClient);
 
-  // ── Repositories ──
-  const authRepository: AuthRepository = useMock ? new MockAuthRepository() : new AuthApiRepository(httpClient);
-  const userRepository: UserRepository = useMock ? new MockUserRepository() : new UserApiRepository(httpClient);
-  const roleRepository: RoleRepository = useMock ? new MockRoleRepository() : new RoleApiRepository(httpClient);
-  const dashboardRepository: DashboardRepository = new MockDashboardRepository();
-  const menuRepository: MenuRepository = new StaticMenuRepository();
-
-  if (useMock) {
-    console.info('[DI Plugin] Using Mock Repositories (development mode, no API configured)');
-  }
-
-  // ── Use Cases ──
+  // ── Auth Use Cases ──
   const loginUseCase = new LoginUseCase(authRepository, cookieTokenStorage);
   const logoutUseCase = new LogoutUseCase(authRepository, cookieTokenStorage);
   const getCurrentUserUseCase = new GetCurrentUserUseCase(authRepository);
 
-  const getUsersUseCase = new GetUsersUseCase(userRepository);
-  const getUserByIdUseCase = new GetUserByIdUseCase(userRepository);
-
-  const getRolesUseCase = new GetRolesUseCase(roleRepository);
-  const saveRolePermissionsUseCase = new SaveRolePermissionsUseCase(roleRepository);
-
-  const getDashboardStatsUseCase = new GetDashboardStatsUseCase(dashboardRepository);
-  const getMenuUseCase = new GetMenuUseCase(menuRepository);
-
   return {
     provide: {
       authRepository,
-      userRepository,
-      roleRepository,
-      dashboardRepository,
-      menuRepository,
       loginUseCase,
       logoutUseCase,
       getCurrentUserUseCase,
-      getUsersUseCase,
-      getUserByIdUseCase,
-      getRolesUseCase,
-      saveRolePermissionsUseCase,
-      getDashboardStatsUseCase,
-      getMenuUseCase,
       tokenStorage: cookieTokenStorage,
     },
   };

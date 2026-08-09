@@ -1,7 +1,7 @@
 /**
  * RoleRepository Interface — Domain contract for role operations.
  */
-import type { RoleEntity, RoleModel, PermissionGroup, RoleMatrixItem } from '../entities/Role';
+import type { RoleModel, PermissionGroup, RoleMatrixItem } from '../entities/Role';
 import type { Result } from '@domain/shared/value-objects/Result';
 import type { AppError } from '@domain/shared/exceptions/AppError';
 
