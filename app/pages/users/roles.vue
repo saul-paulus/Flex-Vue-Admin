@@ -2,7 +2,7 @@
 import { onMounted, computed, ref } from 'vue';
 import { useRoles } from '~/composables/useRoles';
 import { useUsers } from '~/composables/useUsers';
-import type { RoleMatrixItem } from '~/domain/role/entities/Role';
+import type { RoleMatrixItem } from '@domain/roles/entities/Role';
 
 const {
   roles,

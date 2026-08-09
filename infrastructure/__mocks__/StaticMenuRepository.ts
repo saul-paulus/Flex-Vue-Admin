@@ -4,11 +4,11 @@
  * This is the default menu source. For API-driven menus,
  * create an ApiMenuRepository that fetches from a backend endpoint.
  */
-import type { MenuRepository } from '~/domain/menu/repositories/MenuRepository';
-import type { MenuItem } from '~/domain/menu/entities/MenuItem';
-import type { AppError } from '~/domain/core/AppError';
-import { Result } from '~/domain/core/Result';
-import { createAppError } from '~/domain/core/AppError';
+import type { MenuRepository } from '@domain/menus/MenuRepository';
+import type { MenuItem } from '@domain/menus/entities/MenuItem';
+import type { AppError } from '@domain/shared/exceptions/AppError';
+import { Result } from '@domain/shared/value-objects/Result';
+import { createAppError } from '@domain/shared/exceptions/AppError';
 
 export class StaticMenuRepository implements MenuRepository {
   async getMenu(

@@ -1,12 +1,12 @@
 /**
  * MockUserRepository — Loads users from JSON mock file.
  */
-import type { UserRepository, UserListResult } from '~/domain/user/repositories/UserRepository';
-import type { UserModel } from '~/domain/user/models/UserModel';
-import type { PaginationParams } from '~/domain/core/PaginationModel';
-import type { AppError } from '~/domain/core/AppError';
-import { Result } from '~/domain/core/Result';
-import { createAppError } from '~/domain/core/AppError';
+import type { UserRepository, UserListResult } from '@domain/users/UserRepository';
+import type { UserModel } from '@domain/users/models/UserModel';
+import type { PaginationParams } from '@domain/shared/types/PaginationModel';
+import type { AppError } from '@domain/shared/exceptions/AppError';
+import { Result } from '@domain/shared/value-objects/Result';
+import { createAppError } from '@domain/shared/exceptions/AppError';
 import { UserMapper } from '../mappers/UserMapper';
 
 export class MockUserRepository implements UserRepository {

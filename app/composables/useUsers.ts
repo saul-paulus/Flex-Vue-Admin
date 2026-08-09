@@ -11,8 +11,8 @@
  * - API calls (that's in repositories)
  */
 import { computed } from 'vue';
-import type { UserModel, UserSummaryModel, FilterOption, TabItem } from '~/domain/user/models/UserModel';
-import type { PaginationMeta } from '~/domain/core/PaginationModel';
+import type { UserModel, UserSummaryModel, FilterOption, TabItem } from '@domain/users/models/UserModel';
+import type { PaginationMeta } from '@domain/shared/types/PaginationModel';
 
 export function useUsers() {
   const masterUsers = useState<UserModel[]>('users:master', () => []);

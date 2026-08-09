@@ -1,11 +1,11 @@
 /**
  * MockDashboardRepository — Loads dashboard data from JSON mock file.
  */
-import type { DashboardRepository } from '~/domain/dashboard/repositories/DashboardRepository';
-import type { DashboardData } from '~/domain/dashboard/entities/DashboardStat';
-import type { AppError } from '~/domain/core/AppError';
-import { Result } from '~/domain/core/Result';
-import { createAppError } from '~/domain/core/AppError';
+import type { DashboardRepository } from '@domain/dashboard/DashboardRepository';
+import type { DashboardData } from '@domain/dashboard/entities/DashboardStat';
+import type { AppError } from '@domain/shared/exceptions/AppError';
+import { Result } from '@domain/shared/value-objects/Result';
+import { createAppError } from '@domain/shared/exceptions/AppError';
 import { DashboardMapper } from '../mappers/DashboardMapper';
 
 export class MockDashboardRepository implements DashboardRepository {

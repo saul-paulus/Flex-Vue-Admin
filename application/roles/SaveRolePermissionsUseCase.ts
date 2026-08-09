@@ -1,10 +1,10 @@
 /**
  * SaveRolePermissionsUseCase — Persists permission matrix changes for a role.
  */
-import type { RoleRepository } from '~/domain/role/repositories/RoleRepository';
-import type { RoleMatrixItem } from '~/domain/role/entities/Role';
-import type { AppError } from '~/domain/core/AppError';
-import type { Result } from '~/domain/core/Result';
+import type { RoleRepository } from '@domain/roles/RoleRepository';
+import type { RoleMatrixItem } from '@domain/roles/entities/Role';
+import type { AppError } from '@domain/shared/exceptions/AppError';
+import type { Result } from '@domain/shared/value-objects/Result';
 
 export class SaveRolePermissionsUseCase {
   constructor(private readonly roleRepository: RoleRepository) {}

@@ -2,10 +2,10 @@ import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { LoginUseCase } from '~/application/auth/LoginUseCase';
 import { LogoutUseCase } from '~/application/auth/LogoutUseCase';
 import { GetCurrentUserUseCase } from '~/application/auth/GetCurrentUserUseCase';
-import { Result } from '~/domain/core/Result';
-import type { AuthRepository } from '~/domain/auth/repositories/AuthRepository';
-import type { AuthToken, AuthUser } from '~/domain/auth/entities/AuthSession';
-import type { TokenStoragePort } from '~/domain/auth/ports/TokenPorts';
+import { Result } from '@domain/shared/value-objects/Result';
+import type { AuthRepository } from '@domain/auth/AuthRepository';
+import type { AuthToken, AuthUser } from '@domain/auth/entities/AuthSession';
+import type { TokenStoragePort } from '@domain/auth/TokenPorts';
 
 // ── Mock Factories ──
 

@@ -1,10 +1,10 @@
 /**
  * LogoutUseCase — Orchestrates the logout flow.
  */
-import type { AuthRepository } from '~/domain/auth/repositories/AuthRepository';
-import type { TokenStoragePort } from '~/domain/auth/ports/TokenPorts';
-import type { AppError } from '~/domain/core/AppError';
-import type { Result } from '~/domain/core/Result';
+import type { AuthRepository } from '@domain/auth/AuthRepository';
+import type { TokenStoragePort } from '@domain/auth/TokenPorts';
+import type { AppError } from '@domain/shared/exceptions/AppError';
+import type { Result } from '@domain/shared/value-objects/Result';
 
 export class LogoutUseCase {
   constructor(

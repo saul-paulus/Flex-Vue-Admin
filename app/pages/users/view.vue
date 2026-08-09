@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUsers } from '~/composables/useUsers';
-import type { UserModel } from '~/domain/user/models/UserModel';
+import type { UserModel } from '@domain/users/models/UserModel';
 
 const route = useRoute();
 const { getUserById, isLoading } = useUsers();

@@ -1,10 +1,10 @@
 /**
  * GetUserByIdUseCase — Fetches a single user by ID.
  */
-import type { UserRepository } from '~/domain/user/repositories/UserRepository';
-import type { UserModel } from '~/domain/user/models/UserModel';
-import type { AppError } from '~/domain/core/AppError';
-import type { Result } from '~/domain/core/Result';
+import type { UserRepository } from '@domain/users/UserRepository';
+import type { UserModel } from '@domain/users/models/UserModel';
+import type { AppError } from '@domain/shared/exceptions/AppError';
+import type { Result } from '@domain/shared/value-objects/Result';
 
 export class GetUserByIdUseCase {
   constructor(private readonly userRepository: UserRepository) {}

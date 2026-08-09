@@ -2,7 +2,7 @@ import { describe, expect, it, vi, beforeEach } from 'vitest';
 
 // Import AFTER mocking
 import { createHttpClient } from '~/infrastructure/api/httpClient';
-import type { TokenProvider } from '~/domain/ports/TokenPorts';
+import type { TokenProvider } from '@domain/auth/TokenPorts';
 
 // Use vi.hoisted to ensure the mock is available during hoisting
 const { innerMockFetch } = vi.hoisted(() => ({

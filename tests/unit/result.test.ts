@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Result } from '~/domain/core/Result';
+import { Result } from '@domain/shared/value-objects/Result';
 
 describe('Result', () => {
   describe('Result.ok', () => {

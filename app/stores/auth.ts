@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { AuthUser } from '~/domain/entities/Auth';
+import type { AuthUser } from '@domain/auth/entities/AuthSession';
 
 /**
  * Auth Store — Thin reactive state container for authentication.

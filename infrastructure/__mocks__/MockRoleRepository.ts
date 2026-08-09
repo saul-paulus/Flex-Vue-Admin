@@ -1,11 +1,11 @@
 /**
  * MockRoleRepository — Loads roles from JSON mock file.
  */
-import type { RoleRepository, RolesListResult } from '~/domain/role/repositories/RoleRepository';
-import type { RoleMatrixItem } from '~/domain/role/entities/Role';
-import type { AppError } from '~/domain/core/AppError';
-import { Result } from '~/domain/core/Result';
-import { createAppError } from '~/domain/core/AppError';
+import type { RoleRepository, RolesListResult } from '@domain/roles/RoleRepository';
+import type { RoleMatrixItem } from '@domain/roles/entities/Role';
+import type { AppError } from '@domain/shared/exceptions/AppError';
+import { Result } from '@domain/shared/value-objects/Result';
+import { createAppError } from '@domain/shared/exceptions/AppError';
 import { RoleMapper } from '../mappers/RoleMapper';
 
 export class MockRoleRepository implements RoleRepository {

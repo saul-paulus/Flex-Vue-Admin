@@ -3,12 +3,12 @@ import { GetUsersUseCase } from '~/application/users/GetUsersUseCase';
 import { GetUserByIdUseCase } from '~/application/users/GetUserByIdUseCase';
 import { GetRolesUseCase } from '~/application/roles/GetRolesUseCase';
 import { SaveRolePermissionsUseCase } from '~/application/roles/SaveRolePermissionsUseCase';
-import { Result } from '~/domain/core/Result';
-import { createAppError } from '~/domain/core/AppError';
-import type { UserRepository, UserListResult } from '~/domain/user/repositories/UserRepository';
-import type { RoleRepository, RolesListResult } from '~/domain/role/repositories/RoleRepository';
-import type { UserModel } from '~/domain/user/models/UserModel';
-import type { RoleModel } from '~/domain/role/models/RoleModel';
+import { Result } from '@domain/shared/value-objects/Result';
+import { createAppError } from '@domain/shared/exceptions/AppError';
+import type { UserRepository, UserListResult } from '@domain/users/UserRepository';
+import type { RoleRepository, RolesListResult } from '@domain/roles/RoleRepository';
+import type { UserModel } from '@domain/users/models/UserModel';
+import type { RoleModel } from '@domain/roles/models/RoleModel';
 
 function createMockUserRepository(): UserRepository {
   return {

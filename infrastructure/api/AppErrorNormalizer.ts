@@ -11,8 +11,8 @@
  *
  * This is the ONLY place where backend error shapes are interpreted.
  */
-import type { AppError } from '~/domain/core/AppError';
-import { createAppError } from '~/domain/core/AppError';
+import type { AppError } from '@domain/shared/exceptions/AppError';
+import { createAppError } from '@domain/shared/exceptions/AppError';
 import type { FetchError } from 'ofetch';
 
 interface RawErrorPayload {

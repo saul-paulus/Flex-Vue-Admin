@@ -1,4 +1,4 @@
-import type { TokenStoragePort } from '~/domain/ports/TokenPorts';
+import type { TokenStoragePort } from '@domain/auth/TokenPorts';
 
 const COOKIE_NAME = 'auth_token';
 

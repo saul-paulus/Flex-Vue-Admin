@@ -1,11 +1,11 @@
 /**
  * MockAuthRepository — For testing and development ONLY.
  */
-import type { AuthRepository } from '~/domain/auth/repositories/AuthRepository';
-import type { AuthToken, AuthUser, LoginCredentials } from '~/domain/auth/entities/AuthSession';
-import type { AppError } from '~/domain/core/AppError';
-import { Result } from '~/domain/core/Result';
-import { createAppError } from '~/domain/core/AppError';
+import type { AuthRepository } from '@domain/auth/AuthRepository';
+import type { AuthToken, AuthUser, LoginCredentials } from '@domain/auth/entities/AuthSession';
+import type { AppError } from '@domain/shared/exceptions/AppError';
+import { Result } from '@domain/shared/value-objects/Result';
+import { createAppError } from '@domain/shared/exceptions/AppError';
 
 const MOCK_CREDENTIALS = {
   identifier: '1234567890',

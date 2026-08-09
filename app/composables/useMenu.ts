@@ -1,7 +1,7 @@
 /**
  * useMenu Composable — UI state management for navigation menu.
  */
-import type { MenuItem } from '~/domain/menu/entities/MenuItem';
+import type { MenuItem } from '@domain/menus/entities/MenuItem';
 
 export function useMenu() {
   const menuItems = useState<MenuItem[]>('menu:items', () => []);

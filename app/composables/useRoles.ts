@@ -2,8 +2,8 @@
  * useRoles Composable — UI state management for roles & permissions.
  */
 import { computed } from 'vue';
-import type { RoleModel } from '~/domain/role/models/RoleModel';
-import type { PermissionGroup, RoleMatrixItem } from '~/domain/role/entities/Role';
+import type { RoleModel } from '@domain/roles/models/RoleModel';
+import type { PermissionGroup, RoleMatrixItem } from '@domain/roles/entities/Role';
 
 export function useRoles() {
   const masterRoles = useState<RoleModel[]>('roles:master', () => []);

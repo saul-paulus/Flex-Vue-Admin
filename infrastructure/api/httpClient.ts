@@ -1,5 +1,5 @@
 import { $fetch, type FetchOptions } from 'ofetch';
-import type { TokenProvider } from '~/domain/ports/TokenPorts';
+import type { TokenProvider } from '@domain/auth/TokenPorts';
 
 /**
  * Creates a configured HTTP client instance.
