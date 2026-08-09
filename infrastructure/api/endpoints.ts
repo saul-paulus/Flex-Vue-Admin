@@ -5,6 +5,7 @@
  * when API paths, versions, or query parameters change.
  */
 export const API_ENDPOINTS = {
+  MENU: '/menu',
   AUTH: {
     LOGIN: '/auth/login',
     LOGOUT: '/auth/logout',
