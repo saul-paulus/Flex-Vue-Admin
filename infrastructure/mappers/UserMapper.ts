@@ -4,10 +4,10 @@
  * NO `any` types — uses typed DTOs throughout.
  * Handles both snake_case and camelCase backend conventions.
  */
-import type { UserModel, UserSummaryModel, FilterOption, TabItem } from '~/domain/user/models/UserModel';
-import type { UserStats, UserHealth, UserActivityTimeline, UserSession, UserTeam } from '~/domain/user/entities/User';
-import type { UserResponseDTO, UserSummaryDTO, UserListResponseDTO, PaginationDTO } from '~/domain/user/dto/UserDTO';
-import type { PaginationMeta } from '~/domain/core/PaginationModel';
+import type { UserModel, UserSummaryModel, FilterOption, TabItem } from '@domain/users/models/UserModel';
+import type { UserStats, UserHealth, UserActivityTimeline, UserSession, UserTeam } from '@domain/users/entities/User';
+import type { UserResponseDTO, UserSummaryDTO, UserListResponseDTO, PaginationDTO } from '../api/dto/UserDTO';
+import type { PaginationMeta } from '@domain/shared/types/PaginationModel';
 
 /**
  * Helper: compute a CSS badge class based on role name.

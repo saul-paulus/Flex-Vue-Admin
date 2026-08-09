@@ -6,12 +6,12 @@
  * 2. Delegate authentication to repository
  * 3. Persist token on success
  */
-import type { AuthRepository } from '~/domain/auth/repositories/AuthRepository';
-import type { AuthToken } from '~/domain/auth/entities/AuthSession';
-import type { TokenStoragePort } from '~/domain/auth/ports/TokenPorts';
-import type { AppError } from '~/domain/core/AppError';
-import { Result } from '~/domain/core/Result';
-import { createAppError } from '~/domain/core/AppError';
+import type { AuthRepository } from '@domain/auth/AuthRepository';
+import type { AuthToken } from '@domain/auth/entities/AuthSession';
+import type { TokenStoragePort } from '@domain/auth/TokenPorts';
+import type { AppError } from '@domain/shared/exceptions/AppError';
+import { Result } from '@domain/shared/value-objects/Result';
+import { createAppError } from '@domain/shared/exceptions/AppError';
 
 export interface LoginCommand {
   readonly identifier?: string;

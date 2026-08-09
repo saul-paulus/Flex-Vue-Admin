@@ -3,9 +3,9 @@
  *
  * NO `any` types — uses typed DTOs throughout.
  */
-import type { RoleModel } from '~/domain/role/models/RoleModel';
-import type { PermissionGroup, RoleMatrixItem } from '~/domain/role/entities/Role';
-import type { RoleResponseDTO, PermissionGroupDTO, RolesListResponseDTO } from '~/domain/role/dto/RoleDTO';
+import type { RoleModel } from '@domain/roles/models/RoleModel';
+import type { PermissionGroup, RoleMatrixItem } from '@domain/roles/entities/Role';
+import type { RoleResponseDTO, PermissionGroupDTO, RolesListResponseDTO } from '../api/dto/RoleDTO';
 
 export const RoleMapper = {
   toModel(raw: RoleResponseDTO): RoleModel {

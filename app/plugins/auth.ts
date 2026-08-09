@@ -17,14 +17,14 @@ import { GetUserByIdUseCase } from '~/application/users/GetUserByIdUseCase';
 import { GetRolesUseCase } from '~/application/roles/GetRolesUseCase';
 import { SaveRolePermissionsUseCase } from '~/application/roles/SaveRolePermissionsUseCase';
 import { GetDashboardStatsUseCase } from '~/application/dashboard/GetDashboardStatsUseCase';
-import { GetMenuUseCase } from '~/application/menu/GetMenuUseCase';
+import { GetMenuUseCase } from '~/application/menus/GetMenuUseCase';
 
-import type { TokenProvider } from '~/domain/auth/ports/TokenPorts';
-import type { AuthRepository } from '~/domain/auth/repositories/AuthRepository';
-import type { UserRepository } from '~/domain/user/repositories/UserRepository';
-import type { RoleRepository } from '~/domain/role/repositories/RoleRepository';
-import type { DashboardRepository } from '~/domain/dashboard/repositories/DashboardRepository';
-import type { MenuRepository } from '~/domain/menu/repositories/MenuRepository';
+import type { TokenProvider } from '@domain/auth/TokenPorts';
+import type { AuthRepository } from '@domain/auth/AuthRepository';
+import type { UserRepository } from '@domain/users/UserRepository';
+import type { RoleRepository } from '@domain/roles/RoleRepository';
+import type { DashboardRepository } from '@domain/dashboard/DashboardRepository';
+import type { MenuRepository } from '@domain/menus/MenuRepository';
 
 /**
  * Application DI Plugin — Dependency Injection Composition Root.
