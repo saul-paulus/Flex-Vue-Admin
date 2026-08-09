@@ -6,7 +6,52 @@ const user = computed(() => authStore.user);
 
 const isDropdownOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
+
+const isNotificationOpen = ref(false);
+const notificationRef = ref<HTMLElement | null>(null);
+
 const isDarkMode = ref(true);
+
+const staticNotifications = ref([
+  {
+    id: 1,
+    title: 'New User Registered',
+    message: 'Sarah Johnson created a new admin account.',
+    time: '5 mins ago',
+    icon: 'bi-person-plus-fill',
+    colorVariant: 'primary',
+    isUnread: true,
+  },
+  {
+    id: 2,
+    title: 'System Alert',
+    message: 'Server memory utilization reached 85%.',
+    time: '25 mins ago',
+    icon: 'bi-exclamation-triangle-fill',
+    colorVariant: 'warning',
+    isUnread: true,
+  },
+  {
+    id: 3,
+    title: 'Report Generated',
+    message: 'Monthly sales report Q2 is ready for download.',
+    time: '2 hours ago',
+    icon: 'bi-file-earmark-bar-graph-fill',
+    colorVariant: 'success',
+    isUnread: true,
+  },
+  {
+    id: 4,
+    title: 'Security Notice',
+    message: 'Successful login from new IP address 192.168.1.45.',
+    time: '5 hours ago',
+    icon: 'bi-shield-check',
+    colorVariant: 'info',
+    isUnread: true,
+  },
+]);
+
+const unreadCount = computed(() => staticNotifications.value.filter((n) => n.isUnread).length);
 
 const toggleTheme = () => {
   isDarkMode.value = !isDarkMode.value;
@@ -17,11 +62,28 @@ const toggleTheme = () => {
 
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
+  if (isDropdownOpen.value) {
+    isNotificationOpen.value = false;
+  }
+};
+
+const toggleNotification = () => {
+  isNotificationOpen.value = !isNotificationOpen.value;
+  if (isNotificationOpen.value) {
+    isDropdownOpen.value = false;
+  }
+};
+
+const markAllAsRead = () => {
+  staticNotifications.value.forEach((n) => (n.isUnread = false));
 };
 
 const closeDropdown = (event: MouseEvent) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
     isDropdownOpen.value = false;
+  }
+  if (notificationRef.value && !notificationRef.value.contains(event.target as Node)) {
+    isNotificationOpen.value = false;
   }
 };
 
@@ -93,11 +155,82 @@ const handleSignOut = async () => {
             <i class="bi bi-chat-left-text fs-6" />
             <span class="badge-notification">5</span>
           </button>
-          <!-- Notifikasi Badge -->
-          <button class="header-icon-btn position-relative" aria-label="Notifications">
-            <i class="bi bi-bell fs-6" />
-            <span class="badge-notification">4</span>
-          </button>
+          <!-- Notifikasi Badge Dropdown -->
+          <div ref="notificationRef" class="dropdown">
+            <button
+              class="header-icon-btn position-relative"
+              aria-label="Notifications"
+              :aria-expanded="isNotificationOpen"
+              @click.stop="toggleNotification"
+            >
+              <i class="bi bi-bell fs-6" />
+              <span v-if="unreadCount > 0" class="badge-notification">{{ unreadCount }}</span>
+            </button>
+            <!-- Dropdown Menu Notifikasi -->
+            <div
+              class="dropdown-menu dropdown-menu-end shadow-lg border mt-3 p-0 overflow-hidden transition-all d-block-important notification-dropdown"
+              style="margin-left: -10rem"
+              :class="{
+                show: isNotificationOpen,
+                'visible opacity-1 transform-y-0 pointer-events-auto': isNotificationOpen,
+                'invisible opacity-0 transform-y-10 pointer-events-none': !isNotificationOpen,
+              }"
+            >
+              <!-- Header -->
+              <div class="p-3 border-b-apple d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                  <h6 class="mb-0 fw-bold text-primary fs-sm">Notifications</h6>
+                  <span v-if="unreadCount > 0" class="badge rounded-pill bg-primary-subtle text-primary fs-xs">
+                    {{ unreadCount }} New
+                  </span>
+                </div>
+                <button
+                  class="btn btn-link p-0 text-decoration-none text-accent fs-xs fw-medium border-0 shadow-none"
+                  @click="markAllAsRead"
+                >
+                  Mark all read
+                </button>
+              </div>
+              <!-- List Notifikasi Statis -->
+              <div class="notification-list p-2 d-flex flex-column gap-1 overflow-y-auto" style="max-height: 320px">
+                <div
+                  v-for="item in staticNotifications"
+                  :key="item.id"
+                  class="notification-item p-2 rounded-3 text-decoration-none d-flex align-items-start gap-3 transition-all cursor-pointer"
+                  :class="{ 'bg-soft-dark': item.isUnread }"
+                >
+                  <div
+                    class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 mt-1"
+                    :class="`bg-${item.colorVariant}-subtle text-${item.colorVariant}`"
+                    style="width: 36px; height: 36px"
+                  >
+                    <i class="bi" :class="item.icon" />
+                  </div>
+                  <div class="flex-grow-1 lh-sm">
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                      <span class="fw-bold text-primary fs-xs">{{ item.title }}</span>
+                      <span class="text-tertiary fs-10 ms-2">{{ item.time }}</span>
+                    </div>
+                    <p class="text-secondary mb-0" style="font-size: 0.75rem; line-height: 1.35">
+                      {{ item.message }}
+                    </p>
+                  </div>
+                  <span
+                    v-if="item.isUnread"
+                    class="unread-dot rounded-circle bg-accent flex-shrink-0 mt-2"
+                    style="width: 6px; height: 6px"
+                  />
+                </div>
+              </div>
+
+              <!-- Footer -->
+              <div class="p-2 border-t-apple text-center bg-elevated">
+                <a href="#" class="text-decoration-none text-tertiary text-hover-dark fs-xs fw-medium">
+                  View all notifications
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="vr mx-2 d-none d-sm-block h-24" />
         <!-- Dropdown Profil -->
@@ -145,7 +278,7 @@ const handleSignOut = async () => {
                   {{ user?.username || 'Guest' }}
                 </span>
                 <span class="text-tertiary fs-10">
-                  {{ user?.id_personal || 'user@example.com' }}
+                  {{ user?.personalId || 'user@example.com' }}
                 </span>
               </div>
             </li>
@@ -195,7 +328,19 @@ const handleSignOut = async () => {
 </template>
 
 <style scoped>
-/* Transisi dropdown manual karena Bootstrap classes mungkin butuh bantuan jika tidak pakai template built-in */
+.notification-dropdown {
+  width: 340px;
+  max-width: 90vw;
+}
+
+.notification-item:hover {
+  background-color: var(--bg-grouped) !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .transition-all {
   transition: all var(--transition-normal);
 }
